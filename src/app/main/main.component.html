@@ -1,0 +1,6 @@
+<div *ngIf="book">
+    <div><a (click)="OnPlayClicked()">Play</a></div>
+    <div><a (click)="OnPauseClicked()">Pause</a></div>
+    <div><a (click)="OnNextClicked()">Next</a></div>
+    <p *ngFor="let paragraph of book">{{paragraph}}</p>
+</div>
