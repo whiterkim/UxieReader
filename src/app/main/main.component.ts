@@ -18,6 +18,7 @@ export class MainComponent implements OnInit {
   paragraphDisplayed: Array<number> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
   jumpInput: HTMLInputElement | undefined;
   chapters: number[] = [];
+  isPlaying: boolean = false;
 
   async ngOnInit(): Promise<void> {
     this.GetLocalStorage();
@@ -84,12 +85,13 @@ export class MainComponent implements OnInit {
   }
 
   async OnPlayClicked(): Promise<void> {
+    this.isPlaying = true;
     this.Play(this.book[this.counter]);
   }
 
   async OnPreviousClicked(): Promise<void> {
     this.counter--;
-    if (!this.audio.paused) {
+    if (this.isPlaying) {
       this.Play(this.book[this.counter]);
     }
     localStorage.setItem('counter', this.counter.toString());
@@ -97,13 +99,14 @@ export class MainComponent implements OnInit {
 
   async OnNextClicked(): Promise<void> {
     this.counter++;
-    if (!this.audio.paused) {
+    if (this.isPlaying) {
       this.Play(this.book[this.counter]);
     }
     localStorage.setItem('counter', this.counter.toString());
   }
 
   OnPauseClicked(): void {
+    this.isPlaying = false;
     this.audio.pause();
   }
 
