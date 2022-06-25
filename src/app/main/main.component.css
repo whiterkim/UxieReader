@@ -1,0 +1,8 @@
+mark {
+    background-color: darkgoldenrod;
+    color: white;
+}
+
+.dropdown-toggle::after {
+    content: none;
+}

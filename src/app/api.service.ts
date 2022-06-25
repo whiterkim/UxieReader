@@ -13,8 +13,8 @@ export class ApiService {
   ) { }
 
   public async GetBook(): Promise<string[]> {
-    let data = await lastValueFrom(this.http.get('assets/book.txt', {responseType: 'text'}));
-    return data.split('\n');
+    let data = await lastValueFrom(this.http.get('assets/NT10.txt', {responseType: 'text'}));
+    return data.split('\n').filter(e => e !== '\r');
   }
 
 
@@ -34,7 +34,7 @@ export class ApiService {
     const headers = {
       'Accept': '*/*',
       'Ocp-Apim-Subscription-Key': 'd0074ee2b178407291078b0e46fd342c',
-      'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
+      'X-Microsoft-OutputFormat': 'audio-48khz-192kbitrate-mono-mp3',
       'Content-Type': 'application/ssml+xml',
     };
 
@@ -45,15 +45,5 @@ export class ApiService {
       headers: headers,
       responseType: 'blob',
     }));
-  }
-
-  public Play(data: Blob) {
-    const url = URL.createObjectURL(data);
-    const audio = new Audio();
-    audio.src = url;
-    audio.load();
-    audio.play().catch(function (error) {
-        console.log(error.message);
-    });
   }
 }
