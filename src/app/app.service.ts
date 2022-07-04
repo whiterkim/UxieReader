@@ -13,18 +13,57 @@ export class AppService {
     private http: HttpClient
   ) { }
 
-  public async GetBook(): Promise<Book> {
-    let rawText = await lastValueFrom(this.http.get('assets/books/NT10.txt', {responseType: 'text'}));
+  public GetBookPaths() : string[] {
+    let books: string[] = [
+      '追忆似水年华',
+      '新约·魔法禁书目录 10',
+      '新约·魔法禁书目录 11',
+      '新约·魔法禁书目录 12',
+      '新约·魔法禁书目录 13',
+      '新约·魔法禁书目录 14',
+      '新约·魔法禁书目录 15',
+      '新约·魔法禁书目录 16',
+      '新约·魔法禁书目录 17',
+      '新约·魔法禁书目录 18',
+      '新约·魔法禁书目录 19',
+      '新约·魔法禁书目录 20',
+      '新约·魔法禁书目录 21',
+      '新约·魔法禁书目录 22',
+    ];
+    return books;
+  }
+
+  public async LoadBook(bookName: string | undefined): Promise<Book | undefined> {
+    if (bookName) {
+      localStorage.setItem('lastBook', bookName);
+      return await this.GetBookWithName(bookName);
+    }
+
+    let lastBookName = localStorage.getItem('lastBook');
+    if (lastBookName) {
+      // Get last read book
+      return await this.GetBookWithName(lastBookName);
+    }
+
+    return undefined;
+  }
+
+  private async GetBookWithName(name: string): Promise<Book> {
+    let fullPath = 'assets/books/' + name + '.txt';
+    let rawText = await lastValueFrom(this.http.get(fullPath, {responseType: 'text'}));
     let paragraphs = rawText.split('\n').filter(e => e !== '\r');
 
     let book: Book = {
-      name: 'NT10',
+      name: name,
       paragraphs: paragraphs,
       chapters: [],
     };
 
-    this.GetChapters(book);
-
+    if (name[0] == '追') {
+      this.GetChaptersZ(book);
+    } else {
+      this.GetChapters(book);
+    }
     return book;
   }
 
@@ -36,6 +75,19 @@ export class AppService {
         break;
       }
       if (paragraph[0] == '第' && (paragraph[2] == '章' || paragraph[3] == '章')) {
+        book.chapters.push(index);
+      }
+      index++;
+    }
+  }
+
+  private GetChaptersZ(book: Book): void {
+    let index = 0;
+    for (let paragraph of book.paragraphs) {
+      if (paragraph[0] == '分' &&
+        paragraph[1] == '节' &&
+        paragraph[2] == '阅' &&
+        paragraph[3] == '读') {
         book.chapters.push(index);
       }
       index++;

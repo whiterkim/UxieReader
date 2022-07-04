@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { AppService } from '../app.service';
+import { AppSettings } from '../app.settings';
 import { Book } from '../model/book';
 
 @Component({
@@ -10,19 +13,28 @@ import { Book } from '../model/book';
 export class MainComponent implements OnInit {
 
   constructor(
-    private appService: AppService
+    private activatedRoute: ActivatedRoute,
+    private appService: AppService,
+    private router: Router,
   ) { }
 
-  book: Book | undefined;
-  counter: number = 0;
   audio: HTMLAudioElement = new Audio();
-  paragraphDisplayed: Array<number> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
   jumpInput: HTMLInputElement | undefined;
+
+  book: Book | undefined;
+  paragraphDisplayed: Array<number> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
   isPlaying: boolean = false;
-  fontSize: number = 1;
+
+  settings: AppSettings | undefined;
+  textSize: number = 1;
+  counter: number = 0;
 
   async ngOnInit(): Promise<void> {
-    this.GetLocalStorage();
+    // Get book name from params
+    let params = await firstValueFrom(this.activatedRoute.params);
+    let bookName = params['key'];
+
+    // Keep screen on
     try {
       const anyNav: any = navigator;
       if ('wakeLock' in navigator) {
@@ -33,17 +45,20 @@ export class MainComponent implements OnInit {
       console.log(err);
     }
 
-    this.book = await this.appService.GetBook();
+    let loadedBook = await this.appService.LoadBook(bookName);
+    if (loadedBook) {
+      this.book = loadedBook;
+    } else {
+      // Go to the book list page
+      this.router.navigate(['/book-list']);
+    }
+
+    this.settings = new AppSettings(bookName);
+    this.counter = this.settings.GetCounter();
+    this.textSize = AppSettings.GetTextSize();
 
     this.InitAudioElement();
     this.InitInputElement();
-  }
-
-  private GetLocalStorage(): void {
-    let savedCounter = localStorage.getItem('counter');
-    if (savedCounter !== null) {
-      this.counter = +savedCounter;
-    }
   }
 
   private InitAudioElement(): void {
@@ -84,7 +99,7 @@ export class MainComponent implements OnInit {
         this.Play(this.book.paragraphs[this.counter]);
       }
     }
-    localStorage.setItem('counter', this.counter.toString());
+    this.settings?.SetCounter(this.counter);
   }
 
   async OnNextClicked(): Promise<void> {
@@ -94,7 +109,7 @@ export class MainComponent implements OnInit {
         this.Play(this.book.paragraphs[this.counter]);
       }
     }
-    localStorage.setItem('counter', this.counter.toString());
+    this.settings?.SetCounter(this.counter);
   }
 
   OnPauseClicked(): void {
@@ -102,13 +117,18 @@ export class MainComponent implements OnInit {
     this.audio.pause();
   }
 
+  OnChangeBookClicked(): void {
+    this.router.navigate(['/book-list']);
+  }
+
   OnChapterClicked(chapter: number): void {
     this.counter = chapter;
-    localStorage.setItem('counter', this.counter.toString());
+    this.settings?.SetCounter(this.counter);
   }
 
   OnTextSizeClicked(diff: number): void {
-    this.fontSize += diff;
+    this.textSize += diff;
+    AppSettings.SetTextSize(this.textSize);
   }
 
   private async Play(text: string): Promise<void> {

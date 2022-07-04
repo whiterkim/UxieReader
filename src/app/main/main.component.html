@@ -2,7 +2,9 @@
   <div class="navbar-nav container-fluid justify-content-center">
     <div ngbDropdown class="nav-link">
       <i ngbDropdownToggle id="chaptersDropdownButton" class="bi bi-list" style="font-size: 1.5rem;"></i>
-      <div ngbDropdownMenu class="dropdown-menu-dark" aria-labelledby="chaptersDropdownButton">
+      <div ngbDropdownMenu class="dropdown-menu-dark" aria-labelledby="chaptersDropdownButton" style="max-height:600px; overflow-y:auto;">
+        <button ngbDropdownItem (click)="OnChangeBookClicked()">Change book</button>
+        <div class="dropdown-divider"></div>
         <button ngbDropdownItem
           *ngFor="let chapter of book.chapters"
           (click)="OnChapterClicked(chapter)">{{book.paragraphs[chapter]}}</button>
@@ -34,11 +36,11 @@
   </div>
 </nav>
 
+<audio hidden id="text-audio" controls="" autoplay="" name="media"><source src="" type="audio/mpeg"></audio>
 <div *ngIf="book" class="bg-dark" style="padding-top: 80px; padding-left: 24px; padding-right: 24px;">
-  <audio hidden id="text-audio" controls="" autoplay="" name="media"><source src="" type="audio/mpeg"></audio>
   <p style="overflow-wrap: break-word; width: 342px; color:white;"
     *ngFor="let index of paragraphDisplayed"
-    [ngStyle]="{'font-size.rem': fontSize}">
+    [ngStyle]="{'font-size.rem': textSize}">
     <mark *ngIf="index === 0">{{book.paragraphs[counter + index]}}</mark>
     <span *ngIf="index !== 0">{{book.paragraphs[counter + index]}}</span>
   </p>

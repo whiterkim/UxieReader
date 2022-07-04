@@ -1,0 +1,12 @@
+<nav class="navbar navbar-expand navbar-dark fixed-top bg-dark" style="max-width: 390px; height: 80px;">
+  <div class="navbar-nav container-fluid justify-content-center">
+    <h2 style="color:white; width:70%; text-align:center">Uxie Reader</h2>
+  </div>
+</nav>
+
+<div *ngIf="bookPaths" class="bg-dark" style="padding-top: 80px; padding-left: 24px; padding-right: 24px; height: 844px;">
+  <p style="overflow-wrap: break-word; width: 342px; color:white;"
+    *ngFor="let path of bookPaths" (click)="OnBookClicked(path)">
+    {{path}}
+  </p>
+</div>
