@@ -1,17 +1,25 @@
 <nav *ngIf="book" class="navbar navbar-expand navbar-dark fixed-top bg-dark" style="max-width: 390px; height: 80px;">
   <div class="navbar-nav container-fluid justify-content-center">
     <div ngbDropdown class="nav-link">
-      <i ngbDropdownToggle id="dropdownMenuButton" class="bi bi-list" style="font-size: 1.5rem;"></i>
-      <div ngbDropdownMenu class="dropdown-menu-right bg-dark" aria-labelledby="dropdownMenuButton">
-        <button ngbDropdownItem style="color:white;"
-          *ngFor="let chapter of chapters"
-          (click)="OnChapterClicked(chapter)">{{book[chapter]}}</button>
+      <i ngbDropdownToggle id="chaptersDropdownButton" class="bi bi-list" style="font-size: 1.5rem;"></i>
+      <div ngbDropdownMenu class="dropdown-menu-dark" aria-labelledby="chaptersDropdownButton">
+        <button ngbDropdownItem
+          *ngFor="let chapter of book.chapters"
+          (click)="OnChapterClicked(chapter)">{{book.paragraphs[chapter]}}</button>
       </div>
     </div>
-    <h2 style="color:white; width:70%; text-align:center">ReaderApp</h2>
-    <a class="nav-link"><i class="bi bi-gear-fill" style="font-size: 1.5rem;"></i></a>
+    <h2 style="color:white; width:70%; text-align:center">Uxie Reader</h2>
+    <div ngbDropdown class="nav-link">
+      <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill" style="font-size: 1.5rem;"></i>
+      <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
+        <div ngbDropdownItem>
+          Text size
+          <i class="bi bi-dash-lg" style="font-size: 1rem; margin-left:12px" (click)="OnTextSizeClicked(-0.1)"></i>
+          <i class="bi bi-plus-lg" style="font-size: 1rem; margin-left:12px" (click)="OnTextSizeClicked(0.1)"></i>
+        </div>
+      </div>
+    </div>
   </div>
-
 </nav>
 
 <nav class="navbar navbar-expand navbar-dark fixed-bottom bg-dark" style="max-width: 390px; height: 100px;">
@@ -29,8 +37,9 @@
 <div *ngIf="book" class="bg-dark" style="padding-top: 80px; padding-left: 24px; padding-right: 24px;">
   <audio hidden id="text-audio" controls="" autoplay="" name="media"><source src="" type="audio/mpeg"></audio>
   <p style="overflow-wrap: break-word; width: 342px; color:white;"
-    *ngFor="let index of paragraphDisplayed;">
-    <mark *ngIf="index === 0">{{book[counter + index]}}</mark>
-    <span *ngIf="index !== 0">{{book[counter + index]}}</span>
+    *ngFor="let index of paragraphDisplayed"
+    [ngStyle]="{'font-size.rem': fontSize}">
+    <mark *ngIf="index === 0">{{book.paragraphs[counter + index]}}</mark>
+    <span *ngIf="index !== 0">{{book.paragraphs[counter + index]}}</span>
   </p>
 </div>

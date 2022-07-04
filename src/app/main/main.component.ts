@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
+import { Book } from '../model/book';
 
 @Component({
   selector: 'app-main',
@@ -12,13 +13,13 @@ export class MainComponent implements OnInit {
     private apiService: ApiService
   ) { }
 
-  book: string[] = [];
+  book: Book | undefined;
   counter: number = 0;
   audio: HTMLAudioElement = new Audio();
   paragraphDisplayed: Array<number> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
   jumpInput: HTMLInputElement | undefined;
-  chapters: number[] = [];
   isPlaying: boolean = false;
+  fontSize: number = 1;
 
   async ngOnInit(): Promise<void> {
     this.GetLocalStorage();
@@ -33,7 +34,6 @@ export class MainComponent implements OnInit {
     }
 
     this.book = await this.apiService.GetBook();
-    this.GetChapters();
 
     this.InitAudioElement();
     this.InitInputElement();
@@ -43,20 +43,6 @@ export class MainComponent implements OnInit {
     let savedCounter = localStorage.getItem('counter');
     if (savedCounter !== null) {
       this.counter = +savedCounter;
-    }
-  }
-
-  private GetChapters(): void {
-    let index = 0;
-    for (let paragraph of this.book) {
-      if (paragraph[0] == '后' && paragraph[1] == '记') {
-        this.chapters.push(index);
-        break;
-      }
-      if (paragraph[0] == '第' && (paragraph[2] == '章' || paragraph[3] == '章')) {
-        this.chapters.push(index);
-      }
-      index++;
     }
   }
 
@@ -86,13 +72,17 @@ export class MainComponent implements OnInit {
 
   async OnPlayClicked(): Promise<void> {
     this.isPlaying = true;
-    this.Play(this.book[this.counter]);
+    if (this.book) {
+      this.Play(this.book.paragraphs[this.counter]);
+    }
   }
 
   async OnPreviousClicked(): Promise<void> {
     this.counter--;
     if (this.isPlaying) {
-      this.Play(this.book[this.counter]);
+      if (this.book) {
+        this.Play(this.book.paragraphs[this.counter]);
+      }
     }
     localStorage.setItem('counter', this.counter.toString());
   }
@@ -100,7 +90,9 @@ export class MainComponent implements OnInit {
   async OnNextClicked(): Promise<void> {
     this.counter++;
     if (this.isPlaying) {
-      this.Play(this.book[this.counter]);
+      if (this.book) {
+        this.Play(this.book.paragraphs[this.counter]);
+      }
     }
     localStorage.setItem('counter', this.counter.toString());
   }
@@ -115,10 +107,13 @@ export class MainComponent implements OnInit {
     localStorage.setItem('counter', this.counter.toString());
   }
 
+  OnTextSizeClicked(diff: number): void {
+    this.fontSize += diff;
+  }
+
   private async Play(text: string): Promise<void> {
-    console.log(text);
-    let blob = await this.apiService.TtsService(text);
-    const url = URL.createObjectURL(blob);
+    let voice = await this.apiService.GetVoice(text);
+    const url = URL.createObjectURL(voice);
     if (!this.audio.paused) {
       this.audio.pause();
     }
