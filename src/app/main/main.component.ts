@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
+import { AppService } from '../app.service';
 import { Book } from '../model/book';
 
 @Component({
@@ -10,7 +10,7 @@ import { Book } from '../model/book';
 export class MainComponent implements OnInit {
 
   constructor(
-    private apiService: ApiService
+    private appService: AppService
   ) { }
 
   book: Book | undefined;
@@ -33,7 +33,7 @@ export class MainComponent implements OnInit {
       console.log(err);
     }
 
-    this.book = await this.apiService.GetBook();
+    this.book = await this.appService.GetBook();
 
     this.InitAudioElement();
     this.InitInputElement();
@@ -112,7 +112,7 @@ export class MainComponent implements OnInit {
   }
 
   private async Play(text: string): Promise<void> {
-    let voice = await this.apiService.GetVoice(text);
+    let voice = await this.appService.GetVoice(text);
     const url = URL.createObjectURL(voice);
     if (!this.audio.paused) {
       this.audio.pause();

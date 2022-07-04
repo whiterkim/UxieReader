@@ -7,7 +7,7 @@ import { Book } from './model/book';
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
+export class AppService {
 
   constructor(
     private http: HttpClient
