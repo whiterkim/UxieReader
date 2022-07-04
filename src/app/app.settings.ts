@@ -31,4 +31,42 @@ export class AppSettings {
   public static SetTextSize(size: number): void {
     localStorage.setItem('textSize', size.toString());
   }
+
+  public static GetVoiceName(): string {
+    return AppSettings.VoiceList()[AppSettings.GetVoiceIndex()];
+  }
+
+  private static GetVoiceIndex(): number {
+    let savedVoiceIndex = localStorage.getItem('voiceIndex');
+    if (savedVoiceIndex !== null) {
+      return +savedVoiceIndex;
+    }
+    // Set Yunxi as the default voice.
+    return 0;
+  }
+
+  private static SetVoiceIndex(index: number): void {
+    localStorage.setItem('voiceIndex', index.toString());
+  }
+
+  private static VoiceList(): string[] {
+    return [
+      'zh-CN-YunxiNeural',
+      'zh-CN-XiaoxiaoNeural',
+    ]
+  }
+
+  public static SetPreviousVoice(): void {
+    let length = AppSettings.VoiceList().length;
+    let currentIndex = AppSettings.GetVoiceIndex();
+    let newIndex = (currentIndex + length - 1) % length;
+    AppSettings.SetVoiceIndex(newIndex);
+  }
+
+  public static SetNextVoice(): void {
+    let length = AppSettings.VoiceList().length;
+    let currentIndex = AppSettings.GetVoiceIndex();
+    let newIndex = (currentIndex + 1) % length;
+    AppSettings.SetVoiceIndex(newIndex);
+  }
 }

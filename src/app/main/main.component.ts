@@ -131,6 +131,14 @@ export class MainComponent implements OnInit {
     AppSettings.SetTextSize(this.textSize);
   }
 
+  OnPreviousVoiceClicked(): void {
+    AppSettings.SetPreviousVoice();
+  }
+
+  OnNextVoiceClicked(): void {
+    AppSettings.SetNextVoice();
+  }
+
   private async Play(text: string): Promise<void> {
     let voice = await this.appService.GetVoice(text);
     const url = URL.createObjectURL(voice);

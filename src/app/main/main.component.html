@@ -14,10 +14,20 @@
     <div ngbDropdown class="nav-link">
       <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill" style="font-size: 1.5rem;"></i>
       <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
-        <div ngbDropdownItem>
-          Text size
-          <i class="bi bi-dash-lg" style="font-size: 1rem; margin-left:12px" (click)="OnTextSizeClicked(-0.1)"></i>
-          <i class="bi bi-plus-lg" style="font-size: 1rem; margin-left:12px" (click)="OnTextSizeClicked(0.1)"></i>
+        <div ngbDropdownItem style="display: flex; justify-content: space-between;">
+          <span>Text size</span>
+          <span>
+            <i class="bi bi-dash-lg" style="font-size: 1rem; margin-left:12px" (click)="OnTextSizeClicked(-0.1)"></i>
+            <i class="bi bi-plus-lg" style="font-size: 1rem; margin-left:12px" (click)="OnTextSizeClicked(0.1)"></i>
+          </span>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div ngbDropdownItem style="display: flex; justify-content: space-between;">
+          <span>Change voice</span>
+          <span>
+            <i class="bi bi-chevron-left" style="font-size: 1rem; margin-left:12px" (click)="OnPreviousVoiceClicked()"></i>
+            <i class="bi bi-chevron-right" style="font-size: 1rem; margin-left:12px" (click)="OnNextVoiceClicked()"></i>
+          </span>
         </div>
       </div>
     </div>

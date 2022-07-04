@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { create } from 'xmlbuilder2';
 import { Book } from './model/book';
+import { AppSettings } from './app.settings';
 
 @Injectable({
   providedIn: 'root'
@@ -95,9 +96,10 @@ export class AppService {
   }
 
   private GetRequestXmlBody(text: string): string {
+    let voiceName = AppSettings.GetVoiceName();
     const xml_body = create()
         .ele('speak', { version: '1.0', xmlns: 'http://www.w3.org/2001/10/synthesis', 'xmlns:mstts': 'https://www.w3.org/2001/mstts', 'xml:lang': 'zh-CN'})
-        .ele('voice', { name: 'zh-CN-YunxiNeural'})
+        .ele('voice', { name: voiceName})
         .txt(text)
         .end();
 
