@@ -1,11 +1,17 @@
-<nav class="navbar navbar-expand navbar-dark fixed-top bg-dark" style="max-width: 390px; height: 80px;">
-  <div class="navbar-nav container-fluid justify-content-center">
-    <h2 style="color:white; width:70%; text-align:center">Uxie Reader</h2>
+<nav class="navbar navbar-expand navbar-dark fixed-top bg-dark">
+  <div class="navbar-nav menu-bar">
+    <div ngbDropdown class="nav-link menu-button">
+      <i ngbDropdownToggle class="bi bi-list menu-icon"></i>
+    </div>
+    <span class="menu-title text-white">Uxie Reader</span>
+    <div ngbDropdown class="nav-link menu-button">
+      <i ngbDropdownToggle class="bi bi-gear-fill menu-icon"></i>
+    </div>
   </div>
 </nav>
 
-<div *ngIf="bookPaths" class="bg-dark" style="padding-top: 80px; padding-left: 24px; padding-right: 24px; height: 844px;">
-  <p style="overflow-wrap: break-word; width: 342px; color:white;"
+<div *ngIf="bookPaths" class="bg-dark viewer-frame">
+  <p class="viewer-paragraph text-white"
     *ngFor="let path of bookPaths" (click)="OnBookClicked(path)">
     {{path}}
   </p>

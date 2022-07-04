@@ -1,2 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('../node_modules/bootstrap-icons/font/bootstrap-icons.css');
+
+.dropdown-toggle::after {
+    content: none;
+}
+
+.menu-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-title {
+    font-size: 1.5rem;
+    align-self: center;
+}
+
+.menu-button {
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.menu-dropdown {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-icon {
+    font-size: 1.5rem;
+}
+
+.viewer-frame {
+    padding-top: 64px;
+    padding-left: 24px;
+    padding-right: 24px;
+    min-height: 844px;
+}
+
+.viewer-paragraph {
+    overflow-wrap: break-word;
+}

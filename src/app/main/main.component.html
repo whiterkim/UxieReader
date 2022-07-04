@@ -1,8 +1,8 @@
-<nav *ngIf="book" class="navbar navbar-expand navbar-dark fixed-top bg-dark" style="max-width: 390px; height: 80px;">
-  <div class="navbar-nav container-fluid justify-content-center">
-    <div ngbDropdown class="nav-link">
-      <i ngbDropdownToggle id="chaptersDropdownButton" class="bi bi-list" style="font-size: 1.5rem;"></i>
-      <div ngbDropdownMenu class="dropdown-menu-dark" aria-labelledby="chaptersDropdownButton" style="max-height:600px; overflow-y:auto;">
+<nav *ngIf="book" class="navbar navbar-expand navbar-dark fixed-top bg-dark" >
+  <div class="navbar-nav menu-bar">
+    <div ngbDropdown class="nav-link menu-button">
+      <i ngbDropdownToggle id="chaptersDropdownButton" class="bi bi-list menu-icon"></i>
+      <div ngbDropdownMenu class="dropdown-menu-dark menu-dropdown" aria-labelledby="chaptersDropdownButton">
         <button ngbDropdownItem (click)="OnChangeBookClicked()">Change book</button>
         <div class="dropdown-divider"></div>
         <button ngbDropdownItem
@@ -10,23 +10,23 @@
           (click)="OnChapterClicked(chapter)">{{book.paragraphs[chapter]}}</button>
       </div>
     </div>
-    <h2 style="color:white; width:70%; text-align:center">Uxie Reader</h2>
-    <div ngbDropdown class="nav-link">
-      <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill" style="font-size: 1.5rem;"></i>
+    <span class="menu-title text-white">Uxie Reader</span>
+    <div ngbDropdown class="nav-link menu-button">
+      <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill menu-icon"></i>
       <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
-        <div ngbDropdownItem style="display: flex; justify-content: space-between;">
+        <div ngbDropdownItem class="menu-item">
           <span>Text size</span>
           <span>
-            <i class="bi bi-dash-lg" style="font-size: 1rem; margin-left:12px" (click)="OnTextSizeClicked(-0.1)"></i>
-            <i class="bi bi-plus-lg" style="font-size: 1rem; margin-left:12px" (click)="OnTextSizeClicked(0.1)"></i>
+            <i class="bi bi-dash-lg setting-icon" (click)="OnTextSizeClicked(-0.1)"></i>
+            <i class="bi bi-plus-lg setting-icon" (click)="OnTextSizeClicked(0.1)"></i>
           </span>
         </div>
         <div class="dropdown-divider"></div>
-        <div ngbDropdownItem style="display: flex; justify-content: space-between;">
+        <div ngbDropdownItem class="menu-item">
           <span>Change voice</span>
           <span>
-            <i class="bi bi-chevron-left" style="font-size: 1rem; margin-left:12px" (click)="OnPreviousVoiceClicked()"></i>
-            <i class="bi bi-chevron-right" style="font-size: 1rem; margin-left:12px" (click)="OnNextVoiceClicked()"></i>
+            <i class="bi bi-chevron-left setting-icon" (click)="OnPreviousVoiceClicked()"></i>
+            <i class="bi bi-chevron-right setting-icon" (click)="OnNextVoiceClicked()"></i>
           </span>
         </div>
       </div>
@@ -34,21 +34,21 @@
   </div>
 </nav>
 
-<nav class="navbar navbar-expand navbar-dark fixed-bottom bg-dark" style="max-width: 390px; height: 100px;">
-  <div class="navbar-nav container-fluid justify-content-center" style="max-width: 120px">
-    <a class="nav-link" *ngIf="audio.paused" (click)="OnPlayClicked()"><i class="bi bi-play-fill" style="font-size: 2rem;"></i></a>
-    <a class="nav-link" *ngIf="!audio.paused" (click)="OnPauseClicked()"><i class="bi bi-pause-fill" style="font-size: 2rem;"></i></a>
+<nav class="navbar navbar-expand navbar-dark fixed-bottom bg-dark footer-bar">
+  <div class="navbar-nav">
+    <a class="nav-link" *ngIf="audio.paused" (click)="OnPlayClicked()"><i class="bi bi-play-fill footer-icon"></i></a>
+    <a class="nav-link" *ngIf="!audio.paused" (click)="OnPauseClicked()"><i class="bi bi-pause-fill footer-icon"></i></a>
   </div>
-  <div class="navbar-nav container-fluid justify-content-center">
-    <a class="nav-link" (click)="OnPreviousClicked()"><i class="bi bi-skip-start-fill" style="font-size: 2rem;"></i></a>
-    <input class="form-control bg-secondary text-white" id="jump-input" style="max-width: 120px; border: 0px solid" value="{{counter}}">
-    <a class="nav-link" (click)="OnNextClicked()"><i class="bi bi-skip-end-fill" style="font-size: 2rem;"></i></a>
+  <div class="navbar-nav">
+    <a class="nav-link" (click)="OnPreviousClicked()"><i class="bi bi-skip-start-fill footer-icon"></i></a>
+    <input class="form-control bg-secondary text-white footer-input" id="jump-input" value="{{counter}}">
+    <a class="nav-link" (click)="OnNextClicked()"><i class="bi bi-skip-end-fill footer-icon"></i></a>
   </div>
 </nav>
 
 <audio hidden id="text-audio" controls="" autoplay="" name="media"><source src="" type="audio/mpeg"></audio>
-<div *ngIf="book" class="bg-dark" style="padding-top: 80px; padding-left: 24px; padding-right: 24px;">
-  <p style="overflow-wrap: break-word; width: 342px; color:white;"
+<div *ngIf="book" class="bg-dark viewer-frame">
+  <p class="text-white viewer-paragraph"
     *ngFor="let index of paragraphDisplayed"
     [ngStyle]="{'font-size.rem': textSize}">
     <mark *ngIf="index === 0">{{book.paragraphs[counter + index]}}</mark>
