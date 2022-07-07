@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BookListComponent } from './book-list/book-list.component';
+import { EpubViewComponent } from './epub-view/epub-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
     BookListComponent,
+    EpubViewComponent,
   ],
   imports: [
     BrowserModule,
