@@ -7,7 +7,7 @@ import { MainComponent } from './main/main.component';
 const routes: Routes = [
   {path: '', component: MainComponent},
   {path: 'reader-view/:key', component: MainComponent},
-  {path: 'epub-view', component: EpubViewComponent},
+  {path: 'epub-view/:key', component: EpubViewComponent},
   {path: 'book-list', component: BookListComponent},
 ];
 

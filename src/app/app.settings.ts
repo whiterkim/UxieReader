@@ -18,6 +18,31 @@ export class AppSettings {
     localStorage.setItem(this.bookName + 'counter', counter.toString());
   }
 
+  public GetEpubCounter(): number {
+    let savedCounter = localStorage.getItem(this.bookName + '_epub_counter');
+    if (savedCounter !== null) {
+      return +savedCounter;
+    }
+    // Start from beginning when no saved counter found.
+    return 0;
+  }
+
+  public SetEpubCounter(counter: number): void {
+    localStorage.setItem(this.bookName + '_epub_counter', counter.toString());
+  }
+
+  public GetEpubCfi(): string | undefined {
+    let savedEpubCfi = localStorage.getItem(this.bookName + '_epub_cfi');
+    if (savedEpubCfi !== null) {
+      return savedEpubCfi;
+    }
+    return undefined;
+  }
+
+  public SetEpubCfi(cfi: string): void {
+    localStorage.setItem(this.bookName + '_epub_cfi', cfi);
+  }
+
   // Static methods
   public static GetTextSize(): number {
     let savedSize = localStorage.getItem('textSize');

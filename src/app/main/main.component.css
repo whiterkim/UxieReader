@@ -2,29 +2,3 @@ mark {
     background-color: darkgoldenrod;
     color: white;
 }
-
-.setting-icon {
-    font-size: 1rem;
-    margin-left: 12px;
-    margin-right: 12px;
-}
-
-.footer-bar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 24px;
-}
-
-.footer-icon {
-    font-size: 2rem;
-    margin-left: 12px;
-    margin-right: 12px;
-}
-
-.footer-input {
-    max-width: 120px;
-    max-height: 36px;
-    border: 0px solid;
-    align-self: center;
-}

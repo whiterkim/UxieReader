@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AppService } from '../app.service';
 import { AppSettings } from '../app.settings';
+import { AppUtils } from '../app.utils';
 import { Book } from '../model/book';
 
 @Component({
@@ -34,16 +35,7 @@ export class MainComponent implements OnInit {
     let params = await firstValueFrom(this.activatedRoute.params);
     let bookName = params['key'];
 
-    // Keep screen on
-    try {
-      const anyNav: any = navigator;
-      if ('wakeLock' in navigator) {
-        const wakeLock = await anyNav['wakeLock'].request('screen');
-      }
-    } catch (err) {
-      // the wake lock request fails - usually system related, such being low on battery
-      console.log(err);
-    }
+    AppUtils.KeepScreenOn();
 
     let loadedBook = await this.appService.LoadBook(bookName);
     if (loadedBook) {
@@ -85,11 +77,16 @@ export class MainComponent implements OnInit {
     }
   }
 
-  async OnPlayClicked(): Promise<void> {
+  OnPlayClicked(): void {
     this.isPlaying = true;
     if (this.book) {
       this.Play(this.book.paragraphs[this.counter]);
     }
+  }
+
+  OnPauseClicked(): void {
+    this.isPlaying = false;
+    this.audio.pause();
   }
 
   async OnPreviousClicked(): Promise<void> {
@@ -110,11 +107,6 @@ export class MainComponent implements OnInit {
       }
     }
     this.settings?.SetCounter(this.counter);
-  }
-
-  OnPauseClicked(): void {
-    this.isPlaying = false;
-    this.audio.pause();
   }
 
   OnChangeBookClicked(): void {

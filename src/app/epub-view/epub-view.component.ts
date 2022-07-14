@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import Epub, { Rendition } from 'epubjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Rendition } from 'epubjs';
+import { firstValueFrom } from 'rxjs';
 import { AppService } from '../app.service';
+import { AppSettings } from '../app.settings';
+import { AppUtils } from '../app.utils';
 
 @Component({
   selector: 'app-epub-view',
@@ -10,33 +14,241 @@ import { AppService } from '../app.service';
 export class EpubViewComponent implements OnInit {
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private appService: AppService,
+    private router: Router,
   ) { }
 
+  audio: HTMLAudioElement = new Audio();
+  jumpInput: HTMLInputElement | undefined;
+
   rendition: Rendition | undefined;
+  paragraphs: string[] = [];
+  isPlaying: boolean = false;
+
+  settings: AppSettings | undefined;
+  textSize: number = 1;
+  counter: number = 0;
 
   async ngOnInit(): Promise<void> {
-    let element = document.querySelector('html');
+    // Get book name from params
+    let params = await firstValueFrom(this.activatedRoute.params);
+    let bookName = params['key'];
 
-    var book = Epub("assets/NT11.epub");
-    this.rendition = book.renderTo("area", {
+    AppUtils.KeepScreenOn();
+
+    let loadedBook = this.appService.GetEpub(bookName);
+    if (!loadedBook) {
+      this.router.navigate(['/book-list']);
+    }
+
+    this.rendition = loadedBook.renderTo("epub-viewer-area", {
       width: "100%",
       height: "100%",
-      manager: "continuous",
       flow: "scrolled",
     });
-    var displayed = this.rendition.display();
-    await displayed;
-    this.rendition?.next();
+
+    this.settings = new AppSettings(bookName);
+    let savedCfi = this.settings.GetEpubCfi();
+    if (savedCfi) {
+      await this.Navigate(savedCfi);
+    } else {
+      await this.rendition?.display();
+    }
+    this.textSize = AppSettings.GetTextSize();
+    this.AdjustTextSize();
+
+    this.InitAudioElement();
+    this.InitInputElement();
   }
 
-  OnPrevClicked(): void {
-    this.rendition?.prev();
+  private InitAudioElement(): void {
+    let element = document.getElementById('text-audio');
+    if (element instanceof HTMLAudioElement) {
+      this.audio = element;
+      this.audio.addEventListener('ended', (event) => {
+        this.OnNextParagraphClicked();
+      });
+      this.audio.addEventListener('error', (event) => {
+        this.OnNextParagraphClicked();
+      });
+    }
   }
 
-  OnNextClicked(): void {
-    console.log(this.rendition);
-    this.rendition?.next();
+  private InitInputElement(): void {
+    let element = document.getElementById('jump-input');
+    if (element instanceof HTMLInputElement) {
+      this.jumpInput = element;
+      this.jumpInput?.addEventListener('input', (event) => {
+        console.log(this.jumpInput?.value);
+        this.UnmarkParagraph(this.counter);
+        this.counter = this.jumpInput ? +this.jumpInput?.value : 0;
+        this.MarkParagraph(this.counter);
+      });
+    }
+  }
+
+  private GetEpubElement(): HTMLDivElement | undefined {
+    let epubViewerElement = document.getElementById('epub-viewer-area');
+    let iframeElements = epubViewerElement?.getElementsByTagName('iframe');
+    let iframeElement = iframeElements?.item(0);
+    let divElements = iframeElement?.contentDocument?.getElementsByTagName('div');
+    let divElement = divElements?.item(0);
+    return divElement ? divElement : undefined;
+  }
+
+  private GetParagraphs(): void {
+    this.paragraphs = [];
+    let element = this.GetEpubElement();
+    if (element) {
+      // Make dark background
+      element.setAttribute('style', 'background-color:#212529;color:white;');
+      for (let i = 0; i < element.children.length; i++) {
+        let child = element.children[i];
+        if (child.textContent) {
+          this.paragraphs.push(child.textContent);
+        } else {
+          this.paragraphs.push('');
+        }
+      }
+    }
+  }
+
+  private AdjustTextSize(): void {
+    this.GetEpubElement()
+      ?.parentElement
+      ?.setAttribute(
+        'style',
+        'font-size:' + this.textSize + 'rem'
+      );
+  }
+
+  private async Navigate(cfi: string) : Promise<void> {
+    await this.rendition?.display(cfi);
+    this.GetParagraphs();
+    let savedCounter = this.settings?.GetEpubCounter();
+    if (savedCounter === undefined || savedCounter === null) {
+      this.counter = 0;
+    } else {
+      this.counter = savedCounter;
+    }
+    this.MarkParagraph(this.counter);
+  }
+
+  private MarkParagraph(index: number) {
+    let element = this.GetEpubElement();
+    if (element) {
+        let child = element.children[index];
+        child?.setAttribute("style", "background-color:darkgoldenrod;");
+        child?.scrollIntoView(true);
+    }
+  }
+
+  private UnmarkParagraph(index: number) {
+    let element = this.GetEpubElement();
+    if (element) {
+        let child = element.children[index];
+        child?.setAttribute("style", "");
+    }
+  }
+
+  private async ChangeSection(isNext: boolean, isBeginning: boolean): Promise<void> {
+    if (isNext) {
+      await this.rendition?.next();
+    } else {
+      await this.rendition?.prev();
+    }
+    this.GetParagraphs();
+    this.counter = isBeginning ? 0 : this.paragraphs.length - 1;
+    this.MarkParagraph(this.counter);
+    this.SaveSettings();
+    if (this.isPlaying) {
+      this.Play(this.paragraphs[this.counter]);
+    }
+  }
+
+  OnChangeBookClicked(): void {
+    this.router.navigate(['/book-list']);
+  }
+
+  OnPlayClicked(): void {
+    this.isPlaying = true;
+    this.Play(this.paragraphs[this.counter]);
+  }
+
+  OnPauseClicked(): void {
+    this.isPlaying = false;
+    this.audio.pause();
+  }
+
+  OnPreviousParagraphClicked() {
+    this.UnmarkParagraph(this.counter);
+    this.counter--;
+    if (this.counter < 0) {
+      this.ChangeSection(false, false);
+      return;
+    }
+    this.MarkParagraph(this.counter);
+    this.SaveSettings();
+    if (this.isPlaying) {
+      this.Play(this.paragraphs[this.counter]);
+    }
+  }
+
+  OnNextParagraphClicked() {
+    this.UnmarkParagraph(this.counter);
+    this.counter++;
+    if (this.counter >= this.paragraphs.length) {
+      this.OnNextSectionClicked();
+      return;
+    }
+    this.MarkParagraph(this.counter);
+    this.SaveSettings();
+    if (this.isPlaying) {
+      this.Play(this.paragraphs[this.counter]);
+    }
+  }
+
+  async OnPreviousSectionClicked(): Promise<void> {
+    await this.ChangeSection(false, true);
+  }
+
+  async OnNextSectionClicked(): Promise<void> {
+    await this.ChangeSection(true, true);
+  }
+
+  OnTextSizeClicked(diff: number): void {
+    this.textSize += diff;
+    this.AdjustTextSize();
+    AppSettings.SetTextSize(this.textSize);
+  }
+
+  OnPreviousVoiceClicked(): void {
+    AppSettings.SetPreviousVoice();
+  }
+
+  OnNextVoiceClicked(): void {
+    AppSettings.SetNextVoice();
+  }
+
+  private SaveSettings(): void {
+    if (this.rendition) {
+      let cfi = this.rendition.location.end.cfi;
+      console.log(cfi);
+      this.settings?.SetEpubCfi(cfi);
+      this.settings?.SetEpubCounter(this.counter);
+    }
+  }
+
+  private async Play(text: string): Promise<void> {
+    let voice = await this.appService.GetVoice(text);
+    const url = URL.createObjectURL(voice);
+    if (!this.audio.paused) {
+      this.audio.pause();
+    }
+    this.audio.src = url;
+    this.audio.load();
+    this.audio.play();
   }
 
 }

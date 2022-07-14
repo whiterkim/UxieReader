@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { create } from 'xmlbuilder2';
 import { Book } from './model/book';
 import { AppSettings } from './app.settings';
+import Epub from 'epubjs';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +47,19 @@ export class AppService {
       return await this.GetBookWithName(lastBookName);
     }
 
+    return undefined;
+  }
+
+  public async LoadEpub(bookName: string | undefined): Promise<ePub.Book | undefined> {
+    if (bookName) {
+      localStorage.setItem('lastEpub', bookName);
+      return this.GetEpub(bookName);
+    }
+
+    let lastBookName = localStorage.getItem('lastEpub');
+    if (lastBookName) {
+      return this.GetEpub(lastBookName);
+    }
     return undefined;
   }
 
@@ -93,6 +107,12 @@ export class AppService {
       }
       index++;
     }
+  }
+
+  public GetEpub(name: string): ePub.Book {
+    let fullPath = 'assets/books/' + name;
+    var book = Epub(fullPath);
+    return book;
   }
 
   private GetRequestXmlBody(text: string): string {
