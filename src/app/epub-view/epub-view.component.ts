@@ -48,15 +48,15 @@ export class EpubViewComponent implements OnInit {
       flow: "scrolled",
     });
 
+    this.textSize = AppSettings.GetTextSize();
     this.settings = new AppSettings(bookName);
     let savedCfi = this.settings.GetEpubCfi();
     if (savedCfi) {
       await this.Navigate(savedCfi);
     } else {
       await this.rendition?.display();
+      this.RefreshStyle();
     }
-    this.textSize = AppSettings.GetTextSize();
-    this.AdjustTextSize();
 
     this.InitAudioElement();
     this.InitInputElement();
@@ -101,8 +101,6 @@ export class EpubViewComponent implements OnInit {
     this.paragraphs = [];
     let element = this.GetEpubElement();
     if (element) {
-      // Make dark background
-      element.setAttribute('style', 'background-color:#212529;color:white;');
       for (let i = 0; i < element.children.length; i++) {
         let child = element.children[i];
         if (child.textContent) {
@@ -114,16 +112,20 @@ export class EpubViewComponent implements OnInit {
     }
   }
 
-  private AdjustTextSize(): void {
-    this.GetEpubElement()
-      ?.parentElement
-      ?.setAttribute(
-        'style',
-        'font-size:' + this.textSize + 'rem'
-      );
+  private RefreshStyle(): void {
+    let style = '';
+    // Make dark background
+    style += 'background-color:#212529;';
+    // Make white text
+    style += 'color:white;'
+    // Adjust text size
+    style += 'font-size:' + this.textSize + 'rem';
+
+    this.GetEpubElement()?.setAttribute('style', style);
   }
 
   private async Navigate(cfi: string) : Promise<void> {
+    // Make sure element is there
     await this.rendition?.display(cfi);
     this.GetParagraphs();
     let savedCounter = this.settings?.GetEpubCounter();
@@ -132,6 +134,9 @@ export class EpubViewComponent implements OnInit {
     } else {
       this.counter = savedCounter;
     }
+    this.RefreshStyle();
+    // Navigate to CFI again after the style adjustment
+    await this.rendition?.display(cfi);
     this.MarkParagraph(this.counter);
   }
 
@@ -160,6 +165,7 @@ export class EpubViewComponent implements OnInit {
     }
     this.GetParagraphs();
     this.counter = isBeginning ? 0 : this.paragraphs.length - 1;
+    this.RefreshStyle();
     this.MarkParagraph(this.counter);
     this.SaveSettings();
     if (this.isPlaying) {
@@ -219,7 +225,7 @@ export class EpubViewComponent implements OnInit {
 
   OnTextSizeClicked(diff: number): void {
     this.textSize += diff;
-    this.AdjustTextSize();
+    this.RefreshStyle();
     AppSettings.SetTextSize(this.textSize);
   }
 
