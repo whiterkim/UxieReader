@@ -1,0 +1,57 @@
+<nav *ngIf="book" class="navbar navbar-expand navbar-dark fixed-top bg-dark" >
+  <div class="navbar-nav menu-bar">
+    <div ngbDropdown class="nav-link menu-button">
+      <i ngbDropdownToggle id="chaptersDropdownButton" class="bi bi-list menu-icon"></i>
+      <div ngbDropdownMenu class="dropdown-menu-dark menu-dropdown" aria-labelledby="chaptersDropdownButton">
+        <button ngbDropdownItem (click)="OnChangeBookClicked()">Change book</button>
+        <div class="dropdown-divider"></div>
+        <button ngbDropdownItem
+          *ngFor="let chapter of book.chapters"
+          (click)="OnChapterClicked(chapter)">{{book.paragraphs[chapter]}}</button>
+      </div>
+    </div>
+    <span class="menu-title text-white">Uxie Reader</span>
+    <div ngbDropdown class="nav-link menu-button">
+      <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill menu-icon"></i>
+      <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
+        <div ngbDropdownItem class="menu-item">
+          <span>Text size</span>
+          <span>
+            <i class="bi bi-dash-lg setting-icon" (click)="OnTextSizeClicked(-0.1)"></i>
+            <i class="bi bi-plus-lg setting-icon" (click)="OnTextSizeClicked(0.1)"></i>
+          </span>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div ngbDropdownItem class="menu-item">
+          <span>Change voice</span>
+          <span>
+            <i class="bi bi-chevron-left setting-icon" (click)="OnPreviousVoiceClicked()"></i>
+            <i class="bi bi-chevron-right setting-icon" (click)="OnNextVoiceClicked()"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand navbar-dark fixed-bottom bg-dark footer-bar">
+  <div class="navbar-nav">
+    <a class="nav-link" *ngIf="audio.paused" (click)="OnPlayClicked()"><i class="bi bi-play-fill footer-icon"></i></a>
+    <a class="nav-link" *ngIf="!audio.paused" (click)="OnPauseClicked()"><i class="bi bi-pause-fill footer-icon"></i></a>
+  </div>
+  <div class="navbar-nav">
+    <a class="nav-link" (click)="OnPreviousClicked()"><i class="bi bi-skip-start-fill footer-icon"></i></a>
+    <input class="form-control bg-secondary text-white footer-input" id="jump-input" value="{{counter}}">
+    <a class="nav-link" (click)="OnNextClicked()"><i class="bi bi-skip-end-fill footer-icon"></i></a>
+  </div>
+</nav>
+
+<audio hidden id="text-audio" controls="" autoplay="" name="media"><source src="" type="audio/mpeg"></audio>
+<div *ngIf="book" class="bg-dark viewer-frame">
+  <p class="text-white viewer-paragraph"
+    *ngFor="let index of paragraphDisplayed"
+    [ngStyle]="{'font-size.rem': textSize}">
+    <mark *ngIf="index === 0">{{book.paragraphs[counter + index]}}</mark>
+    <span *ngIf="index !== 0">{{book.paragraphs[counter + index]}}</span>
+  </p>
+</div>

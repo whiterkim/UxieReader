@@ -8,6 +8,7 @@ import { MainComponent } from './main/main.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BookListComponent } from './book-list/book-list.component';
 import { EpubViewComponent } from './epub-view/epub-view.component';
+import { TxtViewComponent } from './txt-view/txt-view.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { EpubViewComponent } from './epub-view/epub-view.component';
     MainComponent,
     BookListComponent,
     EpubViewComponent,
+    TxtViewComponent,
   ],
   imports: [
     BrowserModule,
