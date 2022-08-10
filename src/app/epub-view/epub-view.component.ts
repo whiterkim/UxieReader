@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Rendition } from 'epubjs';
+import Section from 'epubjs/types/section';
+import Spine from 'epubjs/types/spine';
 import { firstValueFrom } from 'rxjs';
 import { AppService } from '../app.service';
 import { AppSettings } from '../app.settings';
@@ -23,6 +25,7 @@ export class EpubViewComponent implements OnInit {
   jumpInput: HTMLInputElement | undefined;
 
   rendition: Rendition | undefined;
+  chapters: any[] = [];
   paragraphs: string[] = [];
   isPlaying: boolean = false;
 
@@ -60,6 +63,20 @@ export class EpubViewComponent implements OnInit {
 
     this.InitAudioElement();
     this.InitInputElement();
+
+    this.GetChapters(loadedBook.spine);
+  }
+
+  private GetChapters(spine: Spine): void {
+    this.chapters = [];
+    spine.each((item: Section, _: number) => {
+      let name = item.href.split('/')[1].split('.')[0];
+      let cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)'
+      this.chapters.push({
+        name: name,
+        cfi: cfi,
+      });
+    })
   }
 
   private InitAudioElement(): void {
@@ -117,9 +134,9 @@ export class EpubViewComponent implements OnInit {
     // Make dark background
     style += 'background-color:#212529;';
     // Make white text
-    style += 'color:white;'
+    style += 'color:white;';
     // Adjust text size
-    style += 'font-size:' + this.textSize + 'rem';
+    style += 'font-size:' + this.textSize + 'rem;';
 
     this.GetEpubElement()?.setAttribute('style', style);
   }
@@ -235,6 +252,10 @@ export class EpubViewComponent implements OnInit {
 
   OnNextVoiceClicked(): void {
     AppSettings.SetNextVoice();
+  }
+
+  OnChapterClicked(chapter: any): void {
+    this.Navigate(chapter.cfi);
   }
 
   private SaveSettings(): void {

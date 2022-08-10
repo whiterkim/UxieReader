@@ -5,8 +5,9 @@
       <div ngbDropdownMenu class="dropdown-menu-dark menu-dropdown" aria-labelledby="chaptersDropdownButton">
         <button ngbDropdownItem (click)="OnChangeBookClicked()">Change book</button>
         <div class="dropdown-divider"></div>
-        <button ngbDropdownItem (click)="OnPreviousSectionClicked()">Previous chapter</button>
-        <button ngbDropdownItem (click)="OnNextSectionClicked()">Next chapter</button>
+        <button ngbDropdownItem
+          *ngFor="let chapter of chapters"
+          (click)="OnChapterClicked(chapter)">{{chapter.name}}</button>
       </div>
     </div>
     <span class="menu-title text-white">Uxie Reader</span>
