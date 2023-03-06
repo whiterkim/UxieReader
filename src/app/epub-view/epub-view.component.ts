@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Rendition } from 'epubjs';
 import Section from 'epubjs/types/section';
@@ -7,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { AppService } from '../app.service';
 import { AppSettings } from '../app.settings';
 import { AppUtils } from '../app.utils';
+import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
 
 @Component({
   selector: 'app-epub-view',
@@ -19,6 +21,7 @@ export class EpubViewComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private appService: AppService,
     private router: Router,
+    public dialog: MatDialog,
   ) { }
 
   audio: HTMLAudioElement = new Audio();
@@ -269,6 +272,12 @@ export class EpubViewComponent implements OnInit {
 
   private async Play(text: string): Promise<void> {
     let voice = await this.appService.GetVoice(text);
+    if (!voice.size) {
+      // If voice.size is undefined, it is likely the Azure service call failed.
+      this.dialog.open(KeyDialogComponent);
+      this.isPlaying = false;
+      return;
+    }
     const url = URL.createObjectURL(voice);
     if (!this.audio.paused) {
       this.audio.pause();

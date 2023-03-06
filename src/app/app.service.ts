@@ -17,21 +17,22 @@ export class AppService {
 
   public GetBookPaths() : string[] {
     let books: string[] = [
-      '追忆似水年华',
-      '新约·魔法禁书目录 10',
-      '新约·魔法禁书目录 11',
-      '新约·魔法禁书目录 12',
-      '新约·魔法禁书目录 13',
-      '新约·魔法禁书目录 14',
-      '新约·魔法禁书目录 15',
-      '新约·魔法禁书目录 16',
-      '新约·魔法禁书目录 17',
-      '新约·魔法禁书目录 18',
-      '新约·魔法禁书目录 19',
-      '新约·魔法禁书目录 20',
-      '新约·魔法禁书目录 21',
-      '新约·魔法禁书目录 22',
-    ];
+      '新约 某魔法的禁书目录 10X.epub',
+      '新约 某魔法的禁书目录 11X.epub',
+      '新约 某魔法的禁书目录 12X.epub',
+      '新约 某魔法的禁书目录 13X.epub',
+      '新约 某魔法的禁书目录 14X.epub',
+      '新约 某魔法的禁书目录 15X.epub',
+      '新约 某魔法的禁书目录 16X.epub',
+      '新约 某魔法的禁书目录 17X.epub',
+      '新约 某魔法的禁书目录 18X.epub',
+      '新约 某魔法的禁书目录 19X.epub',
+      '新约 某魔法的禁书目录 20X.epub',
+      '新约 某魔法的禁书目录 21X.epub',
+      '新约 某魔法的禁书目录 22X.epub',
+      '新约 某魔法的禁书目录 22rX.epub',
+      '当我谈跑步时，我在谈些什么.epub',
+    ]
     return books;
   }
 
@@ -129,7 +130,7 @@ export class AppService {
   public async GetVoice(text: string): Promise<Blob> {
     const headers = {
       'Accept': '*/*',
-      'Ocp-Apim-Subscription-Key': 'd0074ee2b178407291078b0e46fd342c',
+      'Ocp-Apim-Subscription-Key': AppSettings.GetAzureKey(),
       'X-Microsoft-OutputFormat': 'audio-48khz-192kbitrate-mono-mp3',
       'Content-Type': 'application/ssml+xml',
     };
@@ -139,6 +140,8 @@ export class AppService {
     return await lastValueFrom(this.http.post('https://westus2.tts.speech.microsoft.com/cognitiveservices/v1', body, {
       headers: headers,
       responseType: 'blob',
-    }));
+    })).catch(_ => {
+      return {} as Promise<Blob>;
+    });
   }
 }

@@ -7,8 +7,8 @@
     <div ngbDropdown class="nav-link menu-button">
       <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill menu-icon"></i>
       <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
-        <div ngbDropdownItem class="menu-item">
-          Unix Reader
+        <div ngbDropdownItem class="menu-item" (click)="OnEnterKeyClicked()">
+          Enter key...
         </div>
         <div class="dropdown-divider"></div>
         <div ngbDropdownItem class="menu-item">

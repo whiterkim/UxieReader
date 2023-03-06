@@ -94,4 +94,16 @@ export class AppSettings {
     let newIndex = (currentIndex + 1) % length;
     AppSettings.SetVoiceIndex(newIndex);
   }
+
+  public static GetAzureKey(): string {
+    let savedAzureKey = localStorage.getItem('azure-key');
+    if (savedAzureKey !== null) {
+      return savedAzureKey;
+    }
+    return '';
+  }
+
+  public static SetAzureKey(key: string): void {
+    localStorage.setItem('azure-key', key);
+  }
 }
