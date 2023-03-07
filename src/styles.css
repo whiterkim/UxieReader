@@ -1,22 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('../node_modules/bootstrap-icons/font/bootstrap-icons.css');
 
-@font-face {
-    font-family: 'SourceHanSerif';
-    font-weight: normal;
-    src: url('./assets/SourceHan/SourceHanSerif.ttc');
-}
-
-@font-face {
-    font-family: 'SourceHanSans';
-    font-weight: normal;
-    src: url('./assets/SourceHan/SourceHanSans.ttc');
-}
-
-body {
-    font-family: 'SourceHanSans', sans-serif;
-}
-
 .dropdown-toggle::after {
     content: none;
 }
