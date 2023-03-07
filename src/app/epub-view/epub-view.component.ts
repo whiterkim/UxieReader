@@ -272,7 +272,7 @@ export class EpubViewComponent implements OnInit {
 
   private async Play(text: string): Promise<void> {
     let voice = await this.appService.GetVoice(text);
-    if (!voice.size) {
+    if (voice.size === undefined) {
       // If voice.size is undefined, it is likely the Azure service call failed.
       this.dialog.open(KeyDialogComponent);
       this.isPlaying = false;
