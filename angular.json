@@ -77,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "reader-app:build:production"
+              "buildTarget": "reader-app:build:production"
             },
             "development": {
-              "browserTarget": "reader-app:build:development"
+              "buildTarget": "reader-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -88,7 +88,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "reader-app:build"
+            "buildTarget": "reader-app:build"
           }
         },
         "test": {
@@ -115,7 +115,6 @@
       }
     }
   },
-  "defaultProject": "reader-app",
   "cli": {
     "analytics": false
   }
