@@ -1,3 +1,5 @@
+import { Character } from "./model/character";
+
 export class AppSettings {
   constructor(bookName: string) {
     this.bookName = bookName;
@@ -57,8 +59,17 @@ export class AppSettings {
     localStorage.setItem('textSize', size.toString());
   }
 
-  public static GetVoiceName(): string {
-    return AppSettings.VoiceList()[AppSettings.GetVoiceIndex()];
+  public static GetVoiceName(character: Character): string {
+    if (character.speaker === 'narration') {
+      return AppSettings.VoiceList()[0];
+    }
+    
+    if (character.gender === 'male') {
+      return AppSettings.VoiceList()[1];
+    }
+
+    // female 1
+    return AppSettings.VoiceList()[2];
   }
 
   private static GetVoiceIndex(): number {
@@ -76,8 +87,11 @@ export class AppSettings {
 
   private static VoiceList(): string[] {
     return [
-      'zh-CN-YunxiNeural',
-      'zh-CN-XiaoxiaoNeural',
+      'zh-CN-XiaoxiaoMultilingualNeural', // narration
+      'zh-CN-YunyiMultilingualNeural', // male
+      'zh-CN-XiaoxiaoMultilingualNeural', // female 1
+      'zh-CN-XiaochenMultilingualNeural', // female 2
+      // xiaoyu
     ]
   }
 
@@ -95,15 +109,27 @@ export class AppSettings {
     AppSettings.SetVoiceIndex(newIndex);
   }
 
-  public static GetAzureKey(): string {
-    let savedAzureKey = localStorage.getItem('azure-key');
-    if (savedAzureKey !== null) {
-      return savedAzureKey;
+  public static GetAzureCognitiveServiceKey(): string {
+    let savedAzureCognitiveServiceKey = localStorage.getItem('azure-cognitive-service-key');
+    if (savedAzureCognitiveServiceKey !== null) {
+      return savedAzureCognitiveServiceKey;
     }
     return '';
   }
 
-  public static SetAzureKey(key: string): void {
-    localStorage.setItem('azure-key', key);
+  public static GetAzureOpenAIKey(): string {
+    let savedAzureOpenAIKey = localStorage.getItem('azure-openai-key');
+    if (savedAzureOpenAIKey !== null) {
+      return savedAzureOpenAIKey;
+    }
+    return '';
+  }
+
+  public static SetCognitiveServiceAzureKey(key: string): void {
+    localStorage.setItem('azure-cognitive-service-key', key);
+  }
+
+  public static SetAzureOpenAIKey(key: string): void {
+    localStorage.setItem('azure-openai-key', key);
   }
 }

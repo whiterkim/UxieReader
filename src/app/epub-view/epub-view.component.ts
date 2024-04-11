@@ -9,6 +9,7 @@ import { AppService } from '../app.service';
 import { AppSettings } from '../app.settings';
 import { AppUtils } from '../app.utils';
 import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
+import { CharacterIdentification } from '../character-identification';
 
 @Component({
   selector: 'app-epub-view',
@@ -36,6 +37,8 @@ export class EpubViewComponent implements OnInit {
   textSize: number = 1;
   counter: number = 0;
 
+  characterIdentification: CharacterIdentification | undefined;
+
   async ngOnInit(): Promise<void> {
     // Get book name from params
     let params = await firstValueFrom(this.activatedRoute.params);
@@ -61,6 +64,7 @@ export class EpubViewComponent implements OnInit {
       await this.Navigate(savedCfi);
     } else {
       await this.rendition?.display();
+      this.GetParagraphs();
       this.RefreshStyle();
     }
 
@@ -68,6 +72,9 @@ export class EpubViewComponent implements OnInit {
     this.InitInputElement();
 
     this.GetChapters(loadedBook.spine);
+
+    this.characterIdentification =
+      new CharacterIdentification(this.appService, this.paragraphs, this.counter);
   }
 
   private GetChapters(spine: Spine): void {
@@ -185,11 +192,12 @@ export class EpubViewComponent implements OnInit {
     }
     this.GetParagraphs();
     this.counter = isBeginning ? 0 : this.paragraphs.length - 1;
+    this.characterIdentification = new CharacterIdentification(this.appService, this.paragraphs, this.counter);
     this.RefreshStyle();
     this.MarkParagraph(this.counter);
     this.SaveSettings();
     if (this.isPlaying) {
-      this.Play(this.paragraphs[this.counter]);
+      this.Play(this.counter);
     }
   }
 
@@ -199,7 +207,7 @@ export class EpubViewComponent implements OnInit {
 
   OnPlayClicked(): void {
     this.isPlaying = true;
-    this.Play(this.paragraphs[this.counter]);
+    this.Play(this.counter);
   }
 
   OnPauseClicked(): void {
@@ -217,7 +225,7 @@ export class EpubViewComponent implements OnInit {
     this.MarkParagraph(this.counter);
     this.SaveSettings();
     if (this.isPlaying) {
-      this.Play(this.paragraphs[this.counter]);
+      this.Play(this.counter);
     }
   }
 
@@ -231,7 +239,7 @@ export class EpubViewComponent implements OnInit {
     this.MarkParagraph(this.counter);
     this.SaveSettings();
     if (this.isPlaying) {
-      this.Play(this.paragraphs[this.counter]);
+      this.Play(this.counter);
     }
   }
 
@@ -249,14 +257,6 @@ export class EpubViewComponent implements OnInit {
     AppSettings.SetTextSize(this.textSize);
   }
 
-  OnPreviousVoiceClicked(): void {
-    AppSettings.SetPreviousVoice();
-  }
-
-  OnNextVoiceClicked(): void {
-    AppSettings.SetNextVoice();
-  }
-
   OnChapterClicked(chapter: any): void {
     this.Navigate(chapter.cfi);
   }
@@ -270,8 +270,10 @@ export class EpubViewComponent implements OnInit {
     }
   }
 
-  private async Play(text: string): Promise<void> {
-    let voice = await this.appService.GetVoice(text);
+  private async Play(conter: number): Promise<void> {
+    const text = this.paragraphs[conter];
+    const character = this.characterIdentification?.GetCharacter(conter) ?? CharacterIdentification.Default();
+    let voice = await this.appService.GetVoice(text, character);
     if (voice.size === undefined) {
       // If voice.size is undefined, it is likely the Azure service call failed.
       this.dialog.open(KeyDialogComponent);

@@ -12,19 +12,22 @@ export class KeyDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<KeyDialogComponent>) { }
 
   azureKey: string|undefined = undefined;
+  azureOpenAIKey: string|undefined = undefined;
 
   ngOnInit(): void {
-    this.azureKey = AppSettings.GetAzureKey();
+    this.azureKey = AppSettings.GetAzureCognitiveServiceKey();
+    this.azureOpenAIKey = AppSettings.GetAzureOpenAIKey();
   }
 
   OnEnterClicked(): void {
-    AppSettings.SetAzureKey(this.GetKey());
+    AppSettings.SetCognitiveServiceAzureKey(this.GetKey('cognitive-service-key-input'));
+    AppSettings.SetAzureOpenAIKey(this.GetKey('openai-key-input'));
     this.dialogRef.close();
   }
 
-  private GetKey(): string {
+  private GetKey(elementId: string): string {
     let key = '';
-    let element = document.getElementById('key-input');
+    let element = document.getElementById(elementId);
     if (element instanceof HTMLInputElement) {
       key = element.value;
     }
