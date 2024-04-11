@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppService } from '../app.service';
 import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/legacy-dialog';
 
 @Component({
   selector: 'app-book-list',
