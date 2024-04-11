@@ -115,5 +115,8 @@
       }
     }
   },
-  "defaultProject": "reader-app"
+  "defaultProject": "reader-app",
+  "cli": {
+    "analytics": false
+  }
 }
