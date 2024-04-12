@@ -10,6 +10,7 @@ import { AppSettings } from '../app.settings';
 import { AppUtils } from '../app.utils';
 import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
 import { CharacterIdentification } from '../character-identification';
+import { AudioGeneration } from '../audio-generation';
 
 @Component({
   selector: 'app-epub-view',
@@ -37,7 +38,9 @@ export class EpubViewComponent implements OnInit {
   textSize: number = 1;
   counter: number = 0;
 
+  audioGeneration: AudioGeneration | undefined;
   characterIdentification: CharacterIdentification | undefined;
+  characterIdentificationInitialized: boolean = false;
 
   async ngOnInit(): Promise<void> {
     // Get book name from params
@@ -73,8 +76,7 @@ export class EpubViewComponent implements OnInit {
 
     this.GetChapters(loadedBook.spine);
 
-    this.characterIdentification =
-      new CharacterIdentification(this.appService, this.paragraphs, this.counter);
+    this.TriggerInitialization();
   }
 
   private GetChapters(spine: Spine): void {
@@ -192,7 +194,7 @@ export class EpubViewComponent implements OnInit {
     }
     this.GetParagraphs();
     this.counter = isBeginning ? 0 : this.paragraphs.length - 1;
-    this.characterIdentification = new CharacterIdentification(this.appService, this.paragraphs, this.counter);
+    this.TriggerInitialization();
     this.RefreshStyle();
     this.MarkParagraph(this.counter);
     this.SaveSettings();
@@ -270,10 +272,10 @@ export class EpubViewComponent implements OnInit {
     }
   }
 
-  private async Play(conter: number): Promise<void> {
-    const text = this.paragraphs[conter];
-    const character = this.characterIdentification?.GetCharacter(conter) ?? CharacterIdentification.Default();
-    let voice = await this.appService.GetVoice(text, character);
+  private async Play(counter: number): Promise<void> {
+    const text = this.paragraphs[counter];
+    const voice = await this.audioGeneration?.GetAudio(counter)
+      ?? await this.appService.GetVoice(text, CharacterIdentification.Default());
     if (voice.size === undefined) {
       // If voice.size is undefined, it is likely the Azure service call failed.
       this.dialog.open(KeyDialogComponent);
@@ -287,6 +289,18 @@ export class EpubViewComponent implements OnInit {
     this.audio.src = url;
     this.audio.load();
     this.audio.play();
+  }
+
+  private async TriggerInitialization(): Promise<void> {
+    this.characterIdentification =
+      new CharacterIdentification(this.appService, this.paragraphs, this.counter);
+
+    this.audioGeneration = new AudioGeneration(
+      this.appService, this.paragraphs, this.characterIdentification);
+
+    this.characterIdentificationInitialized = false;
+    await this.characterIdentification.Init(this.counter, 10);
+    this.characterIdentificationInitialized = true;
   }
 
 }

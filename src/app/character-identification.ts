@@ -12,7 +12,6 @@ export class CharacterIdentification {
         this.appService = appService;
         this.characterMap = {};
         this.paragraphs = paragraphs;
-        this.Init(counter);
     }
 
     static Default(): Character {
@@ -24,9 +23,9 @@ export class CharacterIdentification {
         };
     }
 
-    async Init(counter: number) {
+    async Init(counter: number, step: number = 20) {
         const startCounter = counter;//Math.max(0, counter - 5);
-        const endCounter = startCounter + 20;
+        const endCounter = startCounter + step;
         await this.TriggerCharacterIdentification(startCounter, endCounter);
     }
 
