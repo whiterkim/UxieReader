@@ -10,8 +10,7 @@
           (click)="OnChapterClicked(chapter)">{{chapter.name}}</button>
       </div>
     </div>
-    <span class="menu-title text-white" *ngIf="characterIdentificationInitialized">Uxie Reader</span>
-    <span class="menu-title text-white" *ngIf="!characterIdentificationInitialized">Loading...</span>
+    <span class="menu-title text-white">{{characterIdentificationState}}</span>
     <div ngbDropdown class="nav-link menu-button">
       <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill menu-icon"></i>
       <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">

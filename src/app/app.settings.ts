@@ -87,7 +87,7 @@ export class AppSettings {
 
   private static VoiceList(): string[] {
     return [
-      'zh-CN-XiaoxiaoMultilingualNeural', // narration
+      'zh-CN-XiaochenMultilingualNeural', // narration
       'zh-CN-YunyiMultilingualNeural', // male
       'zh-CN-XiaoxiaoMultilingualNeural', // female 1
       'zh-CN-XiaochenMultilingualNeural', // female 2

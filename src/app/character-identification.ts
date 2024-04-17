@@ -3,14 +3,16 @@ import { Character } from "./model/character";
 
 export class CharacterIdentification {
     appService: AppService;
+    availableCharacters: any[];
     characterMap: { [key: number]: Character } = {};
     paragraphs: string[] = [];
     processedUnitlCounter: number = 0;
     restCallLock: boolean = false;
 
-    constructor(appService: AppService, paragraphs: string[], counter: number) {
-        this.appService = appService;
+    constructor(appService: AppService, availableCharacters: any[], paragraphs: string[]) {
         this.characterMap = {};
+        this.appService = appService;
+        this.availableCharacters = availableCharacters;
         this.paragraphs = paragraphs;
     }
 
@@ -32,7 +34,7 @@ export class CharacterIdentification {
     public GetCharacter(counter: number): Character {
         console.log('GetCharacter ', counter)
         if (this.characterMap[counter]) {
-            console.log('GetCharacter found ', this.characterMap[counter]);
+            console.log('GetCharacter found ', { ...this.characterMap[counter], text: this.paragraphs[counter]});
             if (this.processedUnitlCounter <= counter + 10) {
                 console.log('call Init auto ', this.processedUnitlCounter);
                 this.Init(this.processedUnitlCounter);
@@ -56,7 +58,7 @@ export class CharacterIdentification {
         // [startCounter, endCounter)
         const processingParagraphs = this.paragraphs.slice(startCounter, endCounter);
         try {
-            const characters = await this.appService.IdentifyCharacters(processingParagraphs);
+            const characters = await this.appService.IdentifyCharacters(this.availableCharacters, processingParagraphs);
             this.processedUnitlCounter = endCounter;
             for (let i = 0; i < characters.length; i++) {
                 const paragraphIndex = startCounter + i;

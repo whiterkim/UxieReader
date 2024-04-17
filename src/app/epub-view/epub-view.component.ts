@@ -40,7 +40,7 @@ export class EpubViewComponent implements OnInit {
 
   audioGeneration: AudioGeneration | undefined;
   characterIdentification: CharacterIdentification | undefined;
-  characterIdentificationInitialized: boolean = false;
+  characterIdentificationState: string = 'Uxie Reader';
 
   async ngOnInit(): Promise<void> {
     // Get book name from params
@@ -292,15 +292,19 @@ export class EpubViewComponent implements OnInit {
   }
 
   private async TriggerInitialization(): Promise<void> {
+    this.characterIdentificationState = 'Characters Loading...';
+    const availableCharacters = await this.appService.ListCharacters(this.paragraphs);
+
     this.characterIdentification =
-      new CharacterIdentification(this.appService, this.paragraphs, this.counter);
+      new CharacterIdentification(this.appService, availableCharacters, this.paragraphs);
 
     this.audioGeneration = new AudioGeneration(
       this.appService, this.paragraphs, this.characterIdentification);
 
-    this.characterIdentificationInitialized = false;
+    this.characterIdentificationState = 'Identifying Characters...';
     await this.characterIdentification.Init(this.counter, 10);
-    this.characterIdentificationInitialized = true;
+
+    this.characterIdentificationState = 'Uxie Reader';
   }
 
 }
