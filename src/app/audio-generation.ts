@@ -3,7 +3,7 @@ import { CharacterIdentification } from "./character-identification";
 
 export class AudioGeneration {
     appService: AppService;
-    voiceMap: { [key: number]: Blob } = {};
+    voiceMap: { [key: number]: Promise<Blob> | Blob } = {};
     paragraphs: string[] = [];
     characterIdentification: CharacterIdentification;
 
@@ -17,20 +17,25 @@ export class AudioGeneration {
     public async GetAudio(counter: number): Promise<Blob> {
         console.log('GetAudio ', counter);
         if (!this.voiceMap[counter]) {
-            console.log('GetAudio not found ', this.voiceMap[counter]);
+            console.log('GetAudio not found ', counter);
             await this.GenerateAudio(counter);
         }
 
         // Generate next audio in advance
         this.GenerateAudio(counter + 1);
+        this.GenerateAudio(counter + 2);
+
         return this.voiceMap[counter];
     }
 
-    public async GenerateAudio(counter: number): Promise<Blob> {
+    public async GenerateAudio(counter: number): Promise<void> {
+        if (this.voiceMap[counter]) {
+            console.log('GenerateAudio found ', counter);
+            return;
+        }
         console.log('GenerateAudio ', counter);
         const character = this.characterIdentification.GetCharacter(counter);
-        const audio = await this.appService.GetVoice(this.paragraphs[counter], character);
-        this.voiceMap[counter] = audio;
-        return audio;
+        this.voiceMap[counter] = this.appService.GetVoice(this.paragraphs[counter], character);
+        this.voiceMap[counter] = await this.voiceMap[counter];
     }
 }
