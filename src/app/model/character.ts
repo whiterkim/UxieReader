@@ -1,6 +1,5 @@
 export interface Character {
-    textIndex: number;
-    speaker: string;
+    character: string;
     gender: string;
-    target: string;
+    alias: string[];
 }

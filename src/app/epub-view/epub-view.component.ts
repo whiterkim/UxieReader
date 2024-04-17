@@ -9,7 +9,7 @@ import { AppService } from '../app.service';
 import { AppSettings } from '../app.settings';
 import { AppUtils } from '../app.utils';
 import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
-import { CharacterIdentification } from '../character-identification';
+import { SpeakerIdentification } from '../speaker-identification';
 import { AudioGeneration } from '../audio-generation';
 
 @Component({
@@ -39,7 +39,7 @@ export class EpubViewComponent implements OnInit {
   counter: number = 0;
 
   audioGeneration: AudioGeneration | undefined;
-  characterIdentification: CharacterIdentification | undefined;
+  characterIdentification: SpeakerIdentification | undefined;
   characterIdentificationState: string = 'Uxie Reader';
 
   async ngOnInit(): Promise<void> {
@@ -275,7 +275,7 @@ export class EpubViewComponent implements OnInit {
   private async Play(counter: number): Promise<void> {
     const text = this.paragraphs[counter];
     const voice = await this.audioGeneration?.GetAudio(counter)
-      ?? await this.appService.GetVoice(text, CharacterIdentification.Default());
+      ?? await this.appService.GetVoice(text, SpeakerIdentification.Default());
     if (voice.size === undefined) {
       // If voice.size is undefined, it is likely the Azure service call failed.
       this.dialog.open(KeyDialogComponent);
@@ -296,7 +296,7 @@ export class EpubViewComponent implements OnInit {
     const availableCharacters = await this.appService.ListCharacters(this.paragraphs);
 
     this.characterIdentification =
-      new CharacterIdentification(this.appService, availableCharacters, this.paragraphs);
+      new SpeakerIdentification(this.appService, availableCharacters, this.paragraphs);
 
     this.audioGeneration = new AudioGeneration(
       this.appService, this.paragraphs, this.characterIdentification);

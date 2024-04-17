@@ -1,22 +1,22 @@
 import { AppService } from "./app.service";
-import { Character } from "./model/character";
+import { Speaker } from "./model/speaker";
 
-export class CharacterIdentification {
+export class SpeakerIdentification {
     appService: AppService;
     availableCharacters: any[];
-    characterMap: { [key: number]: Character } = {};
+    speakerMap: { [key: number]: Speaker } = {};
     paragraphs: string[] = [];
     processedUnitlCounter: number = 0;
     restCallLock: boolean = false;
 
     constructor(appService: AppService, availableCharacters: any[], paragraphs: string[]) {
-        this.characterMap = {};
+        this.speakerMap = {};
         this.appService = appService;
         this.availableCharacters = availableCharacters;
         this.paragraphs = paragraphs;
     }
 
-    static Default(): Character {
+    static Default(): Speaker {
         return {
             textIndex: -1,
             speaker: 'narration',
@@ -28,29 +28,29 @@ export class CharacterIdentification {
     async Init(counter: number, step: number = 20) {
         const startCounter = counter;//Math.max(0, counter - 5);
         const endCounter = startCounter + step;
-        await this.TriggerCharacterIdentification(startCounter, endCounter);
+        await this.TriggerSpeakerIdentification(startCounter, endCounter);
     }
 
-    public GetCharacter(counter: number): Character {
-        console.log('GetCharacter ', counter)
-        if (this.characterMap[counter]) {
-            console.log('GetCharacter found ', { ...this.characterMap[counter], text: this.paragraphs[counter]});
+    public GetSpeaker(counter: number): Speaker {
+        console.log('GetSpeaker ', counter)
+        if (this.speakerMap[counter]) {
+            console.log('GetSpeaker found ', { ...this.speakerMap[counter], text: this.paragraphs[counter]});
             if (this.processedUnitlCounter <= counter + 10) {
                 console.log('call Init auto ', this.processedUnitlCounter);
                 this.Init(this.processedUnitlCounter);
             }
-            return this.characterMap[counter];
+            return this.speakerMap[counter];
         }
 
-        console.log('GetCharacter not found ', counter);
+        console.log('GetSpeaker not found ', counter);
         this.Init(counter);
-        return CharacterIdentification.Default();
+        return SpeakerIdentification.Default();
     }
 
-    private async TriggerCharacterIdentification(startCounter: number, endCounter: number) {
-        console.log('TriggerCharacterIdentification ', startCounter, endCounter);
+    private async TriggerSpeakerIdentification(startCounter: number, endCounter: number) {
+        console.log('TriggerSpeakerIdentification ', startCounter, endCounter);
         if (this.restCallLock) {
-            console.log('TriggerCharacterIdentification locked');
+            console.log('TriggerSpeakerIdentification locked');
             return;
         }
 
@@ -58,17 +58,17 @@ export class CharacterIdentification {
         // [startCounter, endCounter)
         const processingParagraphs = this.paragraphs.slice(startCounter, endCounter);
         try {
-            const characters = await this.appService.IdentifyCharacters(this.availableCharacters, processingParagraphs);
+            const speakers = await this.appService.IdentifySpeakers(this.availableCharacters, processingParagraphs);
             this.processedUnitlCounter = endCounter;
-            for (let i = 0; i < characters.length; i++) {
+            for (let i = 0; i < speakers.length; i++) {
                 const paragraphIndex = startCounter + i;
-                this.characterMap[paragraphIndex] = characters[i];
+                this.speakerMap[paragraphIndex] = speakers[i];
             }
         } catch (error) {
-            console.log('TriggerCharacterIdentification error ', error);
+            console.log('TriggerSpeakerIdentification error ', error);
         }
 
-        console.log('TriggerCharacterIdentification done');
+        console.log('TriggerSpeakerIdentification done');
         this.restCallLock = false;
     }
 }

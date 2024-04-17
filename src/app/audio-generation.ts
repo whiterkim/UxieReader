@@ -1,13 +1,13 @@
 import { AppService } from "./app.service";
-import { CharacterIdentification } from "./character-identification";
+import { SpeakerIdentification } from "./speaker-identification";
 
 export class AudioGeneration {
     appService: AppService;
     voiceMap: { [key: number]: Promise<Blob> | Blob } = {};
     paragraphs: string[] = [];
-    characterIdentification: CharacterIdentification;
+    characterIdentification: SpeakerIdentification;
 
-    constructor(appService: AppService, paragraphs: string[], characterIdentification: CharacterIdentification) {
+    constructor(appService: AppService, paragraphs: string[], characterIdentification: SpeakerIdentification) {
         this.appService = appService;
         this.voiceMap = {};
         this.paragraphs = paragraphs;
@@ -34,7 +34,7 @@ export class AudioGeneration {
             return;
         }
         console.log('GenerateAudio ', counter);
-        const character = this.characterIdentification.GetCharacter(counter);
+        const character = this.characterIdentification.GetSpeaker(counter);
         this.voiceMap[counter] = this.appService.GetVoice(this.paragraphs[counter], character);
         this.voiceMap[counter] = await this.voiceMap[counter];
     }

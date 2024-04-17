@@ -1,4 +1,4 @@
-import { Character } from "./model/character";
+import { Speaker } from "./model/speaker";
 
 export class AppSettings {
   constructor(bookName: string) {
@@ -59,12 +59,12 @@ export class AppSettings {
     localStorage.setItem('textSize', size.toString());
   }
 
-  public static GetVoiceName(character: Character): string {
-    if (character.speaker === 'narration') {
+  public static GetVoiceName(speaker: Speaker): string {
+    if (speaker.speaker === 'narration') {
       return AppSettings.VoiceList()[0];
     }
     
-    if (character.gender === 'male') {
+    if (speaker.gender === 'male') {
       return AppSettings.VoiceList()[1];
     }
 
