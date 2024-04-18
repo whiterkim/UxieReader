@@ -60,53 +60,56 @@ export class AppSettings {
   }
 
   public static GetVoiceName(speaker: Speaker): string {
-    if (speaker.speaker === 'narration') {
-      return AppSettings.VoiceList()[0];
+    let role = 'narration';
+    if (speaker.speaker !== 'narration') {
+      role = speaker.gender;
     }
-    
-    if (speaker.gender === 'male') {
-      return AppSettings.VoiceList()[1];
-    }
-
-    // female 1
-    return AppSettings.VoiceList()[2];
+    return AppSettings.GetVoice(role);
   }
 
-  private static GetVoiceIndex(): number {
-    let savedVoiceIndex = localStorage.getItem('voiceIndex');
-    if (savedVoiceIndex !== null) {
-      return +savedVoiceIndex;
+  public static GetVoice(role: string): string {
+    let savedVoice = localStorage.getItem(role);
+    if (savedVoice !== null) {
+      return savedVoice;
     }
     // Set Yunxi as the default voice.
-    return 0;
+    return AppSettings.VoiceList()[0];
   }
 
-  private static SetVoiceIndex(index: number): void {
-    localStorage.setItem('voiceIndex', index.toString());
+  public static SetVoice(role: string, voice: string): void {
+    localStorage.setItem(role, voice);
   }
 
-  private static VoiceList(): string[] {
+  public static VoiceList(): string[] {
     return [
-      'zh-CN-XiaochenMultilingualNeural', // narration
-      'zh-CN-YunyiMultilingualNeural', // male
-      'zh-CN-XiaoxiaoMultilingualNeural', // female 1
-      'zh-CN-XiaochenMultilingualNeural', // female 2
-      // xiaoyu
+      'zh-CN-YunyiMultilingualNeural',
+      'zh-CN-XiaochenMultilingualNeural',
+      'zh-CN-XiaoyuMultilingualNeural',
+      'zh-CN-XiaoxiaoMultilingualNeural',
+      'zh-CN-XiaoxiaoNeural',
+      'zh-CN-YunxiNeural',
+      'zh-CN-YunjianNeural',
+      'zh-CN-XiaoyiNeural',
+      'zh-CN-YunyangNeural',
+      'zh-CN-XiaochenNeural',
+      'zh-CN-XiaohanNeural',
+      'zh-CN-XiaomengNeural',
+      'zh-CN-XiaomoNeural',
+      'zh-CN-XiaoqiuNeural',
+      'zh-CN-XiaoruiNeural',
+      'zh-CN-XiaoshuangNeural',
+      'zh-CN-XiaoyanNeural',
+      'zh-CN-XiaoyouNeural',
+      'zh-CN-XiaozhenNeural',
+      'zh-CN-YunfengNeural',
+      'zh-CN-YunhaoNeural',
+      'zh-CN-YunxiaNeural',
+      'zh-CN-YunyeNeural',
+      'zh-CN-YunzeNeural',
+      'zh-CN-XiaorouNeural',
+      'zh-CN-YunjieNeural',
+      'zh-CN-XiaoxuanNeural',
     ]
-  }
-
-  public static SetPreviousVoice(): void {
-    let length = AppSettings.VoiceList().length;
-    let currentIndex = AppSettings.GetVoiceIndex();
-    let newIndex = (currentIndex + length - 1) % length;
-    AppSettings.SetVoiceIndex(newIndex);
-  }
-
-  public static SetNextVoice(): void {
-    let length = AppSettings.VoiceList().length;
-    let currentIndex = AppSettings.GetVoiceIndex();
-    let newIndex = (currentIndex + 1) % length;
-    AppSettings.SetVoiceIndex(newIndex);
   }
 
   public static GetAzureCognitiveServiceKey(): string {

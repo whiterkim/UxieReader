@@ -123,13 +123,13 @@ export class TxtViewComponent implements OnInit {
     AppSettings.SetTextSize(this.textSize);
   }
 
-  OnPreviousVoiceClicked(): void {
-    AppSettings.SetPreviousVoice();
-  }
+  // OnPreviousVoiceClicked(): void {
+  //   AppSettings.SetPreviousVoice();
+  // }
 
-  OnNextVoiceClicked(): void {
-    AppSettings.SetNextVoice();
-  }
+  // OnNextVoiceClicked(): void {
+  //   AppSettings.SetNextVoice();
+  // }
 
   private async Play(text: string): Promise<void> {
     let voice = await this.appService.GetVoice(text);

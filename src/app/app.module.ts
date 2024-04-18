@@ -12,6 +12,7 @@ import { BookListComponent } from './book-list/book-list.component';
 import { EpubViewComponent } from './epub-view/epub-view.component';
 import { TxtViewComponent } from './txt-view/txt-view.component';
 import { KeyDialogComponent } from './key-dialog/key-dialog.component';
+import { VoiceDialogComponent } from './voice-dialog/voice-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { KeyDialogComponent } from './key-dialog/key-dialog.component';
     EpubViewComponent,
     TxtViewComponent,
     KeyDialogComponent,
+    VoiceDialogComponent,
   ],
   imports: [
     BrowserModule,

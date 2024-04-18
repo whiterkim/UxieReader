@@ -11,6 +11,7 @@ import { AppUtils } from '../app.utils';
 import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
 import { SpeakerIdentification } from '../speaker-identification';
 import { AudioGeneration } from '../audio-generation';
+import { VoiceDialogComponent } from '../voice-dialog/voice-dialog.component';
 
 @Component({
   selector: 'app-epub-view',
@@ -257,6 +258,10 @@ export class EpubViewComponent implements OnInit {
     this.textSize += diff;
     this.RefreshStyle();
     AppSettings.SetTextSize(this.textSize);
+  }
+
+  OnChangeVoicesClicked(): void {
+    this.dialog.open(VoiceDialogComponent);
   }
 
   OnChapterClicked(chapter: any): void {
