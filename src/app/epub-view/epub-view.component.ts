@@ -44,6 +44,7 @@ export class EpubViewComponent implements OnInit {
   characterIdentification: SpeakerIdentification | undefined;
   characterIdentificationState: string = 'Uxie Reader';
   availableCharacters: Character[] = [];
+  availableCharactersLoading = false;
 
   async ngOnInit(): Promise<void> {
     // Get book name from params
@@ -262,6 +263,22 @@ export class EpubViewComponent implements OnInit {
     AppSettings.SetTextSize(this.textSize);
   }
 
+  async OnRefreshCharacterListClicked(): Promise<void> {
+    if (this.availableCharactersLoading) {
+      return;
+    } 
+
+    this.availableCharactersLoading = true;
+    try {
+      this.availableCharacters = await this.appService.ListCharacters(this.paragraphs);
+      AppSettings.SetCharacterList(this.availableCharacters);
+    } catch (error) {
+      console.log('Refresh character list error ', error);
+      this.availableCharactersLoading = false;
+    }
+    this.availableCharactersLoading = false;
+  }
+
   OnChangeVoicesClicked(): void {
     const voiceDialog = this.dialog.open(VoiceDialogComponent);
     voiceDialog.componentInstance.SetCharacters(this.availableCharacters);
@@ -300,7 +317,7 @@ export class EpubViewComponent implements OnInit {
 
   private async TriggerInitialization(): Promise<void> {
     this.characterIdentificationState = 'Characters Loading...';
-    this.availableCharacters = await this.appService.ListCharacters(this.paragraphs);
+    this.availableCharacters = AppSettings.GetCharacterList();
 
     this.characterIdentification =
       new SpeakerIdentification(this.appService, this.availableCharacters, this.paragraphs);

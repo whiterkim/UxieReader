@@ -21,6 +21,12 @@
             <i class="bi bi-plus-lg setting-icon" (click)="OnTextSizeClicked(0.1)"></i>
           </span>
         </div>
+        <div class="dropdown-divider"></div>
+        <div ngbDropdownItem class="menu-item" (click)="OnRefreshCharacterListClicked()">
+          <span *ngIf="!availableCharactersLoading">Refresh character list</span>
+          <span *ngIf="availableCharactersLoading">Character list loading...</span>
+        </div>
+        <div class="dropdown-divider"></div>
         <div ngbDropdownItem class="menu-item" (click)="OnChangeVoicesClicked()">
           <span>Change voices...</span>
         </div>

@@ -1,3 +1,4 @@
+import { Character } from "./model/character";
 import { Speaker } from "./model/speaker";
 
 export class AppSettings {
@@ -140,5 +141,17 @@ export class AppSettings {
 
   public static SetAzureOpenAIKey(key: string): void {
     localStorage.setItem('azure-openai-key', key);
+  }
+
+  public static SetCharacterList(characters: Character[]): void {
+    localStorage.setItem('available-characters', JSON.stringify(characters));
+  }
+
+  public static GetCharacterList(): Character[] {
+    let savedCharacters = localStorage.getItem('available-characters');
+    if (savedCharacters !== null) {
+      return JSON.parse(savedCharacters);
+    }
+    return [];
   }
 }
