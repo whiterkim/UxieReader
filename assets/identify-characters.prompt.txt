@@ -11,7 +11,18 @@ The input will be a JSON object containing two arrays:
 ```
 2. "texts": an array of strings, each string being a line of text from the literary work
 
-Dialogues are usually identified by quotes like 『』or「」. If a whole sentence is quoted, it is likely part of a dialogue. If the whole sentence is not quoted, or only words or phrases are quoted, it is likely to be narration.
+We define the text is "speech" when the whole text is surrounded by quotes like 『』or「」. This can be determined by this condition: `(text[0] == '『' && text[-1] == '』') || (text[0] == '「' && text[-1] == '」')`
+
+We define the text is "narration" when the whole text is not quoted. This can be determined by this condition: `!(text[0] == '『' && text[-1] == '』') || (text[0] == '「' && text[-1] == '」')`
+
+When the text is ending with ：, that implies that the current text is "narration" and the next text is "speech". For example:
+```
+texts: [
+    "茵蒂克丝看着画面上的影像，纳闷地问道：",
+    "「当麻，那是哪一台啊～？报纸上没提到那种节目耶。」",
+]
+```
+In the given example, `texts[0]` is narration and `text[1]` is speech. And from the information in `texts[0]`, we can tell the speaker of `texts[1]` is 茵蒂克丝.
 
 For each line of text in the "texts" array, identify the following:
 - The name of the speaker (considering the given character names and aliases)
@@ -28,7 +39,8 @@ Return your analysis as a JSON object containing a "data" array. Each element of
   "target": "who the speaker is talking to - a name, or 'NA' if not talking to anyone or if narration"
 }
 
-The "data" array in your response should have the same number of elements as the "texts" array in the input.
+
+The "data" array in your response should have the same number of elements as the "texts" array in the input. The length of "text" array will be either 10 or 20, please make sure the length of the returned "data" array is also 10 or 20.
 
 Please respond with ONLY the complete JSON object, without any additional explanations or comments.
 
