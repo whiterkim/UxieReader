@@ -5,19 +5,17 @@ export class AudioGeneration {
     appService: AppService;
     voiceMap: { [key: number]: Promise<Blob> | Blob } = {};
     paragraphs: string[] = [];
-    characterIdentification: SpeakerIdentification;
+    speakerIdentification: SpeakerIdentification;
 
-    constructor(appService: AppService, paragraphs: string[], characterIdentification: SpeakerIdentification) {
+    constructor(appService: AppService, paragraphs: string[], speakerIdentification: SpeakerIdentification) {
         this.appService = appService;
         this.voiceMap = {};
         this.paragraphs = paragraphs;
-        this.characterIdentification = characterIdentification;
+        this.speakerIdentification = speakerIdentification;
     }
 
     public async GetAudio(counter: number): Promise<Blob> {
-        console.log('GetAudio ', counter);
         if (!this.voiceMap[counter]) {
-            console.log('GetAudio not found ', counter);
             await this.GenerateAudio(counter);
         }
 
@@ -30,12 +28,11 @@ export class AudioGeneration {
 
     public async GenerateAudio(counter: number): Promise<void> {
         if (this.voiceMap[counter]) {
-            console.log('GenerateAudio found ', counter);
             return;
         }
-        console.log('GenerateAudio ', counter);
-        const character = this.characterIdentification.GetSpeaker(counter);
-        this.voiceMap[counter] = this.appService.GetVoice(this.paragraphs[counter], character);
+
+        const speaker = this.speakerIdentification.GetSpeaker(counter);
+        this.voiceMap[counter] = this.appService.GetVoice(this.paragraphs[counter], speaker);
         this.voiceMap[counter] = await this.voiceMap[counter];
     }
 }

@@ -1,6 +1,6 @@
 <div class="modal-body m-2">
     <mat-dialog-content class="mat-typography">
-        <h3>Narration</h3>
+        <h3>Narration (Default)</h3>
         <div ngbDropdown class="nav-link menu-button">
             <input ngbDropdownToggle id="settingsDropdownButton" readonly type="text" class="form-control bg-dark text-white" id="cognitive-service-key-input" value="{{narrationVoice}}">
             <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
@@ -10,7 +10,7 @@
 
         <div style="height: 2em; width: 16em;"></div>
 
-        <h3>Male</h3>
+        <h3>Male (Default)</h3>
         <div ngbDropdown class="nav-link menu-button">
             <input ngbDropdownToggle id="settingsDropdownButton" readonly type="text" class="form-control bg-dark text-white" id="cognitive-service-key-input" value="{{maleVoice}}">
             <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
@@ -20,11 +20,23 @@
 
         <div style="height: 2em;"></div>
 
-        <h3>Female</h3>
+        <h3>Female (Default)</h3>
         <div ngbDropdown class="nav-link menu-button">
             <input ngbDropdownToggle id="settingsDropdownButton" readonly type="text" class="form-control bg-dark text-white" id="cognitive-service-key-input" value="{{femaleVoice}}">
             <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
                 <div ngbDropdownItem class="menu-item" *ngFor="let voice of GetVoices()" (click)="OnVoiceClicked('female', voice)">{{voice}}</div>
+            </div>
+        </div>
+
+        <div *ngFor="let character of characters">
+            <div style="height: 2em;"></div>
+
+            <h3>{{character.character}} ({{character.gender}})</h3>
+            <div ngbDropdown class="nav-link menu-button">
+                <input ngbDropdownToggle id="settingsDropdownButton" readonly type="text" class="form-control bg-dark text-white" id="cognitive-service-key-input" value="{{GetVoice(character)}}">
+                <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
+                    <div ngbDropdownItem class="menu-item" *ngFor="let voice of GetVoices()" (click)="OnVoiceClicked(character.character, voice)">{{voice}}</div>
+                </div>
             </div>
         </div>
 

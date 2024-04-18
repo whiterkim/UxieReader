@@ -59,21 +59,27 @@ export class AppSettings {
     localStorage.setItem('textSize', size.toString());
   }
 
-  public static GetVoiceName(speaker: Speaker): string {
+  public static GetVoice(speaker: Speaker): string {
+    const characterVoice = AppSettings.GetCharacterVoice(speaker.speaker);
+    if (characterVoice !== null) {
+      return characterVoice;
+    }
+
+    const defaultVoice = AppSettings.GetDefaultVoice(speaker);
+    return defaultVoice;
+  }
+
+  public static GetDefaultVoice(speaker: Speaker): string {
     let role = 'narration';
     if (speaker.speaker !== 'narration') {
       role = speaker.gender;
     }
-    return AppSettings.GetVoice(role);
+    return AppSettings.GetCharacterVoice(role) ?? AppSettings.VoiceList()[0];
   }
 
-  public static GetVoice(role: string): string {
+  public static GetCharacterVoice(role: string): string | null {
     let savedVoice = localStorage.getItem(role);
-    if (savedVoice !== null) {
-      return savedVoice;
-    }
-    // Set Yunxi as the default voice.
-    return AppSettings.VoiceList()[0];
+    return savedVoice;
   }
 
   public static SetVoice(role: string, voice: string): void {

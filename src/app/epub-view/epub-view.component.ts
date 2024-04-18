@@ -12,6 +12,7 @@ import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
 import { SpeakerIdentification } from '../speaker-identification';
 import { AudioGeneration } from '../audio-generation';
 import { VoiceDialogComponent } from '../voice-dialog/voice-dialog.component';
+import { Character } from '../model/character';
 
 @Component({
   selector: 'app-epub-view',
@@ -42,6 +43,7 @@ export class EpubViewComponent implements OnInit {
   audioGeneration: AudioGeneration | undefined;
   characterIdentification: SpeakerIdentification | undefined;
   characterIdentificationState: string = 'Uxie Reader';
+  availableCharacters: Character[] = [];
 
   async ngOnInit(): Promise<void> {
     // Get book name from params
@@ -261,7 +263,8 @@ export class EpubViewComponent implements OnInit {
   }
 
   OnChangeVoicesClicked(): void {
-    this.dialog.open(VoiceDialogComponent);
+    const voiceDialog = this.dialog.open(VoiceDialogComponent);
+    voiceDialog.componentInstance.SetCharacters(this.availableCharacters);
   }
 
   OnChapterClicked(chapter: any): void {
@@ -271,7 +274,6 @@ export class EpubViewComponent implements OnInit {
   private SaveSettings(): void {
     if (this.rendition) {
       let cfi = this.rendition.location.end.cfi;
-      console.log(cfi);
       this.settings?.SetEpubCfi(cfi);
       this.settings?.SetEpubCounter(this.counter);
     }
@@ -298,10 +300,10 @@ export class EpubViewComponent implements OnInit {
 
   private async TriggerInitialization(): Promise<void> {
     this.characterIdentificationState = 'Characters Loading...';
-    const availableCharacters = await this.appService.ListCharacters(this.paragraphs);
+    this.availableCharacters = await this.appService.ListCharacters(this.paragraphs);
 
     this.characterIdentification =
-      new SpeakerIdentification(this.appService, availableCharacters, this.paragraphs);
+      new SpeakerIdentification(this.appService, this.availableCharacters, this.paragraphs);
 
     this.audioGeneration = new AudioGeneration(
       this.appService, this.paragraphs, this.characterIdentification);

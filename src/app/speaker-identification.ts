@@ -32,7 +32,6 @@ export class SpeakerIdentification {
     }
 
     public GetSpeaker(counter: number): Speaker {
-        console.log('GetSpeaker ', counter)
         if (this.speakerMap[counter]) {
             console.log('GetSpeaker found ', { ...this.speakerMap[counter], text: this.paragraphs[counter]});
             if (this.processedUnitlCounter <= counter + 10) {
@@ -48,12 +47,11 @@ export class SpeakerIdentification {
     }
 
     private async TriggerSpeakerIdentification(startCounter: number, endCounter: number) {
-        console.log('TriggerSpeakerIdentification ', startCounter, endCounter);
         if (this.restCallLock) {
-            console.log('TriggerSpeakerIdentification locked');
             return;
         }
 
+        console.log('TriggerSpeakerIdentification ', startCounter, endCounter);
         this.restCallLock = true;
         // [startCounter, endCounter)
         const processingParagraphs = this.paragraphs.slice(startCounter, endCounter);
