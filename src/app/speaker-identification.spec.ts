@@ -1,6 +1,6 @@
 import { SpeakerIdentification } from './speaker-identification';
 
-describe('CharacterIdentification', () => {
+describe('SpeakerIdentification', () => {
   it('should create an instance', () => {
     expect(new SpeakerIdentification({} as any ,[], [])).toBeTruthy();
   });

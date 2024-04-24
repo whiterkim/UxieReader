@@ -10,7 +10,7 @@
           (click)="OnChapterClicked(chapter)">{{chapter.name}}</button>
       </div>
     </div>
-    <span class="menu-title text-white">{{characterIdentificationState}}</span>
+    <span class="menu-title text-white">Uxie Reader</span>
     <div ngbDropdown class="nav-link menu-button">
       <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill menu-icon"></i>
       <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
@@ -21,10 +21,27 @@
             <i class="bi bi-plus-lg setting-icon" (click)="OnTextSizeClicked(0.1)"></i>
           </span>
         </div>
+
         <div class="dropdown-divider"></div>
-        <div ngbDropdownItem class="menu-item" (click)="OnRefreshCharacterListClicked()">
-          <span *ngIf="!availableCharactersLoading">Refresh character list</span>
-          <span *ngIf="availableCharactersLoading">Character list loading...</span>
+        <div ngbDropdownItem class="menu-item">
+          <span>Character list</span>
+        </div>
+        <div ngbDropdownItem class="menu-item" style="display: flex; justify-content: end;" *ngIf="availableCharactersLoading">
+          <span>Loading...</span>
+        </div>
+        <div ngbDropdownItem class="menu-item" style="display: flex; justify-content: end;" *ngIf="!availableCharactersLoading" (click)="OnRefreshCharacterListClicked()">
+          <span>Refresh</span>
+        </div>
+
+        <div class="dropdown-divider"></div>
+        <div ngbDropdownItem class="menu-item">
+          <span>Speaker identification</span>
+        </div>
+        <div ngbDropdownItem class="menu-item" style="display: flex; justify-content: end;" *ngIf="speakerIdentification?.restCallLock ?? false">
+          <span>Loading...</span>
+        </div>
+        <div ngbDropdownItem class="menu-item" style="display: flex; justify-content: end;" (click)="OnRefreshSpeakerIdentificationClicked()">
+          <span>Refresh</span>
         </div>
         <div class="dropdown-divider"></div>
         <div ngbDropdownItem class="menu-item" (click)="OnChangeVoicesClicked()">

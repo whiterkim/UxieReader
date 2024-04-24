@@ -41,8 +41,7 @@ export class EpubViewComponent implements OnInit {
   counter: number = 0;
 
   audioGeneration: AudioGeneration | undefined;
-  characterIdentification: SpeakerIdentification | undefined;
-  characterIdentificationState: string = 'Uxie Reader';
+  speakerIdentification: SpeakerIdentification | undefined;
   availableCharacters: Character[] = [];
   availableCharactersLoading = false;
 
@@ -279,6 +278,11 @@ export class EpubViewComponent implements OnInit {
     this.availableCharactersLoading = false;
   }
 
+  async OnRefreshSpeakerIdentificationClicked(): Promise<void> {
+    // This will clear the lock and trigger a request immediately.
+    await this.speakerIdentification?.Init(this.counter);
+  }
+
   OnChangeVoicesClicked(): void {
     const voiceDialog = this.dialog.open(VoiceDialogComponent);
     voiceDialog.componentInstance.SetCharacters(this.availableCharacters);
@@ -316,19 +320,17 @@ export class EpubViewComponent implements OnInit {
   }
 
   private async TriggerInitialization(): Promise<void> {
-    this.characterIdentificationState = 'Characters Loading...';
+    // Get from local storage unless click on refresh
     this.availableCharacters = AppSettings.GetCharacterList();
 
-    this.characterIdentification =
+    this.speakerIdentification =
       new SpeakerIdentification(this.appService, this.availableCharacters, this.paragraphs);
 
     this.audioGeneration = new AudioGeneration(
-      this.appService, this.paragraphs, this.characterIdentification);
+      this.appService, this.paragraphs, this.speakerIdentification);
 
-    this.characterIdentificationState = 'Identifying Characters...';
-    await this.characterIdentification.Init(this.counter, 10);
-
-    this.characterIdentificationState = 'Uxie Reader';
+    // Refresh speaker identification on initialization
+    await this.OnRefreshSpeakerIdentificationClicked();
   }
 
 }

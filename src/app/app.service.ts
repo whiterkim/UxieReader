@@ -213,7 +213,12 @@ export class AppService {
     ];
   }
 
-  public async IdentifySpeakers(availableCharacters: any[], paragraphs: string[]): Promise<Speaker[]> {
+  public async IdentifySpeakers(
+    availableCharacters: any[],
+    paragraphsBefore: string[],
+    paragraphs: string[],
+    paragraphsAfter: string[]
+  ): Promise<Speaker[]> {
     let speakers: Speaker[] = [];
 
     const headers = {
@@ -223,7 +228,9 @@ export class AppService {
 
     const content = JSON.stringify({
       characters: availableCharacters,
+      textsBefore: paragraphsBefore,
       texts: paragraphs,
+      textsAfter: paragraphsAfter,
     });
 
     const prompt = await lastValueFrom(this.http.get(

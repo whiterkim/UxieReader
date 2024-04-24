@@ -9,6 +9,11 @@ export class SpeakerIdentification {
     processedUnitlCounter: number = 0;
     restCallLock: boolean = false;
 
+    static processStep: number = 10;
+    static autoCallStep: number = 10;
+    static textsBeforeStep: number = 5;
+    static textsAfterStep: number = 5;
+
     constructor(appService: AppService, availableCharacters: any[], paragraphs: string[]) {
         this.speakerMap = {};
         this.appService = appService;
@@ -25,38 +30,49 @@ export class SpeakerIdentification {
         };
     }
 
-    async Init(counter: number, step: number = 20) {
-        const startCounter = counter;//Math.max(0, counter - 5);
-        const endCounter = startCounter + step;
-        await this.TriggerSpeakerIdentification(startCounter, endCounter);
+    async Init(counter: number) {
+        // Clear lock on init
+        this.restCallLock = false;
+        await this.TriggerSpeakerIdentification(counter);
     }
 
     public GetSpeaker(counter: number): Speaker {
         if (this.speakerMap[counter]) {
             console.log('GetSpeaker found ', { ...this.speakerMap[counter], text: this.paragraphs[counter]});
-            if (this.processedUnitlCounter <= counter + 10) {
-                console.log('call Init auto ', this.processedUnitlCounter);
-                this.Init(this.processedUnitlCounter);
+            if (this.processedUnitlCounter <= counter + SpeakerIdentification.autoCallStep) {
+                console.log('TriggerSpeakerIdentification call auto', this.processedUnitlCounter);
+                this.TriggerSpeakerIdentification(this.processedUnitlCounter);
             }
             return this.speakerMap[counter];
         }
 
         console.log('GetSpeaker not found ', counter);
-        this.Init(counter);
+        this.TriggerSpeakerIdentification(counter);
         return SpeakerIdentification.Default();
     }
 
-    private async TriggerSpeakerIdentification(startCounter: number, endCounter: number) {
+    private async TriggerSpeakerIdentification(counter: number): Promise<boolean> {
         if (this.restCallLock) {
-            return;
+            console.log('TriggerSpeakerIdentification locked');
+            return false;
         }
 
+        const startCounter = counter;
+        const endCounter = startCounter + SpeakerIdentification.processStep;
         console.log('TriggerSpeakerIdentification ', startCounter, endCounter);
         this.restCallLock = true;
+        // [startCounter - 5, startCounter)
+        const paragraphsBefore = this.paragraphs.slice(startCounter - SpeakerIdentification.textsBeforeStep, startCounter);
         // [startCounter, endCounter)
         const processingParagraphs = this.paragraphs.slice(startCounter, endCounter);
+        // [endCounter, endCounter + 5)
+        const paragraphsAfter = this.paragraphs.slice(endCounter, endCounter + SpeakerIdentification.textsAfterStep);
         try {
-            const speakers = await this.appService.IdentifySpeakers(this.availableCharacters, processingParagraphs);
+            const speakers = await this.appService.IdentifySpeakers(
+                this.availableCharacters,
+                paragraphsBefore,
+                processingParagraphs,
+                paragraphsAfter);
             this.processedUnitlCounter = endCounter;
             for (let i = 0; i < speakers.length; i++) {
                 const paragraphIndex = startCounter + i;
@@ -64,9 +80,12 @@ export class SpeakerIdentification {
             }
         } catch (error) {
             console.log('TriggerSpeakerIdentification error ', error);
+            this.restCallLock = false;
+            return false;
         }
 
         console.log('TriggerSpeakerIdentification done');
         this.restCallLock = false;
+        return true;
     }
 }
