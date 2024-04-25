@@ -1,5 +1,14 @@
 <div class="modal-body m-2">
-    <mat-dialog-content class="mat-typography">
+    <mat-dialog-content class="mat-typography" *ngIf="isDefaultMode">
+        <h3>Voice</h3>
+        <div ngbDropdown class="nav-link menu-button">
+            <input ngbDropdownToggle id="settingsDropdownButton" readonly type="text" class="form-control bg-dark text-white" id="cognitive-service-key-input" value="{{narrationVoice}}">
+            <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
+                <div ngbDropdownItem class="menu-item" *ngFor="let voice of GetVoices()" (click)="OnVoiceClicked('default', voice)">{{voice}}</div>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-content class="mat-typography" *ngIf="!isDefaultMode">
         <h3>Narration (Default)</h3>
         <div ngbDropdown class="nav-link menu-button">
             <input ngbDropdownToggle id="settingsDropdownButton" readonly type="text" class="form-control bg-dark text-white" id="cognitive-service-key-input" value="{{narrationVoice}}">

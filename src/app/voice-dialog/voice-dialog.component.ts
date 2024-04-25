@@ -15,6 +15,7 @@ export class VoiceDialogComponent{
   maleVoice: string;
   femaleVoice: string;
   characters: Character[] = [];
+  isDefaultMode: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<VoiceDialogComponent>) { 
     this.narrationVoice = AppSettings.GetDefaultVoice({

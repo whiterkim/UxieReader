@@ -154,4 +154,16 @@ export class AppSettings {
     }
     return [];
   }
+
+  public static GetSpeakerIdentificationEnabled(): boolean {
+    let savedEnabled = localStorage.getItem('speaker-identification-enabled');
+    if (savedEnabled !== null) {
+      return savedEnabled === 'true';
+    }
+    return false;
+  }
+
+  public static SetSpeakerIdentificationEnabled(enabled: boolean): void {
+    localStorage.setItem('speaker-identification-enabled', enabled.toString());
+  }
 }

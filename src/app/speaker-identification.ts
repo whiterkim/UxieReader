@@ -1,4 +1,5 @@
 import { AppService } from "./app.service";
+import { AppSettings } from "./app.settings";
 import { Speaker } from "./model/speaker";
 
 export class SpeakerIdentification {
@@ -31,12 +32,20 @@ export class SpeakerIdentification {
     }
 
     async Init(counter: number) {
+        if (!this.GetEnabled()) {
+            throw new Error('SpeakerIdentification is disabled');
+        }
+
         // Clear lock on init
         this.restCallLock = false;
         await this.TriggerSpeakerIdentification(counter);
     }
 
     public GetSpeaker(counter: number): Speaker {
+        if (!this.GetEnabled()) {
+            return SpeakerIdentification.Default();
+        }
+
         if (this.speakerMap[counter]) {
             console.log('GetSpeaker found ', { ...this.speakerMap[counter], text: this.paragraphs[counter]});
             if (this.processedUnitlCounter <= counter + SpeakerIdentification.autoCallStep) {
@@ -52,6 +61,10 @@ export class SpeakerIdentification {
     }
 
     private async TriggerSpeakerIdentification(counter: number): Promise<boolean> {
+        if (!this.GetEnabled()) {
+            throw new Error('SpeakerIdentification is disabled');
+        }
+
         if (this.restCallLock) {
             console.log('TriggerSpeakerIdentification locked');
             return false;
@@ -87,5 +100,13 @@ export class SpeakerIdentification {
         console.log('TriggerSpeakerIdentification done');
         this.restCallLock = false;
         return true;
+    }
+
+    public GetEnabled(): boolean {
+        return AppSettings.GetSpeakerIdentificationEnabled();
+    }
+
+    public ToggleEnabled(): void {
+        AppSettings.SetSpeakerIdentificationEnabled(!this.GetEnabled());
     }
 }

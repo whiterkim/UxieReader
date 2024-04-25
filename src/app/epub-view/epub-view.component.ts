@@ -176,7 +176,7 @@ export class EpubViewComponent implements OnInit {
     let element = this.GetEpubElement();
     if (element) {
         let child = element.children[index];
-        child?.setAttribute("style", "background-color:darkgoldenrod;");
+        child?.setAttribute("style", "background-color:#52595D;");
         child?.scrollIntoView(true);
     }
   }
@@ -262,6 +262,16 @@ export class EpubViewComponent implements OnInit {
     AppSettings.SetTextSize(this.textSize);
   }
 
+  async OnEnableSpeakerIdentificationToggled(): Promise<void> {
+    this.speakerIdentification?.ToggleEnabled();
+  }
+
+  async OnGetCharacterListClicked(): Promise<void> {
+    const voiceDialog = this.dialog.open(VoiceDialogComponent);
+    voiceDialog.componentInstance.isDefaultMode = false;
+    voiceDialog.componentInstance.SetCharacters(this.availableCharacters);
+  }
+
   async OnRefreshCharacterListClicked(): Promise<void> {
     if (this.availableCharactersLoading) {
       return;
@@ -285,6 +295,7 @@ export class EpubViewComponent implements OnInit {
 
   OnChangeVoicesClicked(): void {
     const voiceDialog = this.dialog.open(VoiceDialogComponent);
+    voiceDialog.componentInstance.isDefaultMode = true;
     voiceDialog.componentInstance.SetCharacters(this.availableCharacters);
   }
 
@@ -330,7 +341,15 @@ export class EpubViewComponent implements OnInit {
       this.appService, this.paragraphs, this.speakerIdentification);
 
     // Refresh speaker identification on initialization
-    await this.OnRefreshSpeakerIdentificationClicked();
+    try {
+      await this.OnRefreshSpeakerIdentificationClicked();
+    } catch (error) {
+      if (error instanceof Error && error.message === 'SpeakerIdentification is disabled') {
+        // Safe to ignore
+        return;
+      }
+      console.log('TriggerInitialization error ', error);
+    }
   }
 
 }
