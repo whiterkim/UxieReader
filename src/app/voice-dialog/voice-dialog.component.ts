@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AppSettings } from '../app.settings';
 import { Character } from '../model/character';
 import { Speaker } from '../model/speaker';
+import { Voice } from '../model/voice';
 
 @Component({
   selector: 'app-voice-dialog',
@@ -11,36 +12,29 @@ import { Speaker } from '../model/speaker';
 })
 export class VoiceDialogComponent{
 
-  narrationVoice: string;
-  maleVoice: string;
-  femaleVoice: string;
+  defaultVoice: Voice;
+  narrationVoice: Voice;
+  maleVoice: Voice;
+  femaleVoice: Voice;
   characters: Character[] = [];
   isDefaultMode: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<VoiceDialogComponent>) { 
-    this.narrationVoice = AppSettings.GetDefaultVoice({
-      speaker: 'narration',
-      gender: 'NA',
-      target: 'NA',
-    } as Speaker);
-    this.maleVoice = AppSettings.GetDefaultVoice({
-      speaker: 'Male Default',
-      gender: 'male',
-      target: 'NA',
-    } as Speaker);
-    this.femaleVoice = AppSettings.GetDefaultVoice({
-      speaker: 'Female Default',
-      gender: 'female',
-      target: 'NA',
-    } as Speaker);
+  constructor(public dialogRef: MatDialogRef<VoiceDialogComponent>) {
+    this.defaultVoice = AppSettings.GetDefaultVoiceForRole('default');
+    this.narrationVoice = AppSettings.GetDefaultVoiceForRole('narration');
+    this.maleVoice = AppSettings.GetDefaultVoiceForRole('male');
+    this.femaleVoice = AppSettings.GetDefaultVoiceForRole('female');
   }
 
-  GetVoices(): string[] {
+  GetVoices(): Voice[] {
     return AppSettings.VoiceList();
   }
 
-  OnVoiceClicked(role: string, voice: string): void {
-    if (role === 'narration') {
+  OnVoiceClicked(role: string, voice: Voice): void {
+    if (role === 'default') {
+      this.defaultVoice = voice;
+      AppSettings.SetVoice('default', voice);
+    } else if (role === 'narration') {
       this.narrationVoice = voice;
       AppSettings.SetVoice('narration', voice);
     } else if (role === 'male') {
@@ -51,7 +45,7 @@ export class VoiceDialogComponent{
       AppSettings.SetVoice('female', voice);
     }
 
-    console.log('Voice changed for ' + role + ' to ' + voice);
+    console.log('Voice changed for ' + role + ' to ' + voice.name);
     AppSettings.SetVoice(role, voice);
   }
 
@@ -59,7 +53,7 @@ export class VoiceDialogComponent{
     this.characters = characters;
   }
 
-  GetVoice(character: Character): string {
+  GetVoice(character: Character): Voice {
     return AppSettings.GetVoice({
       speaker: character.character,
       gender: character.gender,

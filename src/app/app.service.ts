@@ -120,7 +120,7 @@ export class AppService {
   }
 
   private GetRequestXmlBody(text: string, speaker: Speaker ): string {
-    let voiceName = AppSettings.GetVoice(speaker);
+    let voiceName = AppSettings.GetVoice(speaker).value;
     const xml_body = create()
         .ele('speak', { version: '1.0', xmlns: 'http://www.w3.org/2001/10/synthesis', 'xmlns:mstts': 'https://www.w3.org/2001/mstts', 'xml:lang': 'zh-CN'})
         .ele('voice', { name: voiceName})

@@ -25,7 +25,7 @@ export class SpeakerIdentification {
     static Default(): Speaker {
         return {
             textIndex: -1,
-            speaker: 'narration',
+            speaker: 'default',
             gender: 'NA',
             target: 'NA',
         };
