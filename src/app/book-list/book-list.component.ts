@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppService } from '../app.service';
 import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import bookListJson from '../../assets/book_list.json';
 
 @Component({
   selector: 'app-book-list',
@@ -12,19 +11,13 @@ import { MatDialog } from '@angular/material/dialog';
 export class BookListComponent implements OnInit {
 
   constructor(
-    private appService: AppService,
-    private router: Router,
     public dialog: MatDialog,
   ) { }
 
-  bookPaths: string[] = [];
+  bookPaths: any;
 
   ngOnInit(): void {
-    this.bookPaths = this.appService.GetBookPaths();
-  }
-
-  OnBookClicked(path: string): void {
-    this.router.navigate(['/epub-view', path]);
+    this.bookPaths = bookListJson;
   }
 
   OnEnterKeyClicked(): void {

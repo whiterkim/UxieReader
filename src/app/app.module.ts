@@ -13,26 +13,28 @@ import { EpubViewComponent } from './epub-view/epub-view.component';
 import { TxtViewComponent } from './txt-view/txt-view.component';
 import { KeyDialogComponent } from './key-dialog/key-dialog.component';
 import { VoiceDialogComponent } from './voice-dialog/voice-dialog.component';
+import { BookListItemComponent } from "./book-list-item/book-list-item.component";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MainComponent,
-    BookListComponent,
-    EpubViewComponent,
-    TxtViewComponent,
-    KeyDialogComponent,
-    VoiceDialogComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    NgbModule,
-    MatDialogModule,
-    BrowserAnimationsModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        MainComponent,
+        BookListComponent,
+        BookListItemComponent,
+        EpubViewComponent,
+        TxtViewComponent,
+        KeyDialogComponent,
+        VoiceDialogComponent,
+    ],
+    providers: [],
+    bootstrap: [AppComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        NgbModule,
+        MatDialogModule,
+        BrowserAnimationsModule,
+    ]
 })
 export class AppModule { }

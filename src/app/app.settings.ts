@@ -102,7 +102,6 @@ export class AppSettings {
       styles: item.StyleList,
       roles: item.RolePlayList,
     } as Voice));
-    console.log('VoiceList', voices);
     return voices;
   }
 
@@ -152,5 +151,14 @@ export class AppSettings {
 
   public static SetSpeakerIdentificationEnabled(enabled: boolean): void {
     localStorage.setItem('speaker-identification-enabled', enabled.toString());
+  }
+
+  public static GetLastBookPath(): string | null {
+    let savedBook = localStorage.getItem('last-book-path');
+    return savedBook;
+  }
+
+  public static SetLastBookPath(bookPath: string): void {
+    localStorage.setItem('last-book-path', bookPath);
   }
 }

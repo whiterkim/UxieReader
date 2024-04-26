@@ -18,27 +18,6 @@ export class AppService {
     private http: HttpClient
   ) { }
 
-  public GetBookPaths() : string[] {
-    let books: string[] = [
-      '新约 某魔法的禁书目录 10X.epub',
-      '新约 某魔法的禁书目录 11X.epub',
-      '新约 某魔法的禁书目录 12X.epub',
-      '新约 某魔法的禁书目录 13X.epub',
-      '新约 某魔法的禁书目录 14X.epub',
-      '新约 某魔法的禁书目录 15X.epub',
-      '新约 某魔法的禁书目录 16X.epub',
-      '新约 某魔法的禁书目录 17X.epub',
-      '新约 某魔法的禁书目录 18X.epub',
-      '新约 某魔法的禁书目录 19X.epub',
-      '新约 某魔法的禁书目录 20X.epub',
-      '新约 某魔法的禁书目录 21X.epub',
-      '新约 某魔法的禁书目录 22X.epub',
-      '新约 某魔法的禁书目录 22rX.epub',
-      '当我谈跑步时，我在谈些什么.epub',
-    ]
-    return books;
-  }
-
   public async LoadBook(bookName: string | undefined): Promise<Book | undefined> {
     if (bookName) {
       localStorage.setItem('lastBook', bookName);
@@ -51,19 +30,6 @@ export class AppService {
       return await this.GetBookWithName(lastBookName);
     }
 
-    return undefined;
-  }
-
-  public async LoadEpub(bookName: string | undefined): Promise<ePub.Book | undefined> {
-    if (bookName) {
-      localStorage.setItem('lastEpub', bookName);
-      return this.GetEpub(bookName);
-    }
-
-    let lastBookName = localStorage.getItem('lastEpub');
-    if (lastBookName) {
-      return this.GetEpub(lastBookName);
-    }
     return undefined;
   }
 

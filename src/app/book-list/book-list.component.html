@@ -35,8 +35,5 @@
 </nav>
 
 <div *ngIf="bookPaths" class="bg-dark viewer-frame">
-  <p class="viewer-paragraph text-white"
-    *ngFor="let path of bookPaths" (click)="OnBookClicked(path)">
-    {{path}}
-  </p>
+  <app-book-list-item [object]="bookPaths" folder=""></app-book-list-item>
 </div>

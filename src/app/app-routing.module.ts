@@ -6,7 +6,7 @@ import { MainComponent } from './main/main.component';
 import { TxtViewComponent } from './txt-view/txt-view.component';
 
 const routes: Routes = [
-  {path: '', component: BookListComponent},
+  {path: '', component: MainComponent},
   {path: 'book-list', component: BookListComponent},
   {path: 'reader-view/:key', component: MainComponent},
   {path: 'epub-view/:key', component: EpubViewComponent},

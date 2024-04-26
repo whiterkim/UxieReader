@@ -120,13 +120,12 @@ export class EpubViewComponent implements OnInit {
     }
   }
 
-  private GetEpubElement(): HTMLDivElement | undefined {
+  private GetEpubElement(): HTMLElement | undefined {
     let epubViewerElement = document.getElementById('epub-viewer-area');
     let iframeElements = epubViewerElement?.getElementsByTagName('iframe');
     let iframeElement = iframeElements?.item(0);
-    let divElements = iframeElement?.contentDocument?.getElementsByTagName('div');
-    let divElement = divElements?.item(0);
-    return divElement ? divElement : undefined;
+    const bodyElement = iframeElement?.contentDocument?.body;
+    return bodyElement;
   }
 
   private GetParagraphs(): void {

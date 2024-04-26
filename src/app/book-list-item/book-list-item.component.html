@@ -1,0 +1,12 @@
+<ul class="viewer-paragraph text-white">
+    <li *ngFor="let child of GetChildren(object)">
+      <div *ngIf="object[child] as childObject">
+        <span (click)="OnCollapseClicked(childObject)">{{child}}</span>
+        <app-book-list-item  *ngIf="childObject.show" [object]="childObject" [folder]="folder + '/' + child"></app-book-list-item>
+      </div>
+    </li>
+    <li
+      *ngFor="let path of object.files" (click)="OnBookClicked(path)">
+      {{path}}
+    </li>
+  </ul>
