@@ -1,6 +1,7 @@
 import { Character } from "./model/character";
 import { Speaker } from "./model/speaker";
 import { Voice } from "./model/voice";
+import voiceJson from '../assets/voice-list.json';
 
 export class AppSettings {
   constructor(bookName: string) {
@@ -94,35 +95,15 @@ export class AppSettings {
   }
 
   public static VoiceList(): Voice[] {
-    return [
-      { name: '云逸 多语言', value:'zh-CN-YunyiMultilingualNeural', gender: 'male' },
-      { name: '晓辰 多语言', value:'zh-CN-XiaochenMultilingualNeural', gender: 'female' },
-      { name: '晓雨 多语言', value:'zh-CN-XiaoyuMultilingualNeural', gender: 'female' },
-      { name: '晓晓 多语言', value:'zh-CN-XiaoxiaoMultilingualNeural', gender: 'female' },
-      { name: '晓晓', value: 'zh-CN-XiaoxiaoNeural' , gender: 'female' },
-      { name: '云希', value: 'zh-CN-YunxiNeural' , gender: 'male' },
-      { name: '云健', value: 'zh-CN-YunjianNeural' , gender: 'male' },
-      { name: '晓伊', value: 'zh-CN-XiaoyiNeural' , gender: 'female' },
-      { name: '云扬', value: 'zh-CN-YunyangNeural' , gender: 'male' },
-      { name: '晓辰', value: 'zh-CN-XiaochenNeural' , gender: 'female' },
-      { name: '晓涵', value: 'zh-CN-XiaohanNeural' , gender: 'female' },
-      { name: '晓梦', value: 'zh-CN-XiaomengNeural' , gender: 'female' },
-      { name: '晓墨', value: 'zh-CN-XiaomoNeural' , gender: 'female' },
-      { name: '晓秋', value: 'zh-CN-XiaoqiuNeural' , gender: 'female' },
-      { name: '晓睿', value: 'zh-CN-XiaoruiNeural' , gender: 'female' },
-      { name: '晓双', value: 'zh-CN-XiaoshuangNeural' , gender: 'female' },
-      { name: '晓颜', value: 'zh-CN-XiaoyanNeural' , gender: 'female' },
-      { name: '晓悠', value: 'zh-CN-XiaoyouNeural' , gender: 'female' },
-      { name: '晓甄', value: 'zh-CN-XiaozhenNeural' , gender: 'female' },
-      { name: '云枫', value: 'zh-CN-YunfengNeural' , gender: 'male' },
-      { name: '云皓', value: 'zh-CN-YunhaoNeural' , gender: 'male' },
-      { name: '云夏', value: 'zh-CN-YunxiaNeural' , gender: 'male' },
-      { name: '云野', value: 'zh-CN-YunyeNeural' , gender: 'male' },
-      { name: '云泽', value: 'zh-CN-YunzeNeural' , gender: 'male' },
-      { name: '晓柔', value: 'zh-CN-XiaorouNeural' , gender: 'female' },
-      { name: '云杰', value: 'zh-CN-YunjieNeural' , gender: 'male' },
-      { name: '晓萱', value: 'zh-CN-XiaoxuanNeural' , gender: 'female' },
-    ]
+    const voices = (voiceJson as any[]).map((item) => ({
+      name: item.LocalName,
+      value: item.ShortName,
+      gender: item.Gender,
+      styles: item.StyleList,
+      roles: item.RolePlayList,
+    } as Voice));
+    console.log('VoiceList', voices);
+    return voices;
   }
 
   public static GetAzureCognitiveServiceKey(): string {
