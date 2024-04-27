@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Rendition } from 'epubjs';
@@ -28,6 +28,9 @@ export class EpubViewComponent implements OnInit {
     public dialog: MatDialog,
   ) { }
 
+  @Input()
+  bookName?: string;
+
   audio: HTMLAudioElement = new Audio();
   jumpInput: HTMLInputElement | undefined;
 
@@ -48,7 +51,11 @@ export class EpubViewComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     // Get book name from params
     let params = await firstValueFrom(this.activatedRoute.params);
+
     let bookName = params['key'];
+    if (this.bookName) {
+      bookName = this.bookName;
+    }
 
     AppUtils.KeepScreenOn();
 

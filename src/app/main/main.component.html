@@ -1,1 +1,2 @@
-<span>main component</span>
+<app-book-list *ngIf="!lastBookPath"></app-book-list>
+<app-epub-view *ngIf="lastBookPath" [bookName]="lastBookPath"></app-epub-view>

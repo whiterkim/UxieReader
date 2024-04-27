@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppSettings } from '../app.settings';
 
 @Component({
   selector: 'app-main',
@@ -12,12 +13,10 @@ export class MainComponent implements OnInit {
     private router: Router,
   ) { }
 
+  lastBookPath: string | null = null;
+
   ngOnInit(): void {
-    const lastBookPath = localStorage.getItem('lastBookPath');
-    if (lastBookPath) {
-      this.router.navigate(['/epub-view', lastBookPath]);
-    }
-    this.router.navigate(['/book-list']);
+    this.lastBookPath = AppSettings.GetLastBookPath();
   }
 
 }

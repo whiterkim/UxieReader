@@ -158,7 +158,11 @@ export class AppSettings {
     return savedBook;
   }
 
-  public static SetLastBookPath(bookPath: string): void {
+  public static SetLastBookPath(bookPath: string | null): void {
+    if (bookPath === null) {
+      localStorage.removeItem('last-book-path');
+      return;
+    }
     localStorage.setItem('last-book-path', bookPath);
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { KeyDialogComponent } from '../key-dialog/key-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import bookListJson from '../../assets/book_list.json';
+import { AppSettings } from '../app.settings';
 
 @Component({
   selector: 'app-book-list',
@@ -17,6 +18,7 @@ export class BookListComponent implements OnInit {
   bookPaths: any;
 
   ngOnInit(): void {
+    AppSettings.SetLastBookPath(null);
     this.bookPaths = bookListJson;
   }
 
