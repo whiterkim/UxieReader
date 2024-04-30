@@ -5,28 +5,113 @@
     </div>
     <span class="menu-title text-white">Uxie Reader</span>
     <div ngbDropdown class="nav-link menu-button">
-      <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill menu-icon"></i>
-      <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
+      <i
+        ngbDropdownToggle
+        id="settingsDropdownButton"
+        class="bi bi-gear-fill menu-icon"
+      ></i>
+      <div
+        ngbDropdownMenu
+        class="dropdown-menu-dark dropdown-menu-end"
+        aria-labelledby="settingsDropdownButton"
+      >
         <div ngbDropdownItem class="menu-item" (click)="OnEnterKeyClicked()">
           Enter key...
         </div>
         <div class="dropdown-divider"></div>
-        <div ngbDropdownItem class="menu-item">
-          Whiter Kim
-        </div>
-        <div ngbDropdownItem style="display: flex; justify-content: end;">
-          <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3.86323 23.2937C3.20469 23.2937 2.55959 23.1073 2.00256 22.756C1.44553 22.4048 0.999311 21.903 0.715518 21.3087" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <path d="M12.5 1.375C13.1124 1.375 13.7141 1.53624 14.2444 1.84252C14.7748 2.14879 15.2152 2.5893 15.5213 3.11975" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <path d="M24.1579 18.0784C24.464 18.6071 24.6251 19.2067 24.625 19.817C24.625 20.4273 24.4638 21.0268 24.1576 21.5554" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <path d="M9.37238 3.01074L0.704575 18.0238" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <line x1="24.0462" y1="17.8918" x2="15.6069" y2="3.27444" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="square"/>
-            <line x1="4.03839" y1="23.2937" x2="20.7395" y2="23.2937" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <line x1="16.2498" y1="11.7375" x2="20.4288" y2="11.7375" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <line x1="16.2497" y1="18.831" x2="20.7491" y2="18.831" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <line x1="5.74799" y1="15.8115" x2="12.498" y2="15.8115" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <line x1="12.8972" y1="8.87944" x2="12.8972" y2="23.2937" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
-            <path d="M12.8972 8.74867C12.8972 8.32622 12.814 7.9079 12.6523 7.51761C12.4907 7.12732 12.2537 6.77269 11.955 6.47397C11.6563 6.17525 11.3017 5.93829 10.9114 5.77663C10.5211 5.61496 10.1027 5.53175 9.6803 5.53175" stroke="#DEE2E6" stroke-width="0.75" stroke-linecap="round"/>
+        <div ngbDropdownItem class="menu-item">Whiter Kim</div>
+        <div ngbDropdownItem style="display: flex; justify-content: end">
+          <svg
+            width="25"
+            height="25"
+            viewBox="0 0 25 25"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3.86323 23.2937C3.20469 23.2937 2.55959 23.1073 2.00256 22.756C1.44553 22.4048 0.999311 21.903 0.715518 21.3087"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <path
+              d="M12.5 1.375C13.1124 1.375 13.7141 1.53624 14.2444 1.84252C14.7748 2.14879 15.2152 2.5893 15.5213 3.11975"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <path
+              d="M24.1579 18.0784C24.464 18.6071 24.6251 19.2067 24.625 19.817C24.625 20.4273 24.4638 21.0268 24.1576 21.5554"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <path
+              d="M9.37238 3.01074L0.704575 18.0238"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <line
+              x1="24.0462"
+              y1="17.8918"
+              x2="15.6069"
+              y2="3.27444"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="square"
+            />
+            <line
+              x1="4.03839"
+              y1="23.2937"
+              x2="20.7395"
+              y2="23.2937"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <line
+              x1="16.2498"
+              y1="11.7375"
+              x2="20.4288"
+              y2="11.7375"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <line
+              x1="16.2497"
+              y1="18.831"
+              x2="20.7491"
+              y2="18.831"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <line
+              x1="5.74799"
+              y1="15.8115"
+              x2="12.498"
+              y2="15.8115"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <line
+              x1="12.8972"
+              y1="8.87944"
+              x2="12.8972"
+              y2="23.2937"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
+            <path
+              d="M12.8972 8.74867C12.8972 8.32622 12.814 7.9079 12.6523 7.51761C12.4907 7.12732 12.2537 6.77269 11.955 6.47397C11.6563 6.17525 11.3017 5.93829 10.9114 5.77663C10.5211 5.61496 10.1027 5.53175 9.6803 5.53175"
+              stroke="#DEE2E6"
+              stroke-width="0.75"
+              stroke-linecap="round"
+            />
           </svg>
         </div>
       </div>

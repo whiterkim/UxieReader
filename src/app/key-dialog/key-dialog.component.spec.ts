@@ -8,9 +8,8 @@ describe('KeyDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ KeyDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [KeyDialogComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

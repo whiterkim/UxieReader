@@ -1,5 +1,5 @@
 export interface Book {
-    name: string;
-    paragraphs: string[];
-    chapters: number[];
+  name: string;
+  paragraphs: string[];
+  chapters: number[];
 }

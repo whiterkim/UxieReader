@@ -10,5 +10,4 @@ export class AppUtils {
       console.log(err);
     }
   }
-
 }

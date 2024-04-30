@@ -1,82 +1,88 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('../node_modules/bootstrap-icons/font/bootstrap-icons.css');
+@import url("../node_modules/bootstrap-icons/font/bootstrap-icons.css");
 
 .dropdown-toggle::after {
-    content: none;
+  content: none;
 }
 
 .menu-bar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .menu-title {
-    font-size: 1.5rem;
-    align-self: center;
+  font-size: 1.5rem;
+  align-self: center;
 }
 
 .menu-button {
-    margin-left: 12px;
-    margin-right: 12px;
+  margin-left: 12px;
+  margin-right: 12px;
 }
 
 .menu-dropdown {
-    max-height: 600px;
-    overflow-y: auto;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 .menu-item {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .menu-icon {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .viewer-frame {
-    padding-top: 72px;
-    padding-left: 24px;
-    padding-right: 24px;
-    min-height: 844px;
+  padding-top: 72px;
+  padding-left: 24px;
+  padding-right: 24px;
+  min-height: 844px;
 }
 
 .epub-viewer-frame {
-    padding-top: 72px;
-    padding-bottom: 96px;
-    min-height: 844px;
+  padding-top: 72px;
+  padding-bottom: 96px;
+  min-height: 844px;
 }
 
 .viewer-paragraph {
-    overflow-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .setting-icon {
-    font-size: 1rem;
-    margin-left: 12px;
-    margin-right: 12px;
+  font-size: 1rem;
+  margin-left: 12px;
+  margin-right: 12px;
 }
 
 .footer-bar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 24px;
 }
 
 .footer-icon {
-    font-size: 2rem;
-    margin-left: 12px;
-    margin-right: 12px;
+  font-size: 2rem;
+  margin-left: 12px;
+  margin-right: 12px;
 }
 
 .footer-input {
-    max-width: 120px;
-    max-height: 36px;
-    border: 0px solid;
-    align-self: center;
+  max-width: 120px;
+  max-height: 36px;
+  border: 0px solid;
+  align-self: center;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

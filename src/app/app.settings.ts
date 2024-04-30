@@ -1,6 +1,6 @@
-import { Character } from "./model/character";
-import { Speaker } from "./model/speaker";
-import { CharacterVoice, VoiceProfile } from "./model/voice";
+import { Character } from './model/character';
+import { Speaker } from './model/speaker';
+import { CharacterVoice, VoiceProfile } from './model/voice';
 import voiceJson from '../assets/voice-list.json';
 
 export class AppSettings {
@@ -52,7 +52,7 @@ export class AppSettings {
   public static GetTextSize(): number {
     let savedSize = localStorage.getItem('textSize');
     if (savedSize !== null) {
-        return +savedSize;
+      return +savedSize;
     }
     // Set the default size to 1rem.
     return 1;
@@ -63,33 +63,41 @@ export class AppSettings {
   }
 
   public static GetVoiceForSpeaker(speaker: Speaker): CharacterVoice {
-    return AppSettings.GetSavedCharacterVoice(speaker.speaker)
-      ?? AppSettings.GetDefaultVoice(speaker.speaker, speaker.gender);
+    return (
+      AppSettings.GetSavedCharacterVoice(speaker.speaker) ??
+      AppSettings.GetDefaultVoice(speaker.speaker, speaker.gender)
+    );
   }
 
   public static GetVoiceForCharacter(character: Character): CharacterVoice {
-    return AppSettings.GetSavedCharacterVoice(character.character)
-      ?? AppSettings.GetDefaultVoice(character.character, character.gender);
+    return (
+      AppSettings.GetSavedCharacterVoice(character.character) ??
+      AppSettings.GetDefaultVoice(character.character, character.gender)
+    );
   }
 
   private static GetDefaultVoice(name: string, gender: string): CharacterVoice {
-    let key = 'default'
-    if (name === 'narration') { 
-        key = 'narration';
+    let key = 'default';
+    if (name === 'narration') {
+      key = 'narration';
     } else if (gender === 'male') {
-        key = 'male';
+      key = 'male';
     } else if (gender === 'female') {
-        key = 'female';
+      key = 'female';
     }
     return AppSettings.GetCharacterVoice(key);
   }
 
   public static GetCharacterVoice(key: string): CharacterVoice {
-    return AppSettings.GetSavedCharacterVoice(key)
-      ?? AppSettings.BuildCharacterVoice(AppSettings.GetVoiceProfiles()[0]);
+    return (
+      AppSettings.GetSavedCharacterVoice(key) ??
+      AppSettings.BuildCharacterVoice(AppSettings.GetVoiceProfiles()[0])
+    );
   }
 
-  private static GetSavedCharacterVoice(key: string): CharacterVoice | undefined {
+  private static GetSavedCharacterVoice(
+    key: string,
+  ): CharacterVoice | undefined {
     let savedVoiceJson = localStorage.getItem(key);
     if (savedVoiceJson !== null) {
       try {
@@ -106,7 +114,11 @@ export class AppSettings {
     localStorage.setItem(key, voiceJson);
   }
 
-  public static BuildCharacterVoice(voice: VoiceProfile, style?: string, role?: string): CharacterVoice{
+  public static BuildCharacterVoice(
+    voice: VoiceProfile,
+    style?: string,
+    role?: string,
+  ): CharacterVoice {
     // Check style in voice.StyleList
     if (style && voice.StyleList && !voice.StyleList.includes(style)) {
       style = undefined;
@@ -129,7 +141,9 @@ export class AppSettings {
   }
 
   public static GetAzureCognitiveServiceKey(): string {
-    let savedAzureCognitiveServiceKey = localStorage.getItem('azure-cognitive-service-key');
+    let savedAzureCognitiveServiceKey = localStorage.getItem(
+      'azure-cognitive-service-key',
+    );
     if (savedAzureCognitiveServiceKey !== null) {
       return savedAzureCognitiveServiceKey;
     }

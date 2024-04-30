@@ -7,13 +7,10 @@ import { AppSettings } from '../app.settings';
 @Component({
   selector: 'app-book-list',
   templateUrl: './book-list.component.html',
-  styleUrls: ['./book-list.component.css']
+  styleUrls: ['./book-list.component.css'],
 })
 export class BookListComponent implements OnInit {
-
-  constructor(
-    public dialog: MatDialog,
-  ) { }
+  constructor(public dialog: MatDialog) {}
 
   bookPaths: any;
 
@@ -25,5 +22,4 @@ export class BookListComponent implements OnInit {
   OnEnterKeyClicked(): void {
     this.dialog.open(KeyDialogComponent);
   }
-
 }

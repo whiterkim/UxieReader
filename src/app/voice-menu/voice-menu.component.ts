@@ -6,9 +6,9 @@ import { Character } from '../model/character';
 @Component({
   selector: 'app-voice-menu',
   templateUrl: './voice-menu.component.html',
-  styleUrl: './voice-menu.component.css'
+  styleUrl: './voice-menu.component.css',
 })
-export class VoiceMenuComponent implements OnInit{
+export class VoiceMenuComponent implements OnInit {
   @Input()
   key?: string;
 
@@ -30,7 +30,9 @@ export class VoiceMenuComponent implements OnInit{
     }
 
     if (this.characterVoice) {
-      this.selectedProfile = this.GetVoiceProfiles().find(profile => profile.ShortName === this.characterVoice?.value);
+      this.selectedProfile = this.GetVoiceProfiles().find(
+        (profile) => profile.ShortName === this.characterVoice?.value,
+      );
     }
   }
 
@@ -60,7 +62,7 @@ export class VoiceMenuComponent implements OnInit{
 
   SaveCharacterVoice() {
     if (!this.character && !this.key) {
-      throw new Error('Character or key is not set.')
+      throw new Error('Character or key is not set.');
     }
     if (!this.characterVoice) {
       throw new Error('Character voice is not set.');
@@ -70,7 +72,10 @@ export class VoiceMenuComponent implements OnInit{
       AppSettings.SetCharacterVoice(this.key, this.characterVoice);
     }
     if (this.character) {
-      AppSettings.SetCharacterVoice(this.character.character, this.characterVoice);
+      AppSettings.SetCharacterVoice(
+        this.character.character,
+        this.characterVoice,
+      );
     }
   }
 }

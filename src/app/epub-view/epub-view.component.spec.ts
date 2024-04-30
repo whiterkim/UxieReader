@@ -8,9 +8,8 @@ describe('EpubViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EpubViewComponent ]
-    })
-    .compileComponents();
+      declarations: [EpubViewComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

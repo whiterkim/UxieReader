@@ -8,10 +8,9 @@ describe('VoiceDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VoiceDialogComponent]
-    })
-    .compileComponents();
-    
+      imports: [VoiceDialogComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(VoiceDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -8,10 +8,9 @@ describe('VoiceMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VoiceMenuComponent]
-    })
-    .compileComponents();
-    
+      imports: [VoiceMenuComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(VoiceMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

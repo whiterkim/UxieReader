@@ -17,16 +17,15 @@ import { Character } from '../model/character';
 @Component({
   selector: 'app-epub-view',
   templateUrl: './epub-view.component.html',
-  styleUrls: ['./epub-view.component.css']
+  styleUrls: ['./epub-view.component.css'],
 })
 export class EpubViewComponent implements OnInit {
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private appService: AppService,
     private router: Router,
     public dialog: MatDialog,
-  ) { }
+  ) {}
 
   @Input()
   bookName?: string;
@@ -64,10 +63,10 @@ export class EpubViewComponent implements OnInit {
       this.router.navigate(['/book-list']);
     }
 
-    this.rendition = loadedBook.renderTo("epub-viewer-area", {
-      width: "100%",
-      height: "100%",
-      flow: "scrolled",
+    this.rendition = loadedBook.renderTo('epub-viewer-area', {
+      width: '100%',
+      height: '100%',
+      flow: 'scrolled',
     });
 
     this.textSize = AppSettings.GetTextSize();
@@ -93,12 +92,12 @@ export class EpubViewComponent implements OnInit {
     this.chapters = [];
     spine.each((item: Section, _: number) => {
       let name = item.href.split('/')[1].split('.')[0];
-      let cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)'
+      let cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)';
       this.chapters.push({
         name: name,
         cfi: cfi,
       });
-    })
+    });
   }
 
   private InitAudioElement(): void {
@@ -162,7 +161,7 @@ export class EpubViewComponent implements OnInit {
     this.GetEpubElement()?.setAttribute('style', style);
   }
 
-  private async Navigate(cfi: string) : Promise<void> {
+  private async Navigate(cfi: string): Promise<void> {
     // Make sure element is there
     await this.rendition?.display(cfi);
     this.GetParagraphs();
@@ -181,21 +180,24 @@ export class EpubViewComponent implements OnInit {
   private MarkParagraph(index: number) {
     let element = this.GetEpubElement();
     if (element) {
-        let child = element.children[index];
-        child?.setAttribute("style", "background-color:#52595D;");
-        child?.scrollIntoView(true);
+      let child = element.children[index];
+      child?.setAttribute('style', 'background-color:#52595D;');
+      child?.scrollIntoView(true);
     }
   }
 
   private UnmarkParagraph(index: number) {
     let element = this.GetEpubElement();
     if (element) {
-        let child = element.children[index];
-        child?.setAttribute("style", "");
+      let child = element.children[index];
+      child?.setAttribute('style', '');
     }
   }
 
-  private async ChangeSection(isNext: boolean, isBeginning: boolean): Promise<void> {
+  private async ChangeSection(
+    isNext: boolean,
+    isBeginning: boolean,
+  ): Promise<void> {
     if (isNext) {
       await this.rendition?.next();
     } else {
@@ -281,11 +283,13 @@ export class EpubViewComponent implements OnInit {
   async OnRefreshCharacterListClicked(): Promise<void> {
     if (this.availableCharactersLoading) {
       return;
-    } 
+    }
 
     this.availableCharactersLoading = true;
     try {
-      this.availableCharacters = await this.appService.ListCharacters(this.paragraphs);
+      this.availableCharacters = await this.appService.ListCharacters(
+        this.paragraphs,
+      );
       AppSettings.SetCharacterList(this.availableCharacters);
     } catch (error) {
       console.log('Refresh character list error ', error);
@@ -319,8 +323,9 @@ export class EpubViewComponent implements OnInit {
 
   private async Play(counter: number): Promise<void> {
     const text = this.paragraphs[counter];
-    const voice = await this.audioGeneration?.GetAudio(counter)
-      ?? await this.appService.GetVoice(text, SpeakerIdentification.Default());
+    const voice =
+      (await this.audioGeneration?.GetAudio(counter)) ??
+      (await this.appService.GetVoice(text, SpeakerIdentification.Default()));
     if (voice.size === undefined) {
       // If voice.size is undefined, it is likely the Azure service call failed.
       this.dialog.open(KeyDialogComponent);
@@ -340,22 +345,30 @@ export class EpubViewComponent implements OnInit {
     // Get from local storage unless click on refresh
     this.availableCharacters = AppSettings.GetCharacterList();
 
-    this.speakerIdentification =
-      new SpeakerIdentification(this.appService, this.availableCharacters, this.paragraphs);
+    this.speakerIdentification = new SpeakerIdentification(
+      this.appService,
+      this.availableCharacters,
+      this.paragraphs,
+    );
 
     this.audioGeneration = new AudioGeneration(
-      this.appService, this.paragraphs, this.speakerIdentification);
+      this.appService,
+      this.paragraphs,
+      this.speakerIdentification,
+    );
 
     // Refresh speaker identification on initialization
     try {
       await this.OnRefreshSpeakerIdentificationClicked();
     } catch (error) {
-      if (error instanceof Error && error.message === 'SpeakerIdentification is disabled') {
+      if (
+        error instanceof Error &&
+        error.message === 'SpeakerIdentification is disabled'
+      ) {
         // Safe to ignore
         return;
       }
       console.log('TriggerInitialization error ', error);
     }
   }
-
 }

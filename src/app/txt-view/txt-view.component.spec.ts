@@ -8,9 +8,8 @@ describe('TxtViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TxtViewComponent ]
-    })
-    .compileComponents();
+      declarations: [TxtViewComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

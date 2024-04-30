@@ -1,26 +1,61 @@
-<nav *ngIf="rendition" class="navbar navbar-expand navbar-dark fixed-top bg-dark" >
+<nav
+  *ngIf="rendition"
+  class="navbar navbar-expand navbar-dark fixed-top bg-dark"
+>
   <div class="navbar-nav menu-bar">
     <div ngbDropdown class="nav-link menu-button">
-      <i ngbDropdownToggle id="chaptersDropdownButton" class="bi bi-list menu-icon"></i>
-      <div ngbDropdownMenu class="dropdown-menu-dark menu-dropdown" aria-labelledby="chaptersDropdownButton">
-        <button ngbDropdownItem (click)="OnChangeBookClicked()">Change book</button>
+      <i
+        ngbDropdownToggle
+        id="chaptersDropdownButton"
+        class="bi bi-list menu-icon"
+      ></i>
+      <div
+        ngbDropdownMenu
+        class="dropdown-menu-dark menu-dropdown"
+        aria-labelledby="chaptersDropdownButton"
+      >
+        <button ngbDropdownItem (click)="OnChangeBookClicked()">
+          Change book
+        </button>
         <div class="dropdown-divider"></div>
-        <button ngbDropdownItem
+        <button
+          ngbDropdownItem
           *ngFor="let chapter of chapters"
-          (click)="OnChapterClicked(chapter)">{{chapter.name}}</button>
+          (click)="OnChapterClicked(chapter)"
+        >
+          {{ chapter.name }}
+        </button>
       </div>
     </div>
     <span class="menu-title text-white">Uxie Reader</span>
     <div ngbDropdown class="nav-link menu-button">
-      <i ngbDropdownToggle id="settingsDropdownButton" class="bi bi-gear-fill menu-icon"></i>
-      <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="settingsDropdownButton">
+      <i
+        ngbDropdownToggle
+        id="settingsDropdownButton"
+        class="bi bi-gear-fill menu-icon"
+      ></i>
+      <div
+        ngbDropdownMenu
+        class="dropdown-menu-dark dropdown-menu-end"
+        aria-labelledby="settingsDropdownButton"
+      >
         <div ngbDropdownItem class="dropdown-header">
           <span>Text size</span>
         </div>
-        <div ngbDropdownItem class="menu-item" style="display: flex; justify-content: end;">
+        <div
+          ngbDropdownItem
+          class="menu-item"
+          style="display: flex; justify-content: end"
+        >
           <span>
-            <i class="bi bi-dash-lg setting-icon" (click)="OnTextSizeClicked(-0.1)"></i>
-            <i class="bi bi-plus-lg setting-icon" (click)="OnTextSizeClicked(0.1)"></i>
+            <i
+              class="bi bi-dash-lg setting-icon"
+              (click)="OnTextSizeClicked(-0.1)"
+            ></i>
+            <i
+              class="bi bi-plus-lg setting-icon"
+              (click)="OnTextSizeClicked(0.1)"
+            ></i>
           </span>
         </div>
 
@@ -28,13 +63,27 @@
         <div ngbDropdownItem class="dropdown-header">
           <span>Characters</span>
         </div>
-        <div ngbDropdownItem class="menu-item" *ngIf="availableCharactersLoading">
+        <div
+          ngbDropdownItem
+          class="menu-item"
+          *ngIf="availableCharactersLoading"
+        >
           <span>Loading...</span>
         </div>
-        <div ngbDropdownItem class="menu-item" *ngIf="!availableCharactersLoading" (click)="OnGetCharacterListClicked()">
+        <div
+          ngbDropdownItem
+          class="menu-item"
+          *ngIf="!availableCharactersLoading"
+          (click)="OnGetCharacterListClicked()"
+        >
           <span>Change voices...</span>
         </div>
-        <div ngbDropdownItem class="menu-item" *ngIf="!availableCharactersLoading" (click)="OnRefreshCharacterListClicked()">
+        <div
+          ngbDropdownItem
+          class="menu-item"
+          *ngIf="!availableCharactersLoading"
+          (click)="OnRefreshCharacterListClicked()"
+        >
           <span>Refresh</span>
         </div>
 
@@ -42,25 +91,46 @@
         <div ngbDropdownItem class="dropdown-header">
           <span>Speaker identification</span>
         </div>
-        <div ngbDropdownItem class="menu-item" (click)="OnEnableSpeakerIdentificationToggled()">
-          <span>
-            Enable
-          </span>
-          <span style="display: flex; justify-content: end;">            
-            <i *ngIf="speakerIdentification?.GetEnabled()" class="bi bi-check-square setting-icon"></i>
-            <i *ngIf="!speakerIdentification?.GetEnabled()" class="bi bi-square setting-icon"></i>
+        <div
+          ngbDropdownItem
+          class="menu-item"
+          (click)="OnEnableSpeakerIdentificationToggled()"
+        >
+          <span> Enable </span>
+          <span style="display: flex; justify-content: end">
+            <i
+              *ngIf="speakerIdentification?.GetEnabled()"
+              class="bi bi-check-square setting-icon"
+            ></i>
+            <i
+              *ngIf="!speakerIdentification?.GetEnabled()"
+              class="bi bi-square setting-icon"
+            ></i>
           </span>
         </div>
         <div *ngIf="speakerIdentification?.GetEnabled()">
-          <div ngbDropdownItem class="menu-item" *ngIf="speakerIdentification?.restCallLock ?? false">
+          <div
+            ngbDropdownItem
+            class="menu-item"
+            *ngIf="speakerIdentification?.restCallLock ?? false"
+          >
             <span>Loading...</span>
           </div>
-          <div ngbDropdownItem class="menu-item" *ngIf="!(speakerIdentification?.restCallLock ?? false)" (click)="OnRefreshSpeakerIdentificationClicked()">
+          <div
+            ngbDropdownItem
+            class="menu-item"
+            *ngIf="!(speakerIdentification?.restCallLock ?? false)"
+            (click)="OnRefreshSpeakerIdentificationClicked()"
+          >
             <span>Refresh</span>
           </div>
         </div>
         <div class="dropdown-divider"></div>
-        <div ngbDropdownItem class="dropdown-header" (click)="OnChangeVoicesClicked()">
+        <div
+          ngbDropdownItem
+          class="dropdown-header"
+          (click)="OnChangeVoicesClicked()"
+        >
           <span>Change default voice...</span>
         </div>
       </div>
@@ -70,15 +140,33 @@
 
 <nav class="navbar navbar-expand navbar-dark fixed-bottom bg-dark footer-bar">
   <div class="navbar-nav">
-    <a class="nav-link" *ngIf="audio.paused" (click)="OnPlayClicked()"><i class="bi bi-play-fill footer-icon"></i></a>
-    <a class="nav-link" *ngIf="!audio.paused" (click)="OnPauseClicked()"><i class="bi bi-pause-fill footer-icon"></i></a>
+    <a class="nav-link" *ngIf="audio.paused" (click)="OnPlayClicked()"
+      ><i class="bi bi-play-fill footer-icon"></i
+    ></a>
+    <a class="nav-link" *ngIf="!audio.paused" (click)="OnPauseClicked()"
+      ><i class="bi bi-pause-fill footer-icon"></i
+    ></a>
   </div>
   <div class="navbar-nav">
-    <a class="nav-link" (click)="OnPreviousParagraphClicked()"><i class="bi bi-skip-start-fill footer-icon"></i></a>
-    <input class="form-control bg-secondary text-white footer-input" id="jump-input" value="{{counter}}">
-    <a class="nav-link" (click)="OnNextParagraphClicked()"><i class="bi bi-skip-end-fill footer-icon"></i></a>
+    <a class="nav-link" (click)="OnPreviousParagraphClicked()"
+      ><i class="bi bi-skip-start-fill footer-icon"></i
+    ></a>
+    <input
+      class="form-control bg-secondary text-white footer-input"
+      id="jump-input"
+      value="{{ counter }}"
+    />
+    <a class="nav-link" (click)="OnNextParagraphClicked()"
+      ><i class="bi bi-skip-end-fill footer-icon"></i
+    ></a>
   </div>
 </nav>
 
-<audio hidden id="text-audio" controls="" autoplay="" name="media"><source src="" type="audio/mpeg"></audio>
-<div id="epub-viewer-area" class="epub-viewer-frame bg-dark" style="height: 800px; padding-top: 160px; padding-bottom: 96px;"></div>
+<audio hidden id="text-audio" controls="" autoplay="" name="media">
+  <source src="" type="audio/mpeg" />
+</audio>
+<div
+  id="epub-viewer-area"
+  class="epub-viewer-frame bg-dark"
+  style="height: 800px; padding-top: 160px; padding-bottom: 96px"
+></div>

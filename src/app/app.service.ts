@@ -10,15 +10,14 @@ import { SpeakerIdentification } from './speaker-identification';
 import { Character } from './model/character';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppService {
+  constructor(private http: HttpClient) {}
 
-  constructor(
-    private http: HttpClient
-  ) { }
-
-  public async LoadBook(bookName: string | undefined): Promise<Book | undefined> {
+  public async LoadBook(
+    bookName: string | undefined,
+  ): Promise<Book | undefined> {
     if (bookName) {
       localStorage.setItem('lastBook', bookName);
       return await this.GetBookWithName(bookName);
@@ -35,8 +34,10 @@ export class AppService {
 
   private async GetBookWithName(name: string): Promise<Book> {
     let fullPath = 'assets/books/' + name + '.txt';
-    let rawText = await lastValueFrom(this.http.get(fullPath, {responseType: 'text'}));
-    let paragraphs = rawText.split('\n').filter(e => e !== '\r');
+    let rawText = await lastValueFrom(
+      this.http.get(fullPath, { responseType: 'text' }),
+    );
+    let paragraphs = rawText.split('\n').filter((e) => e !== '\r');
 
     let book: Book = {
       name: name,
@@ -59,7 +60,10 @@ export class AppService {
         book.chapters.push(index);
         break;
       }
-      if (paragraph[0] == '第' && (paragraph[2] == '章' || paragraph[3] == '章')) {
+      if (
+        paragraph[0] == '第' &&
+        (paragraph[2] == '章' || paragraph[3] == '章')
+      ) {
         book.chapters.push(index);
       }
       index++;
@@ -69,10 +73,12 @@ export class AppService {
   private GetChaptersZ(book: Book): void {
     let index = 0;
     for (let paragraph of book.paragraphs) {
-      if (paragraph[0] == '分' &&
+      if (
+        paragraph[0] == '分' &&
         paragraph[1] == '节' &&
         paragraph[2] == '阅' &&
-        paragraph[3] == '读') {
+        paragraph[3] == '读'
+      ) {
         book.chapters.push(index);
       }
       index++;
@@ -88,24 +94,24 @@ export class AppService {
   private GetRequestXmlBody(text: string, speaker: Speaker): string {
     const characterVoice = AppSettings.GetVoiceForSpeaker(speaker);
     const root = create()
-        .ele('speak', {
-            version: '1.0',
-            xmlns: 'http://www.w3.org/2001/10/synthesis',
-            'xmlns:mstts': 'https://www.w3.org/2001/mstts',
-            'xml:lang': 'zh-CN'
-        })
-        .ele('voice', { name: characterVoice.value });
+      .ele('speak', {
+        version: '1.0',
+        xmlns: 'http://www.w3.org/2001/10/synthesis',
+        'xmlns:mstts': 'https://www.w3.org/2001/mstts',
+        'xml:lang': 'zh-CN',
+      })
+      .ele('voice', { name: characterVoice.value });
 
     // Add express-as element
     if (characterVoice.style || characterVoice.role) {
-        const expressAsAttributes: any = {};
-        if (characterVoice.style) {
-            expressAsAttributes.style = characterVoice.style;
-        }
-        if (characterVoice.role) {
-            expressAsAttributes.role = characterVoice.role;
-        }
-        root.ele('mstts:express-as', expressAsAttributes);
+      const expressAsAttributes: any = {};
+      if (characterVoice.style) {
+        expressAsAttributes.style = characterVoice.style;
+      }
+      if (characterVoice.role) {
+        expressAsAttributes.role = characterVoice.role;
+      }
+      root.ele('mstts:express-as', expressAsAttributes);
     }
 
     // Add text content
@@ -117,9 +123,12 @@ export class AppService {
     return xml_body;
   }
 
-  public async GetVoice(text: string, speaker: Speaker = SpeakerIdentification.Default()): Promise<Blob> {
+  public async GetVoice(
+    text: string,
+    speaker: Speaker = SpeakerIdentification.Default(),
+  ): Promise<Blob> {
     const headers = {
-      'Accept': '*/*',
+      Accept: '*/*',
       'Ocp-Apim-Subscription-Key': AppSettings.GetAzureCognitiveServiceKey(),
       'X-Microsoft-OutputFormat': 'audio-48khz-192kbitrate-mono-mp3',
       'Content-Type': 'application/ssml+xml',
@@ -127,76 +136,85 @@ export class AppService {
 
     const body = this.GetRequestXmlBody(text, speaker);
 
-    return await lastValueFrom(this.http.post('https://eastus.tts.speech.microsoft.com/cognitiveservices/v1', body, {
-      headers: headers,
-      responseType: 'blob',
-    })).catch(_ => {
+    return await lastValueFrom(
+      this.http.post(
+        'https://eastus.tts.speech.microsoft.com/cognitiveservices/v1',
+        body,
+        {
+          headers: headers,
+          responseType: 'blob',
+        },
+      ),
+    ).catch((_) => {
       return {} as Promise<Blob>;
     });
   }
 
-  public async IdentifySpeakersFake(availableCharacters: any[], paragraphs: string[]): Promise<Speaker[]> {
+  public async IdentifySpeakersFake(
+    availableCharacters: any[],
+    paragraphs: string[],
+  ): Promise<Speaker[]> {
     return [
       {
-          textIndex: 0,
-          speaker: "narration",
-          gender: "NA",
-          target: "NA"
+        textIndex: 0,
+        speaker: 'narration',
+        gender: 'NA',
+        target: 'NA',
       },
       {
-          textIndex: 1,
-          speaker: "narration",
-          gender: "NA",
-          target: "NA"
+        textIndex: 1,
+        speaker: 'narration',
+        gender: 'NA',
+        target: 'NA',
       },
       {
-          textIndex: 2,
-          speaker: "史蒂芬妮·葛洁帕蕾丝",
-          gender: "female",
-          target: "NA"
+        textIndex: 2,
+        speaker: '史蒂芬妮·葛洁帕蕾丝',
+        gender: 'female',
+        target: 'NA',
       },
       {
-          textIndex: 3,
-          speaker: "滨面仕上",
-          gender: "male",
-          target: "NA"
+        textIndex: 3,
+        speaker: '滨面仕上',
+        gender: 'male',
+        target: 'NA',
       },
       {
-          textIndex: 4,
-          speaker: "滨面仕上",
-          gender: "male",
-          target: "史蒂芬妮·葛洁帕蕾丝"
+        textIndex: 4,
+        speaker: '滨面仕上',
+        gender: 'male',
+        target: '史蒂芬妮·葛洁帕蕾丝',
       },
       {
-          textIndex: 5,
-          speaker: "史蒂芬妮·葛洁帕蕾丝",
-          gender: "female",
-          target: "滨面仕上"
+        textIndex: 5,
+        speaker: '史蒂芬妮·葛洁帕蕾丝',
+        gender: 'female',
+        target: '滨面仕上',
       },
       {
-          textIndex: 6,
-          speaker: "滨面仕上",
-          gender: "male",
-          target: "史蒂芬妮·葛洁帕蕾丝"
+        textIndex: 6,
+        speaker: '滨面仕上',
+        gender: 'male',
+        target: '史蒂芬妮·葛洁帕蕾丝',
       },
       {
-          textIndex: 7,
-          speaker: "史蒂芬妮·葛洁帕蕾丝",
-          gender: "female",
-          target: "NA"
+        textIndex: 7,
+        speaker: '史蒂芬妮·葛洁帕蕾丝',
+        gender: 'female',
+        target: 'NA',
       },
       {
-          textIndex: 8,
-          speaker: "滨面仕上",
-          gender: "male",
-          target: "史蒂芬妮·葛洁帕蕾丝"
+        textIndex: 8,
+        speaker: '滨面仕上',
+        gender: 'male',
+        target: '史蒂芬妮·葛洁帕蕾丝',
       },
       {
-          textIndex: 9,
-          speaker: "史蒂芬妮·葛洁帕蕾丝",
-          gender: "female",
-          target: "滨面仕上"
-      }
+        textIndex: 9,
+        speaker: '史蒂芬妮·葛洁帕蕾丝',
+        gender: 'female',
+        target: '滨面仕上',
+      },
     ];
   }
 
@@ -204,7 +222,7 @@ export class AppService {
     availableCharacters: any[],
     paragraphsBefore: string[],
     paragraphs: string[],
-    paragraphsAfter: string[]
+    paragraphsAfter: string[],
   ): Promise<Speaker[]> {
     let speakers: Speaker[] = [];
 
@@ -220,29 +238,36 @@ export class AppService {
       textsAfter: paragraphsAfter,
     });
 
-    const prompt = await lastValueFrom(this.http.get(
-      'assets/identify-characters.prompt.txt',
-      { responseType: 'text' }
-    ));
+    const prompt = await lastValueFrom(
+      this.http.get('assets/identify-characters.prompt.txt', {
+        responseType: 'text',
+      }),
+    );
 
     const body = {
-      'response_format': { 'type': "json_object" },
-      'messages': [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": content},
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: prompt },
+        { role: 'user', content: content },
       ],
-      'max_tokens': 1200,
-      'temperature': 0.7,
-      'frequency_penalty': 0,
-      'presence_penalty': 0,
-      'top_p': 0.95,
-      'stop': null,
-    }
+      max_tokens: 1200,
+      temperature: 0.7,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      top_p: 0.95,
+      stop: null,
+    };
 
-    const response = await lastValueFrom(this.http.post('https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModelGPT4/chat/completions?api-version=2024-02-15-preview', body, {
-      headers: headers,
-      responseType: 'json',
-    })).catch(_ => {
+    const response = await lastValueFrom(
+      this.http.post(
+        'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModelGPT4/chat/completions?api-version=2024-02-15-preview',
+        body,
+        {
+          headers: headers,
+          responseType: 'json',
+        },
+      ),
+    ).catch((_) => {
       return {} as Promise<any>;
     });
 
@@ -278,117 +303,81 @@ export class AppService {
   public async ListCharactersFake(paragraphs: string[]): Promise<Character[]> {
     return [
       {
-          character: "narration",
-          gender: "NA",
-          alias: [
-              "narration"
-          ]
+        character: 'narration',
+        gender: 'NA',
+        alias: ['narration'],
       },
       {
-          character: "少年",
-          gender: "male",
-          alias: [
-              "少年"
-          ]
+        character: '少年',
+        gender: 'male',
+        alias: ['少年'],
       },
       {
-          character: "不良少年",
-          gender: "male",
-          alias: [
-              "不良少年",
-              "那家伙"
-          ]
+        character: '不良少年',
+        gender: 'male',
+        alias: ['不良少年', '那家伙'],
       },
       {
-          character: "芙兰达",
-          gender: "female",
-          alias: [
-              "芙兰达",
-              "她",
-              "那个失踪朋友",
-              "朋友"
-          ]
+        character: '芙兰达',
+        gender: 'female',
+        alias: ['芙兰达', '她', '那个失踪朋友', '朋友'],
       },
       {
-          character: "上条当麻",
-          gender: "male",
-          alias: [
-              "上条当麻",
-              "上条"
-          ]
+        character: '上条当麻',
+        gender: 'male',
+        alias: ['上条当麻', '上条'],
       },
       {
-          character: "茵蒂克丝",
-          gender: "female",
-          alias: [
-              "茵蒂克丝"
-          ]
+        character: '茵蒂克丝',
+        gender: 'female',
+        alias: ['茵蒂克丝'],
       },
       {
-          character: "欧提努斯",
-          gender: "female",
-          alias: [
-              "欧提努斯",
-              "新房客",
-              "白皙少女",
-              "身高十五厘米的「魔神」",
-              "欧提努斯"
-          ]
+        character: '欧提努斯',
+        gender: 'female',
+        alias: [
+          '欧提努斯',
+          '新房客',
+          '白皙少女',
+          '身高十五厘米的「魔神」',
+          '欧提努斯',
+        ],
       },
       {
-          character: "蓝花悦",
-          gender: "NA",
-          alias: [
-              "蓝花悦",
-              "学园都市的第六位"
-          ]
+        character: '蓝花悦',
+        gender: 'NA',
+        alias: ['蓝花悦', '学园都市的第六位'],
       },
       {
-          character: "泷壶理后",
-          gender: "female",
-          alias: [
-              "泷壶理后"
-          ]
+        character: '泷壶理后',
+        gender: 'female',
+        alias: ['泷壶理后'],
       },
       {
-          character: "绢旗最爱",
-          gender: "female",
-          alias: [
-              "绢旗最爱"
-          ]
+        character: '绢旗最爱',
+        gender: 'female',
+        alias: ['绢旗最爱'],
       },
       {
-          character: "滨面仕上",
-          gender: "male",
-          alias: [
-              "滨面仕上",
-              "滨面"
-          ]
+        character: '滨面仕上',
+        gender: 'male',
+        alias: ['滨面仕上', '滨面'],
       },
       {
-          character: "史蒂芬妮·葛洁帕蕾丝",
-          gender: "female",
-          alias: [
-              "史蒂芬妮·葛洁帕蕾丝",
-              "史蒂芬妮"
-          ]
+        character: '史蒂芬妮·葛洁帕蕾丝',
+        gender: 'female',
+        alias: ['史蒂芬妮·葛洁帕蕾丝', '史蒂芬妮'],
       },
       {
-          character: "麦野沉利",
-          gender: "female",
-          alias: [
-              "麦野沉利",
-              "麦野"
-          ]
+        character: '麦野沉利',
+        gender: 'female',
+        alias: ['麦野沉利', '麦野'],
       },
       {
-          character: "魔术师",
-          gender: "male",
-          alias: [
-              "魔术师",
-              "魔神"
-          ]
-      }
+        character: '魔术师',
+        gender: 'male',
+        alias: ['魔术师', '魔神'],
+      },
     ];
   }
 
@@ -403,29 +392,36 @@ export class AppService {
       content += i.toString() + ',' + paragraphs[i] + '\n';
     }
 
-    const prompt = await lastValueFrom(this.http.get(
-      'assets/list-characters.prompt.txt',
-      { responseType: 'text' }
-    ));
+    const prompt = await lastValueFrom(
+      this.http.get('assets/list-characters.prompt.txt', {
+        responseType: 'text',
+      }),
+    );
 
     const body = {
-      'response_format': { 'type': "json_object" },
-      'messages': [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": content},
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: prompt },
+        { role: 'user', content: content },
       ],
-      'max_tokens': 1200,
-      'temperature': 0.7,
-      'frequency_penalty': 0,
-      'presence_penalty': 0,
-      'top_p': 0.95,
-      'stop': null,
-    }
+      max_tokens: 1200,
+      temperature: 0.7,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      top_p: 0.95,
+      stop: null,
+    };
 
-    const response = await lastValueFrom(this.http.post('https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModelGPT4/chat/completions?api-version=2024-02-15-preview', body, {
-      headers: headers,
-      responseType: 'json',
-    })).catch(_ => {
+    const response = await lastValueFrom(
+      this.http.post(
+        'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModelGPT4/chat/completions?api-version=2024-02-15-preview',
+        body,
+        {
+          headers: headers,
+          responseType: 'json',
+        },
+      ),
+    ).catch((_) => {
       return {} as Promise<any>;
     });
 

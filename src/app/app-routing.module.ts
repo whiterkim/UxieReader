@@ -6,15 +6,15 @@ import { MainComponent } from './main/main.component';
 import { TxtViewComponent } from './txt-view/txt-view.component';
 
 const routes: Routes = [
-  {path: '', component: MainComponent},
-  {path: 'book-list', component: BookListComponent},
-  {path: 'reader-view/:key', component: MainComponent},
-  {path: 'epub-view/:key', component: EpubViewComponent},
-  {path: 'txt-view/:key', component: TxtViewComponent},
+  { path: '', component: MainComponent },
+  { path: 'book-list', component: BookListComponent },
+  { path: 'reader-view/:key', component: MainComponent },
+  { path: 'epub-view/:key', component: EpubViewComponent },
+  { path: 'txt-view/:key', component: TxtViewComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

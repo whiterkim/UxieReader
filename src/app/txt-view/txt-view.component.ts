@@ -9,21 +9,22 @@ import { Book } from '../model/book';
 @Component({
   selector: 'app-txt-view',
   templateUrl: './txt-view.component.html',
-  styleUrls: ['./txt-view.component.css']
+  styleUrls: ['./txt-view.component.css'],
 })
 export class TxtViewComponent implements OnInit {
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private appService: AppService,
     private router: Router,
-  ) { }
+  ) {}
 
   audio: HTMLAudioElement = new Audio();
   jumpInput: HTMLInputElement | undefined;
 
   book: Book | undefined;
-  paragraphDisplayed: Array<number> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+  paragraphDisplayed: Array<number> = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+  ];
   isPlaying: boolean = false;
 
   settings: AppSettings | undefined;
@@ -141,5 +142,4 @@ export class TxtViewComponent implements OnInit {
     this.audio.load();
     this.audio.play();
   }
-
 }

@@ -5,14 +5,13 @@ import { AppSettings } from '../app.settings';
 @Component({
   selector: 'app-key-dialog',
   templateUrl: './key-dialog.component.html',
-  styleUrls: ['./key-dialog.component.css']
+  styleUrls: ['./key-dialog.component.css'],
 })
 export class KeyDialogComponent implements OnInit {
+  constructor(public dialogRef: MatDialogRef<KeyDialogComponent>) {}
 
-  constructor(public dialogRef: MatDialogRef<KeyDialogComponent>) { }
-
-  azureKey: string|undefined = undefined;
-  azureOpenAIKey: string|undefined = undefined;
+  azureKey: string | undefined = undefined;
+  azureOpenAIKey: string | undefined = undefined;
 
   ngOnInit(): void {
     this.azureKey = AppSettings.GetAzureCognitiveServiceKey();
@@ -20,7 +19,9 @@ export class KeyDialogComponent implements OnInit {
   }
 
   OnEnterClicked(): void {
-    AppSettings.SetCognitiveServiceAzureKey(this.GetKey('cognitive-service-key-input'));
+    AppSettings.SetCognitiveServiceAzureKey(
+      this.GetKey('cognitive-service-key-input'),
+    );
     AppSettings.SetAzureOpenAIKey(this.GetKey('openai-key-input'));
     this.dialogRef.close();
   }

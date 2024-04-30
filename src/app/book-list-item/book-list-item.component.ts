@@ -6,13 +6,13 @@ import { AppSettings } from '../app.settings';
 @Component({
   selector: 'app-book-list-item',
   templateUrl: './book-list-item.component.html',
-  styleUrl: './book-list-item.component.css'
+  styleUrl: './book-list-item.component.css',
 })
-export class BookListItemComponent  {
+export class BookListItemComponent {
   constructor(
     private router: Router,
     public dialog: MatDialog,
-  ) { }
+  ) {}
 
   @Input()
   object: any;
@@ -21,7 +21,9 @@ export class BookListItemComponent  {
 
   GetChildren(item: any): string[] {
     const allKeys = Object.keys(item);
-    const childKeys = allKeys.filter((key) => key !== 'show' && key !== 'files');
+    const childKeys = allKeys.filter(
+      (key) => key !== 'show' && key !== 'files',
+    );
     return childKeys;
   }
 

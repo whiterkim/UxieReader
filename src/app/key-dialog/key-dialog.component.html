@@ -1,19 +1,36 @@
 <div class="modal-body m-2">
-    <mat-dialog-content class="mat-typography">
-        <h3>Azure Cognitive Services Key</h3>
-        <div class="input-group">
-            <input type="text" class="form-control bg-dark text-white" id="cognitive-service-key-input" value="{{azureKey}}">
-        </div>
-    </mat-dialog-content>
+  <mat-dialog-content class="mat-typography">
+    <h3>Azure Cognitive Services Key</h3>
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control bg-dark text-white"
+        id="cognitive-service-key-input"
+        value="{{ azureKey }}"
+      />
+    </div>
+  </mat-dialog-content>
 
-    <mat-dialog-content class="mat-typography">
-        <h3>Azure OpenAI Key</h3>
-        <div class="input-group">
-            <input type="text" class="form-control bg-dark text-white" id="openai-key-input" value="{{azureOpenAIKey}}">
-        </div>
-    </mat-dialog-content>
+  <mat-dialog-content class="mat-typography">
+    <h3>Azure OpenAI Key</h3>
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control bg-dark text-white"
+        id="openai-key-input"
+        value="{{ azureOpenAIKey }}"
+      />
+    </div>
+  </mat-dialog-content>
 
-    <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close class="btn btn-primary" (click)="OnEnterClicked()">Save</button>
-    </mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      class="btn btn-primary"
+      (click)="OnEnterClicked()"
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
 </div>
