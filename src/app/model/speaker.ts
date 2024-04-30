@@ -1,6 +1,6 @@
 export interface Speaker {
   textIndex: number;
-  speaker: string;
+  name: string;
   gender: string;
   target: string;
 }

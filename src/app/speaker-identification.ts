@@ -29,7 +29,7 @@ export class SpeakerIdentification {
   static Default(): Speaker {
     return {
       textIndex: -1,
-      speaker: 'default',
+      name: 'default',
       gender: 'NA',
       target: 'NA',
     };

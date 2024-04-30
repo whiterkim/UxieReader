@@ -1,5 +1,5 @@
 export interface Character {
-  character: string;
+  name: string;
   gender: string;
   alias: string[];
 }

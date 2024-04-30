@@ -13,7 +13,7 @@
     <app-voice-menu key="female"></app-voice-menu>
 
     <div *ngFor="let character of characters">
-      <h3>{{ character.character }} ({{ character.gender }})</h3>
+      <h3>{{ character.name }} ({{ character.gender }})</h3>
       <app-voice-menu [character]="character"></app-voice-menu>
     </div>
   </mat-dialog-content>

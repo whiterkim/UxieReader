@@ -4,7 +4,7 @@ The input will be a JSON object containing four arrays:
 1. "characters": an array of objects, each representing a character with their name, gender, and aliases:
 ```
 {
-  "character": "character's name",
+  "name": "character's name",
   "gender": "male, female or NA for narration",
   "alias": ["alias1", "alias2", ...]
 }
@@ -37,7 +37,7 @@ Note that the "textsBefore" and "textsAfter" are providing context for better id
 Return your analysis as a JSON object containing a "data" array. Each element of "data" should be an object corresponding to a line of text, in the following format:
 {
   "textIndex": "index of the line of text",
-  "speaker": "speaker's name or 'narration'", 
+  "name": "speaker's name or 'narration'", 
   "gender": "speaker's gender - 'male', 'female', or 'NA' for narration",
   "target": "who the speaker is talking to - a name, or 'NA' if not talking to anyone or if narration"
 }
@@ -51,62 +51,62 @@ For example, if the input is:
 {
   "characters": [
     {
-      "character": "Narration",
+      "name": "Narration",
       "gender": "NA",
       "alias": []
     },
     {
-      "character": "奈芙蒂斯",
+      "name": "奈芙蒂斯",
       "gender": "female",
       "alias": [
         "「奈芙蒂斯」"
       ]
     },
     {
-      "character": "僧正",
+      "name": "僧正",
       "gender": "male",
       "alias": [
         "「僧正」"
       ]
     },
     {
-      "character": "娘娘",
+      "name": "娘娘",
       "gender": "female",
       "alias": [
         "「娘娘」"
       ]
     },
     {
-      "character": "欧提努斯",
+      "name": "欧提努斯",
       "gender": "NA",
       "alias": [
         "「欧提努斯」"
       ]
     },
     {
-      "character": "亚雷斯塔",
+      "name": "亚雷斯塔",
       "gender": "NA",
       "alias": []
     },
     {
-      "character": "原石",
+      "name": "原石",
       "gender": "NA",
       "alias": [
         "「原石」"
       ]
     },
     {
-      "character": "上条当麻",
+      "name": "上条当麻",
       "gender": "male",
       "alias": []
     },
     {
-      "character": "安女王",
+      "name": "安女王",
       "gender": "female",
       "alias": []
     },
     {
-      "character": "亚瑟王",
+      "name": "亚瑟王",
       "gender": "male",
       "alias": []
     }
@@ -152,27 +152,27 @@ For example, if the input is:
 The output should be:
 ```
 {
-  "data": [
-    {"textIndex": "0", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "1", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "2", "speaker": "奈芙蒂斯", "gender": "female", "target": "僧正"},
-    {"textIndex": "3", "speaker": "娘娘", "gender": "female", "target": "僧正"},
-    {"textIndex": "4", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "5", "speaker": "娘娘", "gender": "female", "target": "僧正"},
-    {"textIndex": "6", "speaker": "僧正", "gender": "male", "target": "娘娘"},
-    {"textIndex": "7", "speaker": "娘娘", "gender": "female", "target": "僧正"},
-    {"textIndex": "8", "speaker": "僧正", "gender": "male", "target": "娘娘"},
-    {"textIndex": "9", "speaker": "娘娘", "gender": "female", "target": "僧正"},
-    {"textIndex": "10", "speaker": "僧正", "gender": "male", "target": "娘娘"},
-    {"textIndex": "11", "speaker": "娘娘", "gender": "female", "target": "僧正"},
-    {"textIndex": "12", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "13", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "14", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "15", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "16", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "17", "speaker": "奈芙蒂斯", "gender": "female", "target": "NA"},
-    {"textIndex": "18", "speaker": "narration", "gender": "NA", "target": "NA"},
-    {"textIndex": "19", "speaker": "奈芙蒂斯", "gender": "female", "target": "NA"},
+  "speakers": [
+    {"textIndex": "0", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "1", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "2", "name": "奈芙蒂斯", "gender": "female", "target": "僧正"},
+    {"textIndex": "3", "name": "娘娘", "gender": "female", "target": "僧正"},
+    {"textIndex": "4", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "5", "name": "娘娘", "gender": "female", "target": "僧正"},
+    {"textIndex": "6", "name": "僧正", "gender": "male", "target": "娘娘"},
+    {"textIndex": "7", "name": "娘娘", "gender": "female", "target": "僧正"},
+    {"textIndex": "8", "name": "僧正", "gender": "male", "target": "娘娘"},
+    {"textIndex": "9", "name": "娘娘", "gender": "female", "target": "僧正"},
+    {"textIndex": "10", "name": "僧正", "gender": "male", "target": "娘娘"},
+    {"textIndex": "11", "name": "娘娘", "gender": "female", "target": "僧正"},
+    {"textIndex": "12", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "13", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "14", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "15", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "16", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "17", "name": "奈芙蒂斯", "gender": "female", "target": "NA"},
+    {"textIndex": "18", "name": "narration", "gender": "NA", "target": "NA"},
+    {"textIndex": "19", "name": "奈芙蒂斯", "gender": "female", "target": "NA"},
   ]
 }
 ```

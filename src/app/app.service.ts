@@ -157,61 +157,61 @@ export class AppService {
     return [
       {
         textIndex: 0,
-        speaker: 'narration',
+        name: 'narration',
         gender: 'NA',
         target: 'NA',
       },
       {
         textIndex: 1,
-        speaker: 'narration',
+        name: 'narration',
         gender: 'NA',
         target: 'NA',
       },
       {
         textIndex: 2,
-        speaker: '史蒂芬妮·葛洁帕蕾丝',
+        name: '史蒂芬妮·葛洁帕蕾丝',
         gender: 'female',
         target: 'NA',
       },
       {
         textIndex: 3,
-        speaker: '滨面仕上',
+        name: '滨面仕上',
         gender: 'male',
         target: 'NA',
       },
       {
         textIndex: 4,
-        speaker: '滨面仕上',
+        name: '滨面仕上',
         gender: 'male',
         target: '史蒂芬妮·葛洁帕蕾丝',
       },
       {
         textIndex: 5,
-        speaker: '史蒂芬妮·葛洁帕蕾丝',
+        name: '史蒂芬妮·葛洁帕蕾丝',
         gender: 'female',
         target: '滨面仕上',
       },
       {
         textIndex: 6,
-        speaker: '滨面仕上',
+        name: '滨面仕上',
         gender: 'male',
         target: '史蒂芬妮·葛洁帕蕾丝',
       },
       {
         textIndex: 7,
-        speaker: '史蒂芬妮·葛洁帕蕾丝',
+        name: '史蒂芬妮·葛洁帕蕾丝',
         gender: 'female',
         target: 'NA',
       },
       {
         textIndex: 8,
-        speaker: '滨面仕上',
+        name: '滨面仕上',
         gender: 'male',
         target: '史蒂芬妮·葛洁帕蕾丝',
       },
       {
         textIndex: 9,
-        speaker: '史蒂芬妮·葛洁帕蕾丝',
+        name: '史蒂芬妮·葛洁帕蕾丝',
         gender: 'female',
         target: '滨面仕上',
       },
@@ -278,19 +278,19 @@ export class AppService {
     // Convert message.content to JSON
     let data = JSON.parse(message.content);
     console.log(data);
-    if (data.data.length !== paragraphs.length) {
+    if (data.speakers.length !== paragraphs.length) {
       throw new Error('Data length mismatch');
     }
 
     for (let i = 0; i < paragraphs.length; i++) {
-      let item = data.data[i];
+      let item = data.speakers[i];
       // Cast item to Speaker
       if (+item.textIndex !== i) {
         throw new Error('Index mismatch');
       }
       let speaker: Speaker = {
         textIndex: item.textIndex,
-        speaker: item.speaker,
+        name: item.name,
         gender: item.gender,
         target: item.target,
       };
@@ -303,37 +303,37 @@ export class AppService {
   public async ListCharactersFake(paragraphs: string[]): Promise<Character[]> {
     return [
       {
-        character: 'narration',
+        name: 'narration',
         gender: 'NA',
         alias: ['narration'],
       },
       {
-        character: '少年',
+        name: '少年',
         gender: 'male',
         alias: ['少年'],
       },
       {
-        character: '不良少年',
+        name: '不良少年',
         gender: 'male',
         alias: ['不良少年', '那家伙'],
       },
       {
-        character: '芙兰达',
+        name: '芙兰达',
         gender: 'female',
         alias: ['芙兰达', '她', '那个失踪朋友', '朋友'],
       },
       {
-        character: '上条当麻',
+        name: '上条当麻',
         gender: 'male',
         alias: ['上条当麻', '上条'],
       },
       {
-        character: '茵蒂克丝',
+        name: '茵蒂克丝',
         gender: 'female',
         alias: ['茵蒂克丝'],
       },
       {
-        character: '欧提努斯',
+        name: '欧提努斯',
         gender: 'female',
         alias: [
           '欧提努斯',
@@ -344,37 +344,37 @@ export class AppService {
         ],
       },
       {
-        character: '蓝花悦',
+        name: '蓝花悦',
         gender: 'NA',
         alias: ['蓝花悦', '学园都市的第六位'],
       },
       {
-        character: '泷壶理后',
+        name: '泷壶理后',
         gender: 'female',
         alias: ['泷壶理后'],
       },
       {
-        character: '绢旗最爱',
+        name: '绢旗最爱',
         gender: 'female',
         alias: ['绢旗最爱'],
       },
       {
-        character: '滨面仕上',
+        name: '滨面仕上',
         gender: 'male',
         alias: ['滨面仕上', '滨面'],
       },
       {
-        character: '史蒂芬妮·葛洁帕蕾丝',
+        name: '史蒂芬妮·葛洁帕蕾丝',
         gender: 'female',
         alias: ['史蒂芬妮·葛洁帕蕾丝', '史蒂芬妮'],
       },
       {
-        character: '麦野沉利',
+        name: '麦野沉利',
         gender: 'female',
         alias: ['麦野沉利', '麦野'],
       },
       {
-        character: '魔术师',
+        name: '魔术师',
         gender: 'male',
         alias: ['魔术师', '魔神'],
       },
@@ -434,9 +434,9 @@ export class AppService {
     console.log(data);
 
     const characters: Character[] = [];
-    for (let item of data.data) {
+    for (let item of data.characters) {
       const character: Character = {
-        character: item.character,
+        name: item.name,
         gender: item.gender,
         alias: item.alias,
       };

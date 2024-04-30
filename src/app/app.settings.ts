@@ -64,15 +64,15 @@ export class AppSettings {
 
   public static GetVoiceForSpeaker(speaker: Speaker): CharacterVoice {
     return (
-      AppSettings.GetSavedCharacterVoice(speaker.speaker) ??
-      AppSettings.GetDefaultVoice(speaker.speaker, speaker.gender)
+      AppSettings.GetSavedCharacterVoice(speaker.name) ??
+      AppSettings.GetDefaultVoice(speaker.name, speaker.gender)
     );
   }
 
   public static GetVoiceForCharacter(character: Character): CharacterVoice {
     return (
-      AppSettings.GetSavedCharacterVoice(character.character) ??
-      AppSettings.GetDefaultVoice(character.character, character.gender)
+      AppSettings.GetSavedCharacterVoice(character.name) ??
+      AppSettings.GetDefaultVoice(character.name, character.gender)
     );
   }
 

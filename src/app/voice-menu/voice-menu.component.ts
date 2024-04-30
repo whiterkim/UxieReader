@@ -72,10 +72,7 @@ export class VoiceMenuComponent implements OnInit {
       AppSettings.SetCharacterVoice(this.key, this.characterVoice);
     }
     if (this.character) {
-      AppSettings.SetCharacterVoice(
-        this.character.character,
-        this.characterVoice,
-      );
+      AppSettings.SetCharacterVoice(this.character.name, this.characterVoice);
     }
   }
 }
