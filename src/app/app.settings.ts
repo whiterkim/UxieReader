@@ -1,6 +1,6 @@
 import { Character } from "./model/character";
 import { Speaker } from "./model/speaker";
-import { Voice } from "./model/voice";
+import { CharacterVoice, VoiceProfile } from "./model/voice";
 import voiceJson from '../assets/voice-list.json';
 
 export class AppSettings {
@@ -62,47 +62,70 @@ export class AppSettings {
     localStorage.setItem('textSize', size.toString());
   }
 
-  public static GetVoice(speaker: Speaker): Voice {
-    const characterVoice = AppSettings.GetCharacterVoice(speaker.speaker);
-    if (characterVoice !== undefined) {
-      return characterVoice;
+  public static GetVoiceForSpeaker(speaker: Speaker): CharacterVoice {
+    return AppSettings.GetSavedCharacterVoice(speaker.speaker)
+      ?? AppSettings.GetDefaultVoice(speaker.speaker, speaker.gender);
+  }
+
+  public static GetVoiceForCharacter(character: Character): CharacterVoice {
+    return AppSettings.GetSavedCharacterVoice(character.character)
+      ?? AppSettings.GetDefaultVoice(character.character, character.gender);
+  }
+
+  private static GetDefaultVoice(name: string, gender: string): CharacterVoice {
+    let key = 'default'
+    if (name === 'narration') { 
+        key = 'narration';
+    } else if (gender === 'male') {
+        key = 'male';
+    } else if (gender === 'female') {
+        key = 'female';
     }
-
-    const defaultVoice = AppSettings.GetDefaultVoice(speaker);
-    return defaultVoice;
+    return AppSettings.GetCharacterVoice(key);
   }
 
-  public static GetDefaultVoice(speaker: Speaker): Voice {
-    let role = 'narration';
-    if (speaker.speaker !== 'narration') {
-      role = speaker.gender;
+  public static GetCharacterVoice(key: string): CharacterVoice {
+    return AppSettings.GetSavedCharacterVoice(key)
+      ?? AppSettings.BuildCharacterVoice(AppSettings.GetVoiceProfiles()[0]);
+  }
+
+  private static GetSavedCharacterVoice(key: string): CharacterVoice | undefined {
+    let savedVoiceJson = localStorage.getItem(key);
+    if (savedVoiceJson !== null) {
+      try {
+        return JSON.parse(savedVoiceJson) as CharacterVoice;
+      } catch (error) {
+        console.error('Error parsing voice profile for ' + key + ': ' + error);
+      }
     }
-    return AppSettings.GetDefaultVoiceForRole(role);
+    return undefined;
   }
 
-  public static GetDefaultVoiceForRole(role: string): Voice {
-    return AppSettings.GetCharacterVoice(role) ?? AppSettings.VoiceList()[0];
+  public static SetCharacterVoice(key: string, voice: CharacterVoice): void {
+    const voiceJson = JSON.stringify(voice);
+    localStorage.setItem(key, voiceJson);
   }
 
-  public static GetCharacterVoice(role: string): Voice | undefined {
-    let savedVoiceValue = localStorage.getItem(role);
-    return AppSettings.VoiceList().find(
-      (voice) => voice.value === savedVoiceValue);
+  public static BuildCharacterVoice(voice: VoiceProfile, style?: string, role?: string): CharacterVoice{
+    // Check style in voice.StyleList
+    if (style && voice.StyleList && !voice.StyleList.includes(style)) {
+      style = undefined;
+    }
+    // Check role in voice.RolePlayList
+    if (role && voice.RolePlayList && !voice.RolePlayList.includes(role)) {
+      role = undefined;
+    }
+    return {
+      name: voice.LocalName,
+      value: voice.ShortName,
+      gender: voice.Gender,
+      style,
+      role,
+    };
   }
 
-  public static SetVoice(role: string, voice: Voice): void {
-    localStorage.setItem(role, voice.value);
-  }
-
-  public static VoiceList(): Voice[] {
-    const voices = (voiceJson as any[]).map((item) => ({
-      name: item.LocalName,
-      value: item.ShortName,
-      gender: item.Gender,
-      styles: item.StyleList,
-      roles: item.RolePlayList,
-    } as Voice));
-    return voices;
+  public static GetVoiceProfiles(): VoiceProfile[] {
+    return voiceJson as VoiceProfile[];
   }
 
   public static GetAzureCognitiveServiceKey(): string {

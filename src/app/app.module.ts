@@ -14,6 +14,7 @@ import { TxtViewComponent } from './txt-view/txt-view.component';
 import { KeyDialogComponent } from './key-dialog/key-dialog.component';
 import { VoiceDialogComponent } from './voice-dialog/voice-dialog.component';
 import { BookListItemComponent } from "./book-list-item/book-list-item.component";
+import { VoiceMenuComponent } from "./voice-menu/voice-menu.component";
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import { BookListItemComponent } from "./book-list-item/book-list-item.component
         TxtViewComponent,
         KeyDialogComponent,
         VoiceDialogComponent,
+        VoiceMenuComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

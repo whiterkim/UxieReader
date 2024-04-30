@@ -85,15 +85,36 @@ export class AppService {
     return book;
   }
 
-  private GetRequestXmlBody(text: string, speaker: Speaker ): string {
-    let voiceName = AppSettings.GetVoice(speaker).value;
-    const xml_body = create()
-        .ele('speak', { version: '1.0', xmlns: 'http://www.w3.org/2001/10/synthesis', 'xmlns:mstts': 'https://www.w3.org/2001/mstts', 'xml:lang': 'zh-CN'})
-        .ele('voice', { name: voiceName})
-        .txt(text)
-        .end();
+  private GetRequestXmlBody(text: string, speaker: Speaker): string {
+    const characterVoice = AppSettings.GetVoiceForSpeaker(speaker);
+    const root = create()
+        .ele('speak', {
+            version: '1.0',
+            xmlns: 'http://www.w3.org/2001/10/synthesis',
+            'xmlns:mstts': 'https://www.w3.org/2001/mstts',
+            'xml:lang': 'zh-CN'
+        })
+        .ele('voice', { name: characterVoice.value });
 
-    return xml_body.toString();
+    // Add express-as element
+    if (characterVoice.style || characterVoice.role) {
+        const expressAsAttributes: any = {};
+        if (characterVoice.style) {
+            expressAsAttributes.style = characterVoice.style;
+        }
+        if (characterVoice.role) {
+            expressAsAttributes.role = characterVoice.role;
+        }
+        root.ele('mstts:express-as', expressAsAttributes);
+    }
+
+    // Add text content
+    root.txt(text).end();
+
+    const xml_body = root.end({ prettyPrint: true });
+    console.log(xml_body);
+
+    return xml_body;
   }
 
   public async GetVoice(text: string, speaker: Speaker = SpeakerIdentification.Default()): Promise<Blob> {

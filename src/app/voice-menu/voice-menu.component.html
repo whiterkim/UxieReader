@@ -1,0 +1,31 @@
+<div *ngIf="character || key" class="btn-group" role="group" aria-label="Button group with nested dropdown">
+  <div ngbDropdown class="btn-group" role="group">
+    <button ngbDropdownToggle id="voiceDropdownButton" type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {{characterVoice?.name ?? 'Voice'}}
+    </button>
+    <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="voiceDropdownButton">
+      <div ngbDropdownItem class="menu-item" *ngFor="let profile of GetVoiceProfiles()" (click)="OnProfileClicked(profile)">{{profile.LocalName}}</div>
+    </div>
+  </div>
+
+  <div ngbDropdown class="btn-group" role="group">
+    <button ngbDropdownToggle [ngClass]="selectedProfile?.StyleList ?? 'disabled'" id="styleDropdownButton" type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {{characterVoice?.style ?? 'Style'}}
+    </button>
+    <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="styleDropdownButton">
+      <div ngbDropdownItem class="menu-item" (click)="OnStyleClicked()">Reset</div>
+      <div ngbDropdownItem class="menu-item" *ngFor="let style of selectedProfile?.StyleList" (click)="OnStyleClicked(style)">{{style}}</div>
+    </div>
+  </div>
+
+  <div ngbDropdown class="btn-group" role="group">
+    <button ngbDropdownToggle [ngClass]="selectedProfile?.RolePlayList ?? 'disabled'" id="roleDropdownButton" type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {{characterVoice?.role ?? 'Role'}}
+    </button>
+    <div ngbDropdownMenu class="dropdown-menu-dark dropdown-menu-end" aria-labelledby="roleDropdownButton">
+      <div ngbDropdownItem class="menu-item" (click)="OnRoleClicked()">Reset</div>
+      <div ngbDropdownItem class="menu-item" *ngFor="let role of selectedProfile?.RolePlayList" (click)="OnRoleClicked(role)">{{role}}</div>
+    </div>
+  </div>
+</div>
+<div style="height: 2em; width: 16em;"></div>
