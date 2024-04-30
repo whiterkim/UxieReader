@@ -71,7 +71,7 @@ export class EpubViewComponent implements OnInit {
 
     this.textSize = AppSettings.GetTextSize();
     this.settings = new AppSettings(bookName);
-    let savedCfi = this.settings.GetEpubCfi();
+    const savedCfi = this.settings.GetEpubCfi();
     if (savedCfi) {
       await this.Navigate(savedCfi);
     } else {
@@ -84,8 +84,18 @@ export class EpubViewComponent implements OnInit {
     this.InitInputElement();
 
     this.GetChapters(loadedBook.spine);
+    this.RefreshCurrentChapter(savedCfi);
 
     this.TriggerInitialization();
+  }
+
+  private GetCfiBase(cfi: string): string | undefined {
+    // Regular expression to match the CFI base
+    const regex = /epubcfi\((\/\d+\/\d+)!/;
+    // Execute the regex on the input string
+    const match = regex.exec(cfi);
+    // Return the matched group or null if no match is found
+    return match ? match[1] : undefined;
   }
 
   private GetChapters(spine: Spine): void {
@@ -98,6 +108,19 @@ export class EpubViewComponent implements OnInit {
         cfi: cfi,
       });
     });
+  }
+
+  private RefreshCurrentChapter(currentCfi?: string): void {
+    if (!currentCfi) {
+      currentCfi = (this.rendition?.currentLocation() as any).end.cfi;
+    }
+
+    if (currentCfi) {
+      const currentCfiBase = this.GetCfiBase(currentCfi);
+      this.chapters.forEach((chapter) => {
+        chapter.isCurrent = currentCfiBase === this.GetCfiBase(chapter.cfi);
+      });
+    }
   }
 
   private InitAudioElement(): void {
@@ -118,7 +141,6 @@ export class EpubViewComponent implements OnInit {
     if (element instanceof HTMLInputElement) {
       this.jumpInput = element;
       this.jumpInput?.addEventListener('input', (event) => {
-        console.log(this.jumpInput?.value);
         this.UnmarkParagraph(this.counter);
         this.counter = this.jumpInput ? +this.jumpInput?.value : 0;
         this.MarkParagraph(this.counter);
@@ -203,6 +225,8 @@ export class EpubViewComponent implements OnInit {
     } else {
       await this.rendition?.prev();
     }
+
+    this.RefreshCurrentChapter();
     this.GetParagraphs();
     this.counter = isBeginning ? 0 : this.paragraphs.length - 1;
     this.TriggerInitialization();
@@ -311,6 +335,7 @@ export class EpubViewComponent implements OnInit {
 
   OnChapterClicked(chapter: any): void {
     this.Navigate(chapter.cfi);
+    this.RefreshCurrentChapter(chapter.cfi);
   }
 
   private SaveSettings(): void {
