@@ -336,12 +336,16 @@ export class EpubViewComponent implements OnInit {
   OnChapterClicked(chapter: any): void {
     this.Navigate(chapter.cfi);
     this.RefreshCurrentChapter(chapter.cfi);
+    this.SaveSettings(chapter.cfi);
   }
 
-  private SaveSettings(): void {
-    if (this.rendition) {
-      let cfi = this.rendition.location.end.cfi;
-      this.settings?.SetEpubCfi(cfi);
+  private SaveSettings(currentCfi?: string): void {
+    if (!currentCfi) {
+      currentCfi = (this.rendition?.currentLocation() as any).end.cfi;
+    }
+
+    if (currentCfi) {
+      this.settings?.SetEpubCfi(currentCfi);
       this.settings?.SetEpubCounter(this.counter);
     }
   }
