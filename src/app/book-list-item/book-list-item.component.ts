@@ -22,13 +22,13 @@ export class BookListItemComponent {
   GetChildren(item: any): string[] {
     const allKeys = Object.keys(item);
     const childKeys = allKeys.filter(
-      (key) => key !== 'show' && key !== 'files',
+      (key) => key !== 'collapse' && key !== 'files',
     );
     return childKeys;
   }
 
   OnCollapseClicked(item: any) {
-    item.show = !item.show;
+    item.collapse = !item.collapse;
   }
 
   OnBookClicked(path: string): void {

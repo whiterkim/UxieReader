@@ -118,8 +118,6 @@ export class AppService {
     root.txt(text).end();
 
     const xml_body = root.end({ prettyPrint: true });
-    console.log(xml_body);
-
     return xml_body;
   }
 

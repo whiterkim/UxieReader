@@ -3,7 +3,7 @@
     <div *ngIf="object[child] as childObject">
       <span (click)="OnCollapseClicked(childObject)">{{ child }}</span>
       <app-book-list-item
-        *ngIf="childObject.show"
+        *ngIf="!childObject.collapse"
         [object]="childObject"
         [folder]="folder + '/' + child"
       ></app-book-list-item>
