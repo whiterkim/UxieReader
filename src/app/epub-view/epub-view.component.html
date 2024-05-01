@@ -40,14 +40,12 @@
         class="dropdown-menu-dark dropdown-menu-end"
         aria-labelledby="settingsDropdownButton"
       >
-        <div ngbDropdownItem class="dropdown-header">
-          <span>Text size</span>
-        </div>
         <div
           ngbDropdownItem
-          class="menu-item"
-          style="display: flex; justify-content: end"
+          class="dropdown-header"
+          style="display: flex; justify-content: space-between"
         >
+          <span>Text size</span>
           <span>
             <i
               class="bi bi-dash-lg setting-icon"
@@ -58,6 +56,14 @@
               (click)="OnTextSizeClicked(0.1)"
             ></i>
           </span>
+        </div>
+
+        <div
+          ngbDropdownItem
+          class="dropdown-header"
+          (click)="OnChangeVoicesClicked()"
+        >
+          <span>Default voices...</span>
         </div>
 
         <div class="dropdown-divider"></div>
@@ -77,7 +83,7 @@
           *ngIf="!availableCharactersLoading"
           (click)="OnGetCharacterListClicked()"
         >
-          <span>Change voices...</span>
+          <span>Voices...</span>
         </div>
         <div
           ngbDropdownItem
@@ -125,14 +131,6 @@
           >
             <span>Refresh</span>
           </div>
-        </div>
-        <div class="dropdown-divider"></div>
-        <div
-          ngbDropdownItem
-          class="dropdown-header"
-          (click)="OnChangeVoicesClicked()"
-        >
-          <span>Change default voice...</span>
         </div>
       </div>
     </div>

@@ -237,7 +237,7 @@ export class AppService {
     });
 
     const prompt = await lastValueFrom(
-      this.http.get('assets/identify-characters.prompt.txt', {
+      this.http.get('assets/identify-speakers.prompt.md', {
         responseType: 'text',
       }),
     );
@@ -391,7 +391,7 @@ export class AppService {
     }
 
     const prompt = await lastValueFrom(
-      this.http.get('assets/list-characters.prompt.txt', {
+      this.http.get('assets/list-characters.prompt.md', {
         responseType: 'text',
       }),
     );

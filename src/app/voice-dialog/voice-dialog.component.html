@@ -1,17 +1,16 @@
 <div class="modal-body m-2">
   <mat-dialog-content class="mat-typography" *ngIf="isDefaultMode">
-    <h3>Voice</h3>
+    <h3>Default Voice</h3>
     <app-voice-menu key="default"></app-voice-menu>
-    <div style="height: 16em; width: 16em"></div>
+    <h3>Narration Voice</h3>
+    <app-voice-menu key="narration"></app-voice-menu>
+    <h3>Male Voice</h3>
+    <app-voice-menu key="male"></app-voice-menu>
+    <h3>Female Voice</h3>
+    <app-voice-menu key="female"></app-voice-menu>
   </mat-dialog-content>
   <mat-dialog-content class="mat-typography" *ngIf="!isDefaultMode">
-    <h3>Narration (Default)</h3>
-    <app-voice-menu key="narration"></app-voice-menu>
-    <h3>Male (Default)</h3>
-    <app-voice-menu key="male"></app-voice-menu>
-    <h3>Female (Default)</h3>
-    <app-voice-menu key="female"></app-voice-menu>
-
+    <!-- if characters is empty -->
     <div *ngFor="let character of characters">
       <h3>{{ character.name }} ({{ character.gender }})</h3>
       <app-voice-menu [character]="character"></app-voice-menu>
