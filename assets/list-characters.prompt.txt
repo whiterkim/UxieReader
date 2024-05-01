@@ -11,9 +11,9 @@ For each unique character you identify, please provide the following information
 
 Organize your response as a JSON object in the following format:
 {
-    "data": [
+    "characters": [
         {
-            "character": "character’s name or ‘narration’",
+            "name": "character’s name or ‘narration’",
             "gender": "character’s gender - ‘male’, ‘female’, or ‘NA’ for narration",
             "alias": ["a list of aliases used for the character in the text"]
         }
