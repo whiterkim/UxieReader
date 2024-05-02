@@ -216,6 +216,21 @@ export class AppService {
     ];
   }
 
+  private GetTextElementArray(texts: string[]): any[] {
+    let elements: any[] = [];
+    for (let i = 0; i < texts.length; i++) {
+      const isSpeech =
+        (texts[i][0] == '「' && texts[i][texts[i].length - 1] == '」') ||
+        (texts[i][0] == '『' && texts[i][texts[i].length - 1] == '』');
+      elements.push({
+        index: i,
+        isNarration: !isSpeech,
+        text: texts[i],
+      });
+    }
+    return elements;
+  }
+
   public async IdentifySpeakers(
     availableCharacters: any[],
     paragraphsBefore: string[],
@@ -231,9 +246,9 @@ export class AppService {
 
     const content = JSON.stringify({
       characters: availableCharacters,
-      textsBefore: paragraphsBefore,
-      texts: paragraphs,
-      textsAfter: paragraphsAfter,
+      textsBefore: this.GetTextElementArray(paragraphsBefore),
+      texts: this.GetTextElementArray(paragraphs),
+      textsAfter: this.GetTextElementArray(paragraphsAfter),
     });
 
     const prompt = await lastValueFrom(
@@ -275,24 +290,24 @@ export class AppService {
 
     // Convert message.content to JSON
     let data = JSON.parse(message.content);
-    console.log(data);
-    if (data.speakers.length !== paragraphs.length) {
-      throw new Error('Data length mismatch');
-    }
 
     for (let i = 0; i < paragraphs.length; i++) {
-      let item = data.speakers[i];
-      // Cast item to Speaker
-      if (+item.textIndex !== i) {
-        throw new Error('Index mismatch');
+      const item = data.speakers.find((item: any) => +item.index === i);
+      if (item) {
+        speakers.push({
+          textIndex: i,
+          name: item.name,
+          gender: item.gender,
+          target: item.target,
+        });
+      } else {
+        speakers.push({
+          textIndex: i,
+          name: 'narration',
+          gender: 'NA',
+          target: 'NA',
+        });
       }
-      let speaker: Speaker = {
-        textIndex: item.textIndex,
-        name: item.name,
-        gender: item.gender,
-        target: item.target,
-      };
-      speakers.push(speaker);
     }
 
     return speakers;

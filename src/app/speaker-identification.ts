@@ -10,11 +10,10 @@ export class SpeakerIdentification {
   processedUnitlCounter: number = 0;
   restCallLock: boolean = false;
 
-  // This 10 is used in identify-speakers.prompt.md
-  static processStep: number = 10;
-  static autoCallStep: number = 10;
-  static textsBeforeStep: number = 5;
-  static textsAfterStep: number = 5;
+  static processStep: number = 20;
+  static autoCallStep: number = 20;
+  static textsBeforeStep: number = 10;
+  static textsAfterStep: number = 10;
 
   constructor(
     appService: AppService,
