@@ -41,7 +41,7 @@ For each "speech" in the `texts` array, identify the following:
 3. Who the speaker is talking to (a character name if talking to someone, or "NA" if not talking to anyone)
 
 Note that the speaker for a line may not always be explicitly listed in the `characters` array. In such cases, try to infer the speaker from context.
-Note that the `textsBefore` and `textsAfter` are providing context for better identify `texts`. Only do speaker identification for `texts` array. And only include the speaker identification result when `isNarration == false`.
+Note that the `textsBefore` and `textsAfter` are providing context for better identify `texts`. ONLY do speaker identification for `texts` array. And ONLY generate the speaker identification result when `isNarration == false`.
 
 ## Examples
 
