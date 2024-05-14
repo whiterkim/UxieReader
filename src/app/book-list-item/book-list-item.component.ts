@@ -19,6 +19,19 @@ export class BookListItemComponent {
   @Input()
   folder: string | undefined;
 
+  GetCollapse(item: any): boolean {
+    if (!item) {
+      return false;
+    }
+
+    // Collapse for the inner most folders.
+    if (item.collapse === undefined && item.files !== undefined) {
+      item.collapse = true;
+    }
+
+    return item.collapse ?? false;
+  }
+
   GetChildren(item: any): string[] {
     const allKeys = Object.keys(item);
     const childKeys = allKeys.filter(

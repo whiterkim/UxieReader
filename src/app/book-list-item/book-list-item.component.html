@@ -3,13 +3,17 @@
     <div *ngIf="object[child] as childObject">
       <span (click)="OnCollapseClicked(childObject)">{{ child }}</span>
       <app-book-list-item
-        *ngIf="!childObject.collapse"
+        *ngIf="!GetCollapse(childObject)"
         [object]="childObject"
         [folder]="folder + '/' + child"
       ></app-book-list-item>
     </div>
   </li>
-  <li *ngFor="let path of object.files" (click)="OnBookClicked(path)">
+  <li
+    *ngFor="let path of object.files"
+    (click)="OnBookClicked(path)"
+    style="margin-bottom: 0.4rem"
+  >
     {{ path }}
   </li>
 </ul>

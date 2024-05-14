@@ -216,12 +216,17 @@ export class AppService {
     ];
   }
 
-  private GetTextElementArray(texts: string[]): any[] {
+  private GetTextElementArray(texts: string[]): {
+    index: number;
+    isNarration: boolean;
+    text: string;
+  }[] {
     let elements: any[] = [];
     for (let i = 0; i < texts.length; i++) {
       const isSpeech =
         (texts[i][0] == '「' && texts[i][texts[i].length - 1] == '」') ||
-        (texts[i][0] == '『' && texts[i][texts[i].length - 1] == '』');
+        (texts[i][0] == '『' && texts[i][texts[i].length - 1] == '』') ||
+        (texts[i][0] == '（' && texts[i][texts[i].length - 1] == '）');
       elements.push({
         index: i,
         isNarration: !isSpeech,
@@ -244,10 +249,12 @@ export class AppService {
       'api-key': AppSettings.GetAzureOpenAIKey(),
     };
 
+    const textElements = this.GetTextElementArray(paragraphs);
+
     const content = JSON.stringify({
       characters: availableCharacters,
       textsBefore: this.GetTextElementArray(paragraphsBefore),
-      texts: this.GetTextElementArray(paragraphs),
+      texts: textElements,
       textsAfter: this.GetTextElementArray(paragraphsAfter),
     });
 
@@ -293,7 +300,7 @@ export class AppService {
 
     for (let i = 0; i < paragraphs.length; i++) {
       const item = data.speakers.find((item: any) => +item.index === i);
-      if (item) {
+      if (!textElements[i].isNarration && item) {
         speakers.push({
           textIndex: i,
           name: item.name,

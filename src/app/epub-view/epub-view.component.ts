@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Rendition } from 'epubjs';
+import { Book, NavItem, Rendition } from 'epubjs';
 import Section from 'epubjs/types/section';
 import Spine from 'epubjs/types/spine';
 import { firstValueFrom } from 'rxjs';
@@ -83,7 +83,7 @@ export class EpubViewComponent implements OnInit {
     this.InitAudioElement();
     this.InitInputElement();
 
-    this.GetChapters(loadedBook.spine);
+    this.GetChapters(loadedBook);
     this.RefreshCurrentChapter(savedCfi);
 
     this.TriggerInitialization();
@@ -98,11 +98,20 @@ export class EpubViewComponent implements OnInit {
     return match ? match[1] : undefined;
   }
 
-  private GetChapters(spine: Spine): void {
+  private GetChapters(book: Book): void {
+    const spine = book.spine;
+    const toc = book.navigation.toc;
     this.chapters = [];
     spine.each((item: Section, _: number) => {
-      let name = item.href.split('/')[1].split('.')[0];
-      let cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)';
+      // Try match toc item and spine item
+      let tocItem = toc.find(
+        (tocItem: NavItem) => '/' + tocItem.href === item.url,
+      );
+      if (!tocItem) {
+        tocItem = toc.find((tocItem: NavItem) => tocItem.href === item.href);
+      }
+      const name = tocItem?.label ?? item.href.split('/')[1].split('.')[0];
+      const cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)';
       this.chapters.push({
         name: name,
         cfi: cfi,
