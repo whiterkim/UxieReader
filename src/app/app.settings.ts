@@ -137,6 +137,63 @@ export class AppSettings {
   }
 
   public static GetVoiceProfiles(): VoiceProfile[] {
+    const maleVoiceOrders = [
+      'Yunxia',
+      'Yunxi',
+      'Yunyi',
+      'Yunjie',
+      'Yunfan Dragon HD Latest',
+      'Yunfan Multilingual',
+      'Yunxiao Multilingual',
+      'Yunhao',
+      'Yunfeng',
+      'Yunjian',
+      'Yunjie',
+      'Yunze',
+    ];
+    const femaleVoiceOrders = [
+      'Xiaoyou',
+      'Xiaoshuang',
+      'Xiaoyi',
+      'Xiaoxiao Multilingual',
+      'Xiaoxiao',
+      'Xiaochen Dragon HD Latest',
+      'Xiaohan',
+      'Xiaomeng',
+      'Xiaoyan',
+      'Xiaochen Multilingual',
+      'Xiaozhen',
+      'Xiaoyu Multilingual',
+      'Xiaochen',
+      'Xiaorui',
+    ];
+    // Sort voiceJson using male and femal array above, then put the rest at the end.
+    voiceJson.sort((a, b) => {
+      let aIndex = maleVoiceOrders.indexOf(a.DisplayName);
+      let bIndex = maleVoiceOrders.indexOf(b.DisplayName);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) {
+        return -1;
+      }
+      if (bIndex !== -1) {
+        return 1;
+      }
+      aIndex = femaleVoiceOrders.indexOf(a.DisplayName);
+      bIndex = femaleVoiceOrders.indexOf(b.DisplayName);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) {
+        return -1;
+      }
+      if (bIndex !== -1) {
+        return 1;
+      }
+      return a.DisplayName.localeCompare(b.DisplayName);
+    });
+    console.log('Sorted voiceJson:', voiceJson);
     return voiceJson as VoiceProfile[];
   }
 

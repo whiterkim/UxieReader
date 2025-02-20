@@ -150,7 +150,9 @@ export class AppService {
 
   public async IdentifySpeakersFake(
     availableCharacters: any[],
+    paragraphsBefore: string[],
     paragraphs: string[],
+    paragraphsAfter: string[],
   ): Promise<Speaker[]> {
     return [
       {
