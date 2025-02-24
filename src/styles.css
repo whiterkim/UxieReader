@@ -22,7 +22,6 @@
 }
 
 .menu-dropdown {
-  max-height: 600px;
   overflow-y: auto;
 }
 
@@ -39,13 +38,10 @@
   padding-top: 72px;
   padding-left: 24px;
   padding-right: 24px;
-  min-height: 844px;
 }
 
 .epub-viewer-frame {
-  padding-top: 72px;
-  padding-bottom: 96px;
-  min-height: 844px;
+  height: 85vh;
 }
 
 .viewer-paragraph {
@@ -59,10 +55,11 @@
 }
 
 .footer-bar {
+  height: 15vh;
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding-bottom: 24px;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .footer-icon {
@@ -76,6 +73,11 @@
   max-height: 36px;
   border: 0px solid;
   align-self: center;
+}
+
+.navbar {
+  padding-top: env(safe-area-inset-top);
+  height: 15vh;
 }
 
 html,

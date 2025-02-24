@@ -453,7 +453,6 @@ export class AppService {
 
     // Convert message.content to JSON
     let data = JSON.parse(message.content);
-    console.log(data);
 
     const characters: Character[] = [];
     for (let item of data.characters) {

@@ -1,7 +1,4 @@
-<nav
-  *ngIf="rendition"
-  class="navbar navbar-expand navbar-dark fixed-top bg-dark"
->
+<nav *ngIf="rendition" class="navbar navbar-expand navbar-dark bg-dark">
   <div class="navbar-nav menu-bar">
     <div ngbDropdown class="nav-link menu-button">
       <i
@@ -164,8 +161,4 @@
 <audio hidden id="text-audio" controls="" autoplay="" name="media">
   <source src="" type="audio/mpeg" />
 </audio>
-<div
-  id="epub-viewer-area"
-  class="epub-viewer-frame bg-dark"
-  style="height: 800px; padding-top: 160px; padding-bottom: 96px"
-></div>
+<div id="epub-viewer-area" class="epub-viewer-frame bg-dark"></div>

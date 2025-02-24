@@ -72,7 +72,6 @@ export class TxtViewComponent implements OnInit {
     if (element instanceof HTMLInputElement) {
       this.jumpInput = element;
       this.jumpInput?.addEventListener('input', (event) => {
-        console.log(this.jumpInput?.value);
         this.counter = this.jumpInput ? +this.jumpInput?.value : 0;
       });
     }

@@ -193,7 +193,6 @@ export class AppSettings {
       }
       return a.DisplayName.localeCompare(b.DisplayName);
     });
-    console.log('Sorted voiceJson:', voiceJson);
     return voiceJson as VoiceProfile[];
   }
 
