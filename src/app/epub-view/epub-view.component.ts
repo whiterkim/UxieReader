@@ -173,6 +173,9 @@ export class EpubViewComponent implements OnInit {
         child.addEventListener('click', () => {
           this.UnmarkParagraph(this.counter);
           this.counter = i;
+          if (this.jumpInput) {
+            this.jumpInput.value = this.counter.toString();
+          }
           this.MarkParagraph(this.counter);
           this.SaveSettings();
         });
