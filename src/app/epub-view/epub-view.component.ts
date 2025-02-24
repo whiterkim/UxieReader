@@ -370,6 +370,11 @@ export class EpubViewComponent implements OnInit {
       this.dialog.open(KeyDialogComponent);
       this.isPlaying = false;
       return;
+    } else if (voice.size === 0) {
+      // If voice.size is 0, it is likely the Azure service call succeeded but no audio was generated.
+      // In this case, we will skip to the next paragraph.
+      this.OnNextParagraphClicked();
+      return;
     }
     const url = URL.createObjectURL(voice);
     if (!this.audio.paused) {
