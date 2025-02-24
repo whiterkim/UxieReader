@@ -32,21 +32,12 @@ export class BookListItemComponent {
     return item.collapse ?? false;
   }
 
-  GetChildren(item: any): string[] {
-    const allKeys = Object.keys(item);
-    const childKeys = allKeys.filter(
-      (key) => key !== 'collapse' && key !== 'files',
-    );
-    return childKeys;
-  }
-
   OnCollapseClicked(item: any) {
     item.collapse = !item.collapse;
   }
 
   OnBookClicked(path: string): void {
-    const fullPath = this.folder + '/' + path;
-    AppSettings.SetLastBookPath(fullPath);
-    this.router.navigate(['/epub-view', fullPath]);
+    AppSettings.SetLastBookPath(path);
+    this.router.navigate(['/epub-view', path]);
   }
 }

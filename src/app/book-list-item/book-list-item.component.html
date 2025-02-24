@@ -1,19 +1,14 @@
 <ul class="viewer-paragraph text-white">
-  <li *ngFor="let child of GetChildren(object)">
-    <div *ngIf="object[child] as childObject">
-      <span (click)="OnCollapseClicked(childObject)">{{ child }}</span>
-      <app-book-list-item
-        *ngIf="!GetCollapse(childObject)"
-        [object]="childObject"
-        [folder]="folder + '/' + child"
-      ></app-book-list-item>
-    </div>
-  </li>
-  <li
-    *ngFor="let path of object.files"
-    (click)="OnBookClicked(path)"
-    style="margin-bottom: 0.4rem"
-  >
-    {{ path }}
+  <li *ngFor="let child of object">
+    <span *ngIf="!child.book_name" (click)="OnCollapseClicked(child)">{{
+      child.key
+    }}</span>
+    <span *ngIf="child.book_name" (click)="OnBookClicked(child.file_name)">{{
+      child.book_name
+    }}</span>
+    <app-book-list-item
+      *ngIf="!GetCollapse(child)"
+      [object]="child.value"
+    ></app-book-list-item>
   </li>
 </ul>
