@@ -1,7 +1,0 @@
-{
-  "short_name": "Uxie Reader",
-  "name": "Uxie Reader",
-  "start_url": "/UxieReader/index.html",
-  "scope": "/UxieReader/",
-  "display": "standalone"
-}
