@@ -41,7 +41,8 @@
 }
 
 .epub-viewer-frame {
-  height: 85vh;
+  height: 88vh;
+  padding-bottom: 10vh;
 }
 
 .viewer-paragraph {
@@ -54,8 +55,13 @@
   margin-right: 12px;
 }
 
-.footer-bar {
-  height: 15vh;
+.navbar {
+  padding-top: env(safe-area-inset-top);
+  height: 12vh;
+}
+
+.footer {
+  height: 10vh;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -75,9 +81,10 @@
   align-self: center;
 }
 
-.navbar {
-  padding-top: env(safe-area-inset-top);
-  height: 15vh;
+.footer-control {
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
 }
 
 html,

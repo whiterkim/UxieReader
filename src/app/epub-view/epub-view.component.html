@@ -134,8 +134,8 @@
   </div>
 </nav>
 
-<nav class="navbar navbar-expand navbar-dark fixed-bottom bg-dark footer-bar">
-  <div class="navbar-nav">
+<footer class="footer navbar-expand navbar-dark fixed-bottom bg-dark">
+  <div class="navbar-nav footer-control">
     <a class="nav-link" *ngIf="audio.paused" (click)="OnPlayClicked()"
       ><i class="bi bi-play-fill footer-icon"></i
     ></a>
@@ -143,7 +143,7 @@
       ><i class="bi bi-pause-fill footer-icon"></i
     ></a>
   </div>
-  <div class="navbar-nav">
+  <div class="navbar-nav footer-control">
     <a class="nav-link" (click)="OnPreviousParagraphClicked()"
       ><i class="bi bi-skip-start-fill footer-icon"></i
     ></a>
@@ -156,7 +156,7 @@
       ><i class="bi bi-skip-end-fill footer-icon"></i
     ></a>
   </div>
-</nav>
+</footer>
 
 <audio hidden id="text-audio" controls="" autoplay="" name="media">
   <source src="" type="audio/mpeg" />
