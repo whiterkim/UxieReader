@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Book, NavItem, Rendition } from 'epubjs';
 import Section from 'epubjs/types/section';
-import Spine from 'epubjs/types/spine';
 import { firstValueFrom } from 'rxjs';
 import { AppService } from '../app.service';
 import { AppSettings } from '../app.settings';
@@ -67,6 +66,7 @@ export class EpubViewComponent implements OnInit {
       width: '100%',
       height: '100%',
       flow: 'scrolled',
+      allowScriptedContent: true,
     });
 
     this.textSize = AppSettings.GetTextSize();
@@ -158,10 +158,9 @@ export class EpubViewComponent implements OnInit {
   }
 
   private GetEpubElement(): HTMLElement | undefined {
-    let epubViewerElement = document.getElementById('epub-viewer-area');
-    let iframeElements = epubViewerElement?.getElementsByTagName('iframe');
-    let iframeElement = iframeElements?.item(0);
-    const bodyElement = iframeElement?.contentDocument?.body;
+    const epubViewerArea = document.getElementById('epub-viewer-area');
+    const iframe = epubViewerArea?.getElementsByTagName('iframe')?.item(0);
+    const bodyElement = iframe?.contentDocument?.body;
     return bodyElement;
   }
 
@@ -171,6 +170,12 @@ export class EpubViewComponent implements OnInit {
     if (element) {
       for (let i = 0; i < element.children.length; i++) {
         let child = element.children[i];
+        child.addEventListener('click', () => {
+          this.UnmarkParagraph(this.counter);
+          this.counter = i;
+          this.MarkParagraph(this.counter);
+          this.SaveSettings();
+        });
         if (child.textContent) {
           this.paragraphs.push(child.textContent);
         } else {
@@ -197,11 +202,7 @@ export class EpubViewComponent implements OnInit {
     await this.rendition?.display(cfi);
     this.GetParagraphs();
     let savedCounter = this.settings?.GetEpubCounter();
-    if (savedCounter === undefined || savedCounter === null) {
-      this.counter = 0;
-    } else {
-      this.counter = savedCounter;
-    }
+    this.counter = savedCounter ?? 0;
     this.RefreshStyle();
     // Navigate to CFI again after the style adjustment
     await this.rendition?.display(cfi);
