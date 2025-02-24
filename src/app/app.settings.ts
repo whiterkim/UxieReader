@@ -11,7 +11,7 @@ export class AppSettings {
   bookName: string = '';
 
   public GetCounter(): number {
-    let savedCounter = localStorage.getItem(this.bookName + 'counter');
+    const savedCounter = localStorage.getItem(this.bookName + 'counter');
     if (savedCounter !== null) {
       return +savedCounter;
     }
@@ -24,7 +24,7 @@ export class AppSettings {
   }
 
   public GetEpubCounter(): number {
-    let savedCounter = localStorage.getItem(this.bookName + '_epub_counter');
+    const savedCounter = localStorage.getItem(this.bookName + '_epub_counter');
     if (savedCounter !== null) {
       return +savedCounter;
     }
@@ -37,7 +37,7 @@ export class AppSettings {
   }
 
   public GetEpubCfi(): string | undefined {
-    let savedEpubCfi = localStorage.getItem(this.bookName + '_epub_cfi');
+    const savedEpubCfi = localStorage.getItem(this.bookName + '_epub_cfi');
     if (savedEpubCfi !== null) {
       return savedEpubCfi;
     }
@@ -50,7 +50,7 @@ export class AppSettings {
 
   // Static methods
   public static GetTextSize(): number {
-    let savedSize = localStorage.getItem('textSize');
+    const savedSize = localStorage.getItem('textSize');
     if (savedSize !== null) {
       return +savedSize;
     }
@@ -98,7 +98,7 @@ export class AppSettings {
   private static GetSavedCharacterVoice(
     key: string,
   ): CharacterVoice | undefined {
-    let savedVoiceJson = localStorage.getItem(key);
+    const savedVoiceJson = localStorage.getItem(key);
     if (savedVoiceJson !== null) {
       try {
         return JSON.parse(savedVoiceJson) as CharacterVoice;
@@ -197,7 +197,7 @@ export class AppSettings {
   }
 
   public static GetAzureCognitiveServiceKey(): string {
-    let savedAzureCognitiveServiceKey = localStorage.getItem(
+    const savedAzureCognitiveServiceKey = localStorage.getItem(
       'azure-cognitive-service-key',
     );
     if (savedAzureCognitiveServiceKey !== null) {
@@ -207,7 +207,7 @@ export class AppSettings {
   }
 
   public static GetAzureOpenAIKey(): string {
-    let savedAzureOpenAIKey = localStorage.getItem('azure-openai-key');
+    const savedAzureOpenAIKey = localStorage.getItem('azure-openai-key');
     if (savedAzureOpenAIKey !== null) {
       return savedAzureOpenAIKey;
     }
@@ -235,7 +235,7 @@ export class AppSettings {
   }
 
   public static GetSpeakerIdentificationEnabled(): boolean {
-    let savedEnabled = localStorage.getItem('speaker-identification-enabled');
+    const savedEnabled = localStorage.getItem('speaker-identification-enabled');
     if (savedEnabled !== null) {
       return savedEnabled === 'true';
     }
@@ -247,7 +247,7 @@ export class AppSettings {
   }
 
   public static GetLastBookPath(): string | null {
-    let savedBook = localStorage.getItem('last-book-path');
+    const savedBook = localStorage.getItem('last-book-path');
     return savedBook;
   }
 
@@ -257,5 +257,17 @@ export class AppSettings {
       return;
     }
     localStorage.setItem('last-book-path', bookPath);
+  }
+
+  public static GetCollapse(key: string): boolean {
+    const collapse = localStorage.getItem('collapse-' + key);
+    if (collapse !== null) {
+      return collapse === 'true';
+    }
+    return false;
+  }
+
+  public static SetCollapse(key: string, value: boolean): void {
+    localStorage.setItem('collapse-' + key, value.toString());
   }
 }

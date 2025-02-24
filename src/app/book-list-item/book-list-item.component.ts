@@ -20,20 +20,12 @@ export class BookListItemComponent {
   folder: string | undefined;
 
   GetCollapse(item: any): boolean {
-    if (!item) {
-      return false;
-    }
-
-    // Collapse for the inner most folders.
-    if (item.collapse === undefined && item.files !== undefined) {
-      item.collapse = true;
-    }
-
-    return item.collapse ?? false;
+    return AppSettings.GetCollapse(item.key);
   }
 
   OnCollapseClicked(item: any) {
     item.collapse = !item.collapse;
+    AppSettings.SetCollapse(item.key, item.collapse);
   }
 
   OnBookClicked(path: string): void {
