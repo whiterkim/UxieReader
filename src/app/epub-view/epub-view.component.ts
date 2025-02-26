@@ -184,6 +184,19 @@ export class EpubViewComponent implements OnInit {
         } else {
           this.paragraphs.push('');
         }
+
+        const links = child.getElementsByTagName('a');
+        if (links.length === 1) {
+          const link = links[0];
+          link.addEventListener('click', () => {
+            console.log('link clicked');
+            // Sleep a bit then refresh style
+            setTimeout(() => {
+              this.RefreshStyle();
+            }, 100);
+          });
+          console.log(link);
+        }
       }
     }
   }

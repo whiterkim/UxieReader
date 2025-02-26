@@ -23,6 +23,8 @@
 
 .menu-dropdown {
   overflow-y: auto;
+  max-height: 80vh;
+  max-width: 90vw;
 }
 
 .menu-item {
@@ -41,12 +43,15 @@
 }
 
 .epub-viewer-frame {
-  height: 88vh;
+  /* 100vh - nav height */
+  height: 92vh;
+  /* footer height */
   padding-bottom: 10vh;
 }
 
 .book-list-frame {
-  height: 88vh;
+  /* 100vh - nav height */
+  height: 92vh;
   padding: 4vh;
   font-size: 1.2rem;
   overflow-y: auto;
@@ -63,8 +68,7 @@
 }
 
 .navbar {
-  padding-top: env(safe-area-inset-top);
-  height: 12vh;
+  height: 8vh;
 }
 
 .footer {
@@ -72,7 +76,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: 2vh;
 }
 
 .footer-icon {
