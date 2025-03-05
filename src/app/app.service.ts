@@ -325,80 +325,28 @@ export class AppService {
   public async ListCharactersFake(paragraphs: string[]): Promise<Character[]> {
     return [
       {
-        name: 'narration',
-        gender: 'NA',
-        alias: ['narration'],
-      },
-      {
-        name: '少年',
-        gender: 'male',
-        alias: ['少年'],
-      },
-      {
-        name: '不良少年',
-        gender: 'male',
-        alias: ['不良少年', '那家伙'],
-      },
-      {
-        name: '芙兰达',
+        name: '御坂美琴',
         gender: 'female',
-        alias: ['芙兰达', '她', '那个失踪朋友', '朋友'],
+        alias: ['美琴', '姐姐大人'],
+        features: ['茶色长发', '常盘台中学', '十亿伏特的雷击枪'],
       },
       {
-        name: '上条当麻',
-        gender: 'male',
-        alias: ['上条当麻', '上条'],
-      },
-      {
-        name: '茵蒂克丝',
+        name: '初春饰利',
         gender: 'female',
-        alias: ['茵蒂克丝'],
+        alias: ['初春'],
+        features: ['头上戴满了花饰', '少女'],
       },
       {
-        name: '欧提努斯',
+        name: '佐天泪子',
         gender: 'female',
-        alias: [
-          '欧提努斯',
-          '新房客',
-          '白皙少女',
-          '身高十五厘米的「魔神」',
-          '欧提努斯',
-        ],
+        alias: ['佐天'],
+        features: ['黑发垂及肩部', '头上戴着一朵花', '活泼少女'],
       },
       {
-        name: '蓝花悦',
-        gender: 'NA',
-        alias: ['蓝花悦', '学园都市的第六位'],
-      },
-      {
-        name: '泷壶理后',
+        name: '白井黑子',
         gender: 'female',
-        alias: ['泷壶理后'],
-      },
-      {
-        name: '绢旗最爱',
-        gender: 'female',
-        alias: ['绢旗最爱'],
-      },
-      {
-        name: '滨面仕上',
-        gender: 'male',
-        alias: ['滨面仕上', '滨面'],
-      },
-      {
-        name: '史蒂芬妮·葛洁帕蕾丝',
-        gender: 'female',
-        alias: ['史蒂芬妮·葛洁帕蕾丝', '史蒂芬妮'],
-      },
-      {
-        name: '麦野沉利',
-        gender: 'female',
-        alias: ['麦野沉利', '麦野'],
-      },
-      {
-        name: '魔术师',
-        gender: 'male',
-        alias: ['魔术师', '魔神'],
+        alias: ['黑子'],
+        features: ['双马尾'],
       },
     ];
   }
@@ -460,6 +408,7 @@ export class AppService {
         name: item.name,
         gender: item.gender,
         alias: item.alias,
+        features: item.features,
       };
       characters.push(character);
     }

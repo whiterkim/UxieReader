@@ -13,6 +13,7 @@ The text will be in CSV format, where:
 2. Group the names together if they belong to the same character.
 3. Identify the official name from the group for the character and treat the rest as alias.
 4. Identify the gender of the character to be one of: 'male', 'female', or 'NA' for unknown cases.
+5. Extract a list of the character features from the text to demonstrate age, outfit, hair style, etc.
 
 # Output Definition
 
@@ -24,7 +25,8 @@ Organize your response as a JSON object in the following format:
     {
       "name": "character’s name",
       "gender": "character’s gender - 'male', 'female', or 'NA'",
-      "alias": ["a list of aliases used for the character in the text"]
+      "alias": ["a list of aliases used for the character in the text"],
+      "features": ["a list of features of the character"]
     }
   ]
 }
@@ -59,17 +61,20 @@ Example output:
     {
       "name": "上条当麻",
       "gender": "male",
-      "alias": ["当麻", "上条", "刺猬头少年"]
+      "alias": ["当麻", "上条", "刺猬头少年"],
+      "features": ["少年", "刺猬头"]
     },
     {
       "name": "茵蒂克丝",
       "gender": "female",
-      "alias": ["白色修女"]
+      "alias": ["白色修女"],
+      "features": ["修女", "白色"]
     },
     {
       "name": "御坂美琴",
       "gender": "female",
-      "alias": ["『哔哩哔哩』"]
+      "alias": ["『哔哩哔哩』"],
+      "features": ["初中生", "少女", "茶色长发"]
     }
   ]
 }
