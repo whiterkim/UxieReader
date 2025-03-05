@@ -225,12 +225,25 @@ export class EpubViewComponent implements OnInit {
     this.MarkParagraph(this.counter);
   }
 
+  private isElementInViewport(element: HTMLElement): boolean {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
   private MarkParagraph(index: number) {
     let element = this.GetEpubElement();
     if (element) {
       let child = element.children[index];
       child?.setAttribute('style', 'background-color:#52595D;');
-      child?.scrollIntoView(true);
+      if (!this.isElementInViewport(child as HTMLElement)) {
+        child.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     }
   }
 

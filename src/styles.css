@@ -98,6 +98,21 @@
   align-self: center;
 }
 
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.hint-text {
+  position: absolute;
+  right: 0.75em;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* so clicks focus the input, not the hint */
+  opacity: 0.5;
+}
+
 html,
 body {
   height: 100%;

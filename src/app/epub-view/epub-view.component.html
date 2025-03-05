@@ -147,12 +147,19 @@
     <a class="nav-link" (click)="OnPreviousParagraphClicked()"
       ><i class="bi bi-skip-start-fill footer-icon"></i
     ></a>
-    <input
-      class="form-control bg-secondary text-white footer-input"
-      inputmode="numeric"
-      id="jump-input"
-      value="{{ counter }}"
-    />
+    <div class="input-wrapper">
+      <input
+        class="form-control bg-secondary text-white footer-input"
+        inputmode="numeric"
+        id="jump-input"
+        value="{{ counter }}"
+      />
+      <span
+        class="hint-text text-light"
+        style="align-self: center; position: absolute"
+        >/{{ paragraphs.length }}</span
+      >
+    </div>
     <a class="nav-link" (click)="OnNextParagraphClicked()"
       ><i class="bi bi-skip-end-fill footer-icon"></i
     ></a>
