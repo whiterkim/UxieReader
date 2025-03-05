@@ -384,7 +384,7 @@
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaorouNeural)",
     "DisplayName": "Xiaorou",
-    "LocalName": "晓柔",
+    "LocalName": "晓柔 港普",
     "ShortName": "zh-CN-XiaorouNeural",
     "Gender": "Female",
     "Locale": "zh-CN",
@@ -1264,7 +1264,7 @@
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-henan, YundengNeural)",
     "DisplayName": "Yundeng",
-    "LocalName": "云登",
+    "LocalName": "云登 河南",
     "ShortName": "zh-CN-henan-YundengNeural",
     "Gender": "Male",
     "Locale": "zh-CN-henan",
@@ -1314,7 +1314,7 @@
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-shaanxi, XiaoniNeural)",
     "DisplayName": "Xiaoni",
-    "LocalName": "晓妮",
+    "LocalName": "晓妮 陕西",
     "ShortName": "zh-CN-shaanxi-XiaoniNeural",
     "Gender": "Female",
     "Locale": "zh-CN-shaanxi",
@@ -1331,7 +1331,7 @@
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-shandong, YunxiangNeural)",
     "DisplayName": "Yunxiang",
-    "LocalName": "云翔",
+    "LocalName": "云翔 山东",
     "ShortName": "zh-CN-shandong-YunxiangNeural",
     "Gender": "Male",
     "Locale": "zh-CN-shandong",
@@ -1361,57 +1361,6 @@
       "VoicePersonalities": ["Casual", "Animated", "Gentle"]
     },
     "WordsPerMinute": "285"
-  },
-  {
-    "Name": "Microsoft Server Speech Text to Speech Voice (zh-HK, HiuMaanNeural)",
-    "DisplayName": "HiuMaan",
-    "LocalName": "曉曼",
-    "ShortName": "zh-HK-HiuMaanNeural",
-    "Gender": "Female",
-    "Locale": "zh-HK",
-    "LocaleName": "Chinese (Cantonese, Traditional)",
-    "SampleRateHertz": "48000",
-    "VoiceType": "Neural",
-    "Status": "GA",
-    "VoiceTag": {
-      "TailoredScenarios": ["News", "Narration"],
-      "VoicePersonalities": ["Bright", "Upbeat"]
-    },
-    "WordsPerMinute": "244"
-  },
-  {
-    "Name": "Microsoft Server Speech Text to Speech Voice (zh-HK, WanLungNeural)",
-    "DisplayName": "WanLung",
-    "LocalName": "雲龍",
-    "ShortName": "zh-HK-WanLungNeural",
-    "Gender": "Male",
-    "Locale": "zh-HK",
-    "LocaleName": "Chinese (Cantonese, Traditional)",
-    "SampleRateHertz": "48000",
-    "VoiceType": "Neural",
-    "Status": "GA",
-    "VoiceTag": {
-      "TailoredScenarios": ["News", "Narration"],
-      "VoicePersonalities": ["Calm", "Formal"]
-    },
-    "WordsPerMinute": "259"
-  },
-  {
-    "Name": "Microsoft Server Speech Text to Speech Voice (zh-HK, HiuGaaiNeural)",
-    "DisplayName": "HiuGaai",
-    "LocalName": "曉佳",
-    "ShortName": "zh-HK-HiuGaaiNeural",
-    "Gender": "Female",
-    "Locale": "zh-HK",
-    "LocaleName": "Chinese (Cantonese, Traditional)",
-    "SampleRateHertz": "48000",
-    "VoiceType": "Neural",
-    "Status": "GA",
-    "VoiceTag": {
-      "TailoredScenarios": ["News", "E-learning"],
-      "VoicePersonalities": ["Crisp", "Bright", "Clear"]
-    },
-    "WordsPerMinute": "194"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-TW, HsiaoChenNeural)",

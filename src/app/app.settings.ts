@@ -137,62 +137,66 @@ export class AppSettings {
   }
 
   public static GetVoiceProfiles(): VoiceProfile[] {
-    const maleVoiceOrders = [
-      'Yunxia',
-      'Yunxi',
-      'Yunyi',
-      'Yunjie',
-      'Yunfan Dragon HD Latest',
-      'Yunfan Multilingual',
-      'Yunxiao Multilingual',
-      'Yunhao',
-      'Yunfeng',
-      'Yunjian',
-      'Yunjie',
-      'Yunze',
+    // Merge both "male" and "female" lists into a single desired order
+    const voiceOrders = [
+      // Male voices
+      'zh-CN-YunxiaNeural',
+      'zh-CN-YunxiNeural',
+      'zh-CN-YunyiMultilingualNeural',
+      'zh-CN-YunjieNeural',
+      'zh-CN-Yunfan:DragonHDLatestNeural',
+      'zh-CN-YunfanMultilingualNeural',
+      'zh-CN-YunxiaoMultilingualNeural',
+      'zh-CN-YunhaoNeural',
+      'zh-CN-YunfengNeural',
+      'zh-CN-YunjianNeural',
+      'zh-CN-YunyeNeural',
+      'zh-CN-YunzeNeural',
+      // Female voices
+      'zh-CN-XiaoyouNeural',
+      'zh-CN-XiaoshuangNeural',
+      'zh-CN-XiaoyiNeural',
+      'zh-CN-XiaoxiaoMultilingualNeural',
+      'zh-CN-XiaoxiaoNeural',
+      'zh-CN-Xiaochen:DragonHDLatestNeural',
+      'zh-CN-XiaohanNeural',
+      'zh-CN-XiaomengNeural',
+      'zh-CN-XiaoyanNeural',
+      'zh-CN-XiaochenMultilingualNeural',
+      'zh-CN-XiaozhenNeural',
+      'zh-CN-XiaoyuMultilingualNeural',
+      'zh-CN-XiaochenNeural',
+      'zh-CN-XiaomoNeural',
+      'zh-CN-XiaoruiNeural',
+      // Broadcast voices
+      'zh-CN-YunyangNeural',
+      'zh-CN-XiaoqiuNeural',
     ];
-    const femaleVoiceOrders = [
-      'Xiaoyou',
-      'Xiaoshuang',
-      'Xiaoyi',
-      'Xiaoxiao Multilingual',
-      'Xiaoxiao',
-      'Xiaochen Dragon HD Latest',
-      'Xiaohan',
-      'Xiaomeng',
-      'Xiaoyan',
-      'Xiaochen Multilingual',
-      'Xiaozhen',
-      'Xiaoyu Multilingual',
-      'Xiaochen',
-      'Xiaorui',
-    ];
-    // Sort voiceJson using male and femal array above, then put the rest at the end.
+
+    // Sort 'voiceJson' based on the merged 'voiceOrders'
     voiceJson.sort((a, b) => {
-      let aIndex = maleVoiceOrders.indexOf(a.DisplayName);
-      let bIndex = maleVoiceOrders.indexOf(b.DisplayName);
+      const aIndex = voiceOrders.indexOf(a.ShortName);
+      const bIndex = voiceOrders.indexOf(b.ShortName);
+
+      // Both A and B found in the voiceOrders
       if (aIndex !== -1 && bIndex !== -1) {
         return aIndex - bIndex;
       }
+
+      // A is in the list, B is not
       if (aIndex !== -1) {
         return -1;
       }
+
+      // B is in the list, A is not
       if (bIndex !== -1) {
         return 1;
       }
-      aIndex = femaleVoiceOrders.indexOf(a.DisplayName);
-      bIndex = femaleVoiceOrders.indexOf(b.DisplayName);
-      if (aIndex !== -1 && bIndex !== -1) {
-        return aIndex - bIndex;
-      }
-      if (aIndex !== -1) {
-        return -1;
-      }
-      if (bIndex !== -1) {
-        return 1;
-      }
-      return a.DisplayName.localeCompare(b.DisplayName);
+
+      // Neither is in the list — fall back to alphabetical by ShortName
+      return a.ShortName.localeCompare(b.ShortName);
     });
+
     return voiceJson as VoiceProfile[];
   }
 
