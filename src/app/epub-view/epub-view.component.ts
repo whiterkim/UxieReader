@@ -82,6 +82,7 @@ export class EpubViewComponent implements OnInit {
 
     this.InitAudioElement();
     this.InitInputElement();
+    this.InitVisibleEvent();
 
     this.GetChapters(loadedBook);
     this.RefreshCurrentChapter(savedCfi);
@@ -155,6 +156,15 @@ export class EpubViewComponent implements OnInit {
         this.MarkParagraph(this.counter);
       });
     }
+  }
+
+  private InitVisibleEvent() {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        // Scroll the current paragraph in view
+        this.MarkParagraph(this.counter);
+      }
+    });
   }
 
   private GetEpubElement(): HTMLElement | undefined {
