@@ -111,7 +111,7 @@ export class EpubViewComponent implements OnInit {
       if (!tocItem) {
         tocItem = toc.find((tocItem: NavItem) => tocItem.href === item.href);
       }
-      const name = tocItem?.label ?? item.href.split('/')[1].split('.')[0];
+      const name = tocItem?.label;
       const cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)';
       this.chapters.push({
         name: name,
@@ -167,11 +167,31 @@ export class EpubViewComponent implements OnInit {
     });
   }
 
+  private InitFont() {
+    const epubViewerArea = document.getElementById('epub-viewer-area');
+    const iframe = epubViewerArea?.getElementsByTagName('iframe')?.item(0);
+    const headElement = iframe?.contentDocument?.head;
+    // insert link to head
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href =
+      'https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap';
+    headElement?.appendChild(link);
+  }
+
   private GetEpubElement(): HTMLElement | undefined {
     const epubViewerArea = document.getElementById('epub-viewer-area');
     const iframe = epubViewerArea?.getElementsByTagName('iframe')?.item(0);
     const bodyElement = iframe?.contentDocument?.body;
-    return bodyElement;
+
+    let element = bodyElement;
+    while (
+      element?.children[0]?.tagName === 'DIV' ||
+      element?.children[0]?.tagName === 'SECTION'
+    ) {
+      element = element?.children[0] as HTMLElement;
+    }
+    return element;
   }
 
   private GetParagraphs(): void {
@@ -219,7 +239,10 @@ export class EpubViewComponent implements OnInit {
     style += 'color:white;';
     // Adjust text size
     style += 'font-size:' + this.textSize + 'rem;';
+    // Set font
+    style += 'font-family: "Noto Serif SC", serif;';
 
+    this.InitFont();
     this.GetEpubElement()?.setAttribute('style', style);
   }
 
