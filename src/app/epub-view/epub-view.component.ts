@@ -103,13 +103,20 @@ export class EpubViewComponent implements OnInit {
     const spine = book.spine;
     const toc = book.navigation.toc;
     this.chapters = [];
+    console.log('toc', toc);
+    console.log('spine', spine);
     spine.each((item: Section, _: number) => {
       // Try match toc item and spine item
       let tocItem = toc.find(
         (tocItem: NavItem) => '/' + tocItem.href === item.url,
       );
       if (!tocItem) {
-        tocItem = toc.find((tocItem: NavItem) => tocItem.href === item.href);
+        tocItem = toc.find(
+          (tocItem: NavItem) =>
+            tocItem.href === item.href ||
+            tocItem.href.split('#')[0] === item.href,
+        );
+        console.log('tocItem', tocItem);
       }
       const name = tocItem?.label;
       const cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)';
@@ -234,9 +241,9 @@ export class EpubViewComponent implements OnInit {
   private RefreshStyle(): void {
     let style = '';
     // Make dark background
-    style += 'background-color:#212529;';
+    style += 'background-color:#121212;';
     // Make white text
-    style += 'color:white;';
+    style += 'color:#E4E4E4;';
     // Adjust text size
     style += 'font-size:' + this.textSize + 'rem;';
     // Set font
@@ -273,7 +280,7 @@ export class EpubViewComponent implements OnInit {
     let element = this.GetEpubElement();
     if (element) {
       let child = element.children[index];
-      child?.setAttribute('style', 'background-color:#52595D;');
+      child?.setAttribute('style', 'background-color:#2C2C2C;');
       if (!this.isElementInViewport(child as HTMLElement)) {
         child.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }

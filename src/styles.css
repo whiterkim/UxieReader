@@ -43,10 +43,8 @@
 }
 
 .epub-viewer-frame {
-  /* 100vh - nav height */
-  height: 92vh;
-  /* footer height */
-  padding-bottom: 10vh;
+  /* 100vh - nav height - footer height */
+  height: 82vh;
 }
 
 .book-list-frame {
@@ -120,4 +118,18 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.viewer-row {
+  display: flex;
+}
+
+.viewer-row app-epub-view {
+  flex: 1 1 50%; /* grow/shrink to half of the row */
+  max-width: 50%; /* never exceed half width */
+  box-sizing: border-box;
+}
+
+.bg-dark {
+  background-color: #121212 !important;
 }
