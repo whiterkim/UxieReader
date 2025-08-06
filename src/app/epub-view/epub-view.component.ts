@@ -233,7 +233,8 @@ export class EpubViewComponent implements OnInit {
                 translationElem.textContent = translated;
                 translationElem.className = 'translation-text';
                 translationElem.style.color = '#8ec07c';
-                translationElem.style.fontSize = '0.95em';
+                translationElem.style.fontSize =
+                  String(this.textSize * 1.1) + 'rem';
                 translationElem.style.marginTop = '0.3em';
                 child.appendChild(translationElem);
               });
