@@ -12,6 +12,7 @@ import { SpeakerIdentification } from '../speaker-identification';
 import { AudioGeneration } from '../audio-generation';
 import { VoiceDialogComponent } from '../voice-dialog/voice-dialog.component';
 import { Character } from '../model/character';
+import { TranslationGeneration } from '../translation-generation';
 
 @Component({
   selector: 'app-epub-view',
@@ -42,9 +43,12 @@ export class EpubViewComponent implements OnInit {
   counter: number = 0;
 
   audioGeneration: AudioGeneration | undefined;
+  translationGeneration: TranslationGeneration | undefined;
   speakerIdentification: SpeakerIdentification | undefined;
   availableCharacters: Character[] = [];
   availableCharactersLoading = false;
+
+  showTranslation: boolean = false;
 
   async ngOnInit(): Promise<void> {
     // Get book name from params
@@ -68,6 +72,8 @@ export class EpubViewComponent implements OnInit {
       flow: 'scrolled',
       allowScriptedContent: true,
     });
+
+    this.translationGeneration = new TranslationGeneration(this.appService);
 
     this.textSize = AppSettings.GetTextSize();
     this.settings = new AppSettings(bookName);
@@ -103,8 +109,6 @@ export class EpubViewComponent implements OnInit {
     const spine = book.spine;
     const toc = book.navigation.toc;
     this.chapters = [];
-    console.log('toc', toc);
-    console.log('spine', spine);
     spine.each((item: Section, _: number) => {
       // Try match toc item and spine item
       let tocItem = toc.find(
@@ -116,7 +120,6 @@ export class EpubViewComponent implements OnInit {
             tocItem.href === item.href ||
             tocItem.href.split('#')[0] === item.href,
         );
-        console.log('tocItem', tocItem);
       }
       const name = tocItem?.label;
       const cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)';
@@ -201,7 +204,7 @@ export class EpubViewComponent implements OnInit {
     return element;
   }
 
-  private GetParagraphs(): void {
+  private async GetParagraphs(): Promise<void> {
     this.paragraphs = [];
     let element = this.GetEpubElement();
     if (element) {
@@ -218,6 +221,23 @@ export class EpubViewComponent implements OnInit {
         });
         if (child.textContent) {
           this.paragraphs.push(child.textContent);
+
+          const old = child.querySelector('.translation-text');
+          if (old) child.removeChild(old);
+
+          if (this.showTranslation) {
+            this.translationGeneration
+              ?.GetTranslation(child.textContent)
+              .then((translated) => {
+                const translationElem = document.createElement('div');
+                translationElem.textContent = translated;
+                translationElem.className = 'translation-text';
+                translationElem.style.color = '#8ec07c';
+                translationElem.style.fontSize = '0.95em';
+                translationElem.style.marginTop = '0.3em';
+                child.appendChild(translationElem);
+              });
+          }
         } else {
           this.paragraphs.push('');
         }
@@ -226,16 +246,19 @@ export class EpubViewComponent implements OnInit {
         if (links.length === 1) {
           const link = links[0];
           link.addEventListener('click', () => {
-            console.log('link clicked');
             // Sleep a bit then refresh style
             setTimeout(() => {
               this.RefreshStyle();
             }, 100);
           });
-          console.log(link);
         }
       }
     }
+  }
+
+  OnToggleTranslation(): void {
+    this.showTranslation = !this.showTranslation;
+    this.GetParagraphs();
   }
 
   private RefreshStyle(): void {

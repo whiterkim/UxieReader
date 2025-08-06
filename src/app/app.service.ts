@@ -414,4 +414,50 @@ export class AppService {
     }
     return characters;
   }
+
+  public async GetTranslation(text: string): Promise<string> {
+    const headers = {
+      'Content-Type': 'application/json',
+      'api-key': AppSettings.GetAzureOpenAIKey(),
+    };
+
+    const prompt = await lastValueFrom(
+      this.http.get('assets/translate-text.prompt.md', {
+        responseType: 'text',
+      }),
+    );
+
+    const content = `Translate to zh (simplified Chinese) (output translation only):\n${text}`;
+
+    const body = {
+      response_format: { type: 'text' },
+      messages: [
+        { role: 'system', content: prompt },
+        { role: 'user', content: content },
+      ],
+      max_tokens: 1200,
+      temperature: 0.3,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      top_p: 0.95,
+      stop: null,
+    };
+
+    try {
+      const response: any = await lastValueFrom(
+        this.http.post(
+          'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-02-15-preview',
+          body,
+          {
+            headers: headers,
+            responseType: 'json',
+          },
+        ),
+      );
+      // 取出返回的翻译文本
+      return response?.choices?.[0]?.message?.content?.trim() ?? '';
+    } catch (e) {
+      return '';
+    }
+  }
 }

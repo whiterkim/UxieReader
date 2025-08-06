@@ -129,6 +129,30 @@
             <span>Refresh</span>
           </div>
         </div>
+
+        <div class="dropdown-divider"></div>
+        <div ngbDropdownItem class="dropdown-header">
+          <span>Translation</span>
+        </div>
+        <div
+          ngbDropdownItem
+          class="menu-item"
+          (click)="OnToggleTranslation()"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <span>Display</span>
+          <span>
+            <i
+              *ngIf="showTranslation"
+              class="bi bi-check-square setting-icon"
+            ></i>
+            <i *ngIf="!showTranslation" class="bi bi-square setting-icon"></i>
+          </span>
+        </div>
       </div>
     </div>
   </div>
