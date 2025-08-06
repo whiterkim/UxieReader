@@ -276,12 +276,18 @@ export class EpubViewComponent implements OnInit {
     const epubElement = this.GetEpubElement();
     epubElement?.setAttribute('style', style);
 
-    // Set style for links (contents/jump links)
     if (epubElement) {
+      // Set style for paragraphs
+      const paragraphs = epubElement.querySelectorAll('p, .bodytext, span');
+      paragraphs.forEach((el) => {
+        (el as HTMLElement).style.fontSize = this.textSize + 'rem';
+        (el as HTMLElement).style.color = '#E4E4E4';
+      });
+
+      // Set style for links (contents/jump links)
       const links = epubElement.querySelectorAll('a');
       links.forEach((link) => {
-        const l = link as HTMLElement;
-        l.style.color = '#E4E4E4';
+        (link as HTMLElement).style.color = '#E4E4E4';
       });
     }
   }
