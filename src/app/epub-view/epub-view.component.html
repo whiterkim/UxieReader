@@ -153,6 +153,21 @@
             <i *ngIf="!showTranslation" class="bi bi-square setting-icon"></i>
           </span>
         </div>
+        <div class="dropdown-divider"></div>
+        <div ngbDropdownItem class="dropdown-header">
+          <span>Display</span>
+        </div>
+        <div
+          ngbDropdownItem
+          class="menu-item"
+          (click)="OnRefreshStyleClicked()"
+          style="display: flex; justify-content: space-between; align-items: center;"
+        >
+          <span>Refresh Style</span>
+          <span>
+            <i class="bi bi-arrow-repeat setting-icon"></i>
+          </span>
+        </div>
       </div>
     </div>
   </div>

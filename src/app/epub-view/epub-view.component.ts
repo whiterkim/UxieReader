@@ -273,7 +273,17 @@ export class EpubViewComponent implements OnInit {
     style += 'font-family: "Noto Serif SC", serif;';
 
     this.InitFont();
-    this.GetEpubElement()?.setAttribute('style', style);
+    const epubElement = this.GetEpubElement();
+    epubElement?.setAttribute('style', style);
+
+    // Set style for links (contents/jump links)
+    if (epubElement) {
+      const links = epubElement.querySelectorAll('a');
+      links.forEach((link) => {
+        const l = link as HTMLElement;
+        l.style.color = '#E4E4E4';
+      });
+    }
   }
 
   private async Navigate(cfi: string): Promise<void> {
@@ -506,5 +516,9 @@ export class EpubViewComponent implements OnInit {
       }
       console.log('TriggerInitialization error ', error);
     }
+  }
+
+  OnRefreshStyleClicked(): void {
+    this.RefreshStyle();
   }
 }
