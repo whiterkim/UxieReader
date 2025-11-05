@@ -282,7 +282,7 @@ export class AppService {
 
     const response = await lastValueFrom(
       this.http.post(
-        'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-02-15-preview',
+        'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-12-01-preview',
         body,
         {
           headers: headers,
@@ -384,7 +384,7 @@ export class AppService {
 
     const response = await lastValueFrom(
       this.http.post(
-        'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-02-15-preview',
+        'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-12-01-preview',
         body,
         {
           headers: headers,
@@ -446,7 +446,7 @@ export class AppService {
     try {
       const response: any = await lastValueFrom(
         this.http.post(
-          'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-02-15-preview',
+          'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-12-01-preview',
           body,
           {
             headers: headers,
