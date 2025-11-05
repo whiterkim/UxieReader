@@ -49,6 +49,8 @@ export class EpubViewComponent implements OnInit {
   availableCharactersLoading = false;
 
   showTranslation: boolean = false;
+  readTranslatedContent: boolean = false;
+  translatedParagraphs: string[] = [];
 
   async ngOnInit(): Promise<void> {
     // Get book name from params
@@ -206,6 +208,7 @@ export class EpubViewComponent implements OnInit {
 
   private async GetParagraphs(): Promise<void> {
     this.paragraphs = [];
+    this.translatedParagraphs = [];
     let element = this.GetEpubElement();
     if (element) {
       for (let i = 0; i < element.children.length; i++) {
@@ -221,6 +224,7 @@ export class EpubViewComponent implements OnInit {
         });
         if (child.textContent) {
           this.paragraphs.push(child.textContent);
+          this.translatedParagraphs.push(''); // Initialize with empty string
 
           const old = child.querySelector('.translation-text');
           if (old) child.removeChild(old);
@@ -229,6 +233,9 @@ export class EpubViewComponent implements OnInit {
             this.translationGeneration
               ?.GetTranslation(child.textContent)
               .then((translated) => {
+                // Store the translation
+                this.translatedParagraphs[i] = translated;
+
                 const translationElem = document.createElement('div');
                 translationElem.textContent = translated;
                 translationElem.className = 'translation-text';
@@ -241,6 +248,7 @@ export class EpubViewComponent implements OnInit {
           }
         } else {
           this.paragraphs.push('');
+          this.translatedParagraphs.push('');
         }
 
         const links = child.getElementsByTagName('a');
@@ -259,7 +267,16 @@ export class EpubViewComponent implements OnInit {
 
   OnToggleTranslation(): void {
     this.showTranslation = !this.showTranslation;
+    if (!this.showTranslation) {
+      this.readTranslatedContent = false;
+    }
     this.GetParagraphs();
+  }
+
+  OnToggleReadTranslatedContent(): void {
+    if (this.showTranslation) {
+      this.readTranslatedContent = !this.readTranslatedContent;
+    }
   }
 
   private RefreshStyle(): void {
@@ -470,10 +487,19 @@ export class EpubViewComponent implements OnInit {
   }
 
   private async Play(counter: number): Promise<void> {
-    const text = this.paragraphs[counter];
-    const voice =
-      (await this.audioGeneration?.GetAudio(counter)) ??
-      (await this.appService.GetVoice(text, SpeakerIdentification.Default()));
+    const shouldReadTranslated =
+      this.showTranslation && this.readTranslatedContent;
+
+    const text = shouldReadTranslated
+      ? this.translatedParagraphs[counter]
+      : this.paragraphs[counter];
+
+    const voice = shouldReadTranslated
+      ? // If reading translated content, always get new voice
+        await this.appService.GetVoice(text, SpeakerIdentification.Default())
+      : // Otherwise, use speaker identification
+        (await this.audioGeneration?.GetAudio(counter)) ??
+        (await this.appService.GetVoice(text, SpeakerIdentification.Default()));
     if (voice.size === undefined) {
       // If voice.size is undefined, it is likely the Azure service call failed.
       this.dialog.open(KeyDialogComponent);

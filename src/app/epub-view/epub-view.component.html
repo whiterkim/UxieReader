@@ -144,13 +144,41 @@
             align-items: center;
           "
         >
-          <span>Display</span>
+          <span>Enable</span>
           <span>
             <i
               *ngIf="showTranslation"
               class="bi bi-check-square setting-icon"
             ></i>
             <i *ngIf="!showTranslation" class="bi bi-square setting-icon"></i>
+          </span>
+        </div>
+        <div
+          ngbDropdownItem
+          class="menu-item"
+          [class.disabled]="!showTranslation"
+          (click)="showTranslation && OnToggleReadTranslatedContent()"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <span>Read translations</span>
+          <span>
+            <i
+              *ngIf="showTranslation && readTranslatedContent"
+              class="bi bi-check-square setting-icon"
+            ></i>
+            <i
+              *ngIf="showTranslation && !readTranslatedContent"
+              class="bi bi-square setting-icon"
+            ></i>
+            <i
+              *ngIf="!showTranslation"
+              class="bi bi-square setting-icon"
+              style="opacity: 0.5"
+            ></i>
           </span>
         </div>
         <div class="dropdown-divider"></div>
@@ -161,7 +189,11 @@
           ngbDropdownItem
           class="menu-item"
           (click)="OnRefreshStyleClicked()"
-          style="display: flex; justify-content: space-between; align-items: center;"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
         >
           <span>Refresh Style</span>
           <span>
