@@ -218,18 +218,18 @@ export class EpubViewComponent implements OnInit {
     });
   }
 
-  private AddTranslation(child: Element): void {
+  private AddTranslation(child: Element, counter: number): void {
     const old = child.querySelector('.translation-text');
     if (old) child.removeChild(old);
 
-    let translation = '';
+    this.translatedParagraphs.push('Loading...');
 
     if (this.showTranslation && child.textContent) {
       this.translationGeneration
         ?.GetTranslation(child.textContent)
         .then((translated) => {
           // Store the translation
-          translation = translated;
+          this.translatedParagraphs[counter] = translated;
 
           const translationElem = document.createElement('div');
           translationElem.textContent = translated;
@@ -240,8 +240,6 @@ export class EpubViewComponent implements OnInit {
           child.appendChild(translationElem);
         });
     }
-
-    this.translatedParagraphs.push(translation);
   }
 
   private HandleLinkClick(child: Element): void {
@@ -265,7 +263,7 @@ export class EpubViewComponent implements OnInit {
       } else if (child.textContent) {
         this.AddClickEventToParagraphs(child, counter);
         this.paragraphs.push(child.textContent);
-        this.AddTranslation(child);
+        this.AddTranslation(child, counter);
       } else {
         this.paragraphs.push('');
         this.translatedParagraphs.push('');
