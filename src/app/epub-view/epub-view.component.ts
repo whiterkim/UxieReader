@@ -206,62 +206,82 @@ export class EpubViewComponent implements OnInit {
     return element;
   }
 
-  private async GetParagraphs(): Promise<void> {
+  private AddClickEventToParagraphs(child: Element, counter: number): void {
+    child.addEventListener('click', () => {
+      this.UnmarkParagraph(this.counter);
+      this.counter = counter;
+      if (this.jumpInput) {
+        this.jumpInput.value = this.counter.toString();
+      }
+      this.MarkParagraph(this.counter);
+      this.SaveSettings();
+    });
+  }
+
+  private AddTranslation(child: Element): void {
+    const old = child.querySelector('.translation-text');
+    if (old) child.removeChild(old);
+
+    let translation = '';
+
+    if (this.showTranslation && child.textContent) {
+      this.translationGeneration
+        ?.GetTranslation(child.textContent)
+        .then((translated) => {
+          // Store the translation
+          translation = translated;
+
+          const translationElem = document.createElement('div');
+          translationElem.textContent = translated;
+          translationElem.className = 'translation-text';
+          translationElem.style.color = '#8ec07c';
+          translationElem.style.fontSize = String(this.textSize * 1.1) + 'rem';
+          translationElem.style.marginTop = '0.3em';
+          child.appendChild(translationElem);
+        });
+    }
+
+    this.translatedParagraphs.push(translation);
+  }
+
+  private HandleLinkClick(child: Element): void {
+    const links = child.getElementsByTagName('a');
+    if (links.length === 1) {
+      const link = links[0];
+      link.addEventListener('click', () => {
+        // Sleep a bit then refresh style
+        setTimeout(() => {
+          this.RefreshStyle();
+        }, 100);
+      });
+    }
+  }
+
+  private ProcessDocumentElements(element: Element, counter: number = 0): void {
+    for (let i = 0; i < element.children.length; i++) {
+      let child = element.children[i];
+      if (child.tagName === 'SECTION') {
+        this.ProcessDocumentElements(child, counter);
+      } else if (child.textContent) {
+        this.AddClickEventToParagraphs(child, counter);
+        this.paragraphs.push(child.textContent);
+        this.AddTranslation(child);
+      } else {
+        this.paragraphs.push('');
+        this.translatedParagraphs.push('');
+      }
+
+      this.HandleLinkClick(child);
+      counter++;
+    }
+  }
+
+  private GetParagraphs(): void {
     this.paragraphs = [];
     this.translatedParagraphs = [];
     let element = this.GetEpubElement();
     if (element) {
-      for (let i = 0; i < element.children.length; i++) {
-        let child = element.children[i];
-        child.addEventListener('click', () => {
-          this.UnmarkParagraph(this.counter);
-          this.counter = i;
-          if (this.jumpInput) {
-            this.jumpInput.value = this.counter.toString();
-          }
-          this.MarkParagraph(this.counter);
-          this.SaveSettings();
-        });
-        if (child.textContent) {
-          this.paragraphs.push(child.textContent);
-          this.translatedParagraphs.push(''); // Initialize with empty string
-
-          const old = child.querySelector('.translation-text');
-          if (old) child.removeChild(old);
-
-          if (this.showTranslation) {
-            this.translationGeneration
-              ?.GetTranslation(child.textContent)
-              .then((translated) => {
-                // Store the translation
-                this.translatedParagraphs[i] = translated;
-
-                const translationElem = document.createElement('div');
-                translationElem.textContent = translated;
-                translationElem.className = 'translation-text';
-                translationElem.style.color = '#8ec07c';
-                translationElem.style.fontSize =
-                  String(this.textSize * 1.1) + 'rem';
-                translationElem.style.marginTop = '0.3em';
-                child.appendChild(translationElem);
-              });
-          }
-        } else {
-          this.paragraphs.push('');
-          this.translatedParagraphs.push('');
-        }
-
-        const links = child.getElementsByTagName('a');
-        if (links.length === 1) {
-          const link = links[0];
-          link.addEventListener('click', () => {
-            // Sleep a bit then refresh style
-            setTimeout(() => {
-              this.RefreshStyle();
-            }, 100);
-          });
-        }
-      }
+      this.ProcessDocumentElements(element);
     }
   }
 
@@ -333,13 +353,40 @@ export class EpubViewComponent implements OnInit {
     );
   }
 
+  private FindParagraphElement(
+    element: Element,
+    index: number,
+  ): Element | undefined {
+    let counter = 0;
+    for (let i = 0; i < element.children.length; i++) {
+      let child = element.children[i];
+      if (child.tagName === 'SECTION') {
+        for (let j = 0; j < child.children.length; j++) {
+          let subChild = child.children[j];
+          if (counter === index) {
+            return subChild;
+          }
+          counter++;
+        }
+      }
+
+      if (counter === index) {
+        return child;
+      }
+      counter++;
+    }
+
+    return undefined;
+  }
+
   private MarkParagraph(index: number) {
     let element = this.GetEpubElement();
     if (element) {
-      let child = element.children[index];
+      // let child = element.children[index];
+      let child = this.FindParagraphElement(element, index);
       child?.setAttribute('style', 'background-color:#2C2C2C;');
       if (!this.isElementInViewport(child as HTMLElement)) {
-        child.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        child?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
   }
@@ -347,7 +394,8 @@ export class EpubViewComponent implements OnInit {
   private UnmarkParagraph(index: number) {
     let element = this.GetEpubElement();
     if (element) {
-      let child = element.children[index];
+      // let child = element.children[index];
+      let child = this.FindParagraphElement(element, index);
       child?.setAttribute('style', '');
     }
   }
