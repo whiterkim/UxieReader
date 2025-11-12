@@ -111,6 +111,7 @@ export class EpubViewComponent implements OnInit {
 
   private GetChapters(book: Book): void {
     const spine = book.spine;
+    console.log('Spine items: ', spine);
     const toc = book.navigation.toc;
     this.chapters = [];
     spine.each((item: Section, _: number) => {
@@ -125,7 +126,8 @@ export class EpubViewComponent implements OnInit {
             tocItem.href.split('#')[0] === item.href,
         );
       }
-      const name = tocItem?.label;
+      console.log('Matched toc item ', tocItem, ' for spine item ', item);
+      const name = tocItem?.label ? tocItem.label : item.idref;
       const cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)';
       this.chapters.push({
         name: name,
