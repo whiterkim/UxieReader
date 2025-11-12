@@ -35,8 +35,11 @@ export class EpubViewComponent implements OnInit {
 
   rendition: Rendition | undefined;
   chapters: any[] = [];
-  paragraphs: string[] = [];
   isPlaying: boolean = false;
+
+  paragraphs: string[] = [];
+  translatedParagraphs: string[] = [];
+  paragraphElements: Element[] = [];
 
   settings: AppSettings | undefined;
   textSize: number = 1;
@@ -50,7 +53,6 @@ export class EpubViewComponent implements OnInit {
 
   showTranslation: boolean = false;
   readTranslatedContent: boolean = false;
-  translatedParagraphs: string[] = [];
 
   async ngOnInit(): Promise<void> {
     // Get book name from params
@@ -218,19 +220,15 @@ export class EpubViewComponent implements OnInit {
     });
   }
 
-  private AddTranslation(child: Element, counter: number): void {
+  private AddTranslation(child: Element): void {
     const old = child.querySelector('.translation-text');
     if (old) child.removeChild(old);
-
-    this.translatedParagraphs.push('Loading...');
 
     if (this.showTranslation && child.textContent) {
       this.translationGeneration
         ?.GetTranslation(child.textContent)
         .then((translated) => {
           // Store the translation
-          this.translatedParagraphs[counter] = translated;
-
           const translationElem = document.createElement('div');
           translationElem.textContent = translated;
           translationElem.className = 'translation-text';
@@ -263,10 +261,12 @@ export class EpubViewComponent implements OnInit {
       } else if (child.textContent) {
         this.AddClickEventToParagraphs(child, counter);
         this.paragraphs.push(child.textContent);
-        this.AddTranslation(child, counter);
+        this.translatedParagraphs.push('Not translated');
+        this.paragraphElements.push(child);
       } else {
         this.paragraphs.push('');
         this.translatedParagraphs.push('');
+        this.paragraphElements.push(child);
       }
 
       this.HandleLinkClick(child);
@@ -277,6 +277,7 @@ export class EpubViewComponent implements OnInit {
   private GetParagraphs(): void {
     this.paragraphs = [];
     this.translatedParagraphs = [];
+    this.paragraphElements = [];
     let element = this.GetEpubElement();
     if (element) {
       this.ProcessDocumentElements(element);
@@ -288,7 +289,10 @@ export class EpubViewComponent implements OnInit {
     if (!this.showTranslation) {
       this.readTranslatedContent = false;
     }
-    this.GetParagraphs();
+
+    for (let i = 0; i < this.paragraphElements.length; i++) {
+      this.AddTranslation(this.paragraphElements[i]);
+    }
   }
 
   OnToggleReadTranslatedContent(): void {
