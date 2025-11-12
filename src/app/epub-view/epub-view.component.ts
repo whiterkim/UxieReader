@@ -13,6 +13,8 @@ import { AudioGeneration } from '../audio-generation';
 import { VoiceDialogComponent } from '../voice-dialog/voice-dialog.component';
 import { Character } from '../model/character';
 import { TranslationGeneration } from '../translation-generation';
+import { ParagraphManager } from '../paragraph-manager';
+import { StyleManager } from '../style-manager';
 
 @Component({
   selector: 'app-epub-view',
@@ -39,12 +41,11 @@ export class EpubViewComponent implements OnInit {
   chapters: any[] = [];
   isPlaying: boolean = false;
 
-  paragraphs: string[] = [];
-  translatedParagraphs: string[] = [];
-  paragraphElements: Element[] = [];
+  paragraphManager: ParagraphManager = new ParagraphManager();
+  styleManager: StyleManager = new StyleManager();
 
   settings: AppSettings | undefined;
-  textSize: number = 1;
+  // textSize: number = 1;
   counter: number = 0;
 
   audioGeneration: AudioGeneration | undefined;
@@ -82,9 +83,10 @@ export class EpubViewComponent implements OnInit {
       allowScriptedContent: true,
     });
 
+    // TODO: This init is not good.
     this.translationGeneration = new TranslationGeneration(this.appService);
+    this.paragraphManager.translationGeneration = this.translationGeneration;
 
-    this.textSize = AppSettings.GetTextSize();
     this.settings = new AppSettings(bookName);
     const savedCfi = this.settings.GetEpubCfi();
     if (savedCfi) {
@@ -92,7 +94,7 @@ export class EpubViewComponent implements OnInit {
     } else {
       await this.rendition?.display();
       this.GetParagraphs();
-      this.RefreshStyle();
+      this.styleManager.RefreshStyle(this.GetEpubElement());
     }
 
     this.InitAudioElement();
@@ -171,9 +173,9 @@ export class EpubViewComponent implements OnInit {
     if (element instanceof HTMLInputElement) {
       this.jumpInput = element;
       this.jumpInput?.addEventListener('input', (event) => {
-        this.UnmarkParagraph(this.counter);
+        this.paragraphManager.UnmarkParagraph(this.counter);
         this.counter = this.jumpInput ? +this.jumpInput?.value : 0;
-        this.MarkParagraph(this.counter);
+        this.paragraphManager.MarkParagraph(this.counter);
       });
     }
   }
@@ -182,21 +184,9 @@ export class EpubViewComponent implements OnInit {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         // Scroll the current paragraph in view
-        this.MarkParagraph(this.counter);
+        this.paragraphManager.MarkParagraph(this.counter);
       }
     });
-  }
-
-  private InitFont() {
-    const epubViewerArea = document.getElementById('epub-viewer-area');
-    const iframe = epubViewerArea?.getElementsByTagName('iframe')?.item(0);
-    const headElement = iframe?.contentDocument?.head;
-    // insert link to head
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href =
-      'https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap';
-    headElement?.appendChild(link);
   }
 
   private GetEpubElement(): HTMLElement | undefined {
@@ -216,88 +206,30 @@ export class EpubViewComponent implements OnInit {
 
   private AddClickEventToParagraphs(child: Element, counter: number): void {
     child.addEventListener('click', () => {
-      this.UnmarkParagraph(this.counter);
+      this.paragraphManager.UnmarkParagraph(this.counter);
       this.counter = counter;
       if (this.jumpInput) {
         this.jumpInput.value = this.counter.toString();
       }
-      this.MarkParagraph(this.counter);
+      this.paragraphManager.MarkParagraph(this.counter);
       this.SaveSettings();
     });
   }
 
-  private AddTranslation(child: Element): void {
-    const old = child.querySelector('.translation-text');
-    if (old) child.removeChild(old);
-
-    if (this.showTranslation && child.textContent) {
-      this.translationGeneration
-        ?.GetTranslation(child.textContent)
-        .then((translated) => {
-          // Store the translation
-          const translationElem = document.createElement('div');
-          translationElem.textContent = translated;
-          translationElem.className = 'translation-text';
-          translationElem.style.color = '#8ec07c';
-          translationElem.style.fontSize = String(this.textSize * 1.1) + 'rem';
-          translationElem.style.marginTop = '0.3em';
-          child.appendChild(translationElem);
-        });
-    }
-  }
-
-  private HandleLinkClick(child: Element): void {
-    const links = child.getElementsByTagName('a');
-    if (links.length === 1) {
-      const link = links[0];
-      link.addEventListener('click', () => {
-        // Sleep a bit then refresh style
-        setTimeout(() => {
-          this.RefreshStyle();
-        }, 100);
-      });
-    }
-  }
-
-  private ProcessDocumentElements(element: Element, counter: number = 0): void {
-    for (let i = 0; i < element.children.length; i++) {
-      let child = element.children[i];
-      if (child.tagName === 'SECTION') {
-        this.ProcessDocumentElements(child, counter);
-      } else if (child.textContent) {
-        this.AddClickEventToParagraphs(child, counter);
-        this.paragraphs.push(child.textContent);
-        this.translatedParagraphs.push('Not translated');
-        this.paragraphElements.push(child);
-      } else {
-        this.paragraphs.push('');
-        this.translatedParagraphs.push('');
-        this.paragraphElements.push(child);
-      }
-
-      this.HandleLinkClick(child);
-      counter++;
-    }
-  }
-
   private GetParagraphs(): void {
-    this.paragraphs = [];
-    this.translatedParagraphs = [];
-    this.paragraphElements = [];
-    let element = this.GetEpubElement();
-    if (element) {
-      this.ProcessDocumentElements(element);
-    }
+    const element = this.GetEpubElement();
+    this.paragraphManager.Init(element);
+    this.paragraphManager.SetClickEventCallback(
+      this.AddClickEventToParagraphs.bind(this),
+    );
   }
 
   OnToggleTranslation(): void {
     this.showTranslation = !this.showTranslation;
-    if (!this.showTranslation) {
+    if (this.showTranslation) {
+      this.paragraphManager.TriggerTranslate();
+    } else {
       this.readTranslatedContent = false;
-    }
-
-    for (let i = 0; i < this.paragraphElements.length; i++) {
-      this.AddTranslation(this.paragraphElements[i]);
     }
   }
 
@@ -307,105 +239,16 @@ export class EpubViewComponent implements OnInit {
     }
   }
 
-  private RefreshStyle(): void {
-    let style = '';
-    // Make dark background
-    style += 'background-color:#121212;';
-    // Make white text
-    style += 'color:#E4E4E4;';
-    // Adjust text size
-    style += 'font-size:' + this.textSize + 'rem;';
-    // Set font
-    style += 'font-family: "Noto Serif SC", serif;';
-
-    this.InitFont();
-    const epubElement = this.GetEpubElement();
-    epubElement?.setAttribute('style', style);
-
-    if (epubElement) {
-      // Set style for paragraphs
-      const paragraphs = epubElement.querySelectorAll('p, .bodytext, span');
-      paragraphs.forEach((el) => {
-        (el as HTMLElement).style.fontSize = this.textSize + 'rem';
-        (el as HTMLElement).style.color = '#E4E4E4';
-      });
-
-      // Set style for links (contents/jump links)
-      const links = epubElement.querySelectorAll('a');
-      links.forEach((link) => {
-        (link as HTMLElement).style.color = '#E4E4E4';
-      });
-    }
-  }
-
   private async Navigate(cfi: string): Promise<void> {
     // Make sure element is there
     await this.rendition?.display(cfi);
     this.GetParagraphs();
     let savedCounter = this.settings?.GetEpubCounter();
     this.counter = savedCounter ?? 0;
-    this.RefreshStyle();
+    this.styleManager.RefreshStyle(this.GetEpubElement());
     // Navigate to CFI again after the style adjustment
     await this.rendition?.display(cfi);
-    this.MarkParagraph(this.counter);
-  }
-
-  private isElementInViewport(element: HTMLElement): boolean {
-    const rect = element.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  }
-
-  private FindParagraphElement(
-    element: Element,
-    index: number,
-  ): Element | undefined {
-    let counter = 0;
-    for (let i = 0; i < element.children.length; i++) {
-      let child = element.children[i];
-      if (child.tagName === 'SECTION') {
-        for (let j = 0; j < child.children.length; j++) {
-          let subChild = child.children[j];
-          if (counter === index) {
-            return subChild;
-          }
-          counter++;
-        }
-      }
-
-      if (counter === index) {
-        return child;
-      }
-      counter++;
-    }
-
-    return undefined;
-  }
-
-  private MarkParagraph(index: number) {
-    let element = this.GetEpubElement();
-    if (element) {
-      // let child = element.children[index];
-      let child = this.FindParagraphElement(element, index);
-      child?.setAttribute('style', 'background-color:#2C2C2C;');
-      if (!this.isElementInViewport(child as HTMLElement)) {
-        child?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }
-  }
-
-  private UnmarkParagraph(index: number) {
-    let element = this.GetEpubElement();
-    if (element) {
-      // let child = element.children[index];
-      let child = this.FindParagraphElement(element, index);
-      child?.setAttribute('style', '');
-    }
+    this.paragraphManager.MarkParagraph(this.counter);
   }
 
   private async ChangeSection(
@@ -420,10 +263,10 @@ export class EpubViewComponent implements OnInit {
 
     this.RefreshCurrentChapter();
     this.GetParagraphs();
-    this.counter = isBeginning ? 0 : this.paragraphs.length - 1;
+    this.counter = isBeginning ? 0 : this.paragraphManager.GetSize() - 1;
     this.TriggerInitialization();
-    this.RefreshStyle();
-    this.MarkParagraph(this.counter);
+    this.styleManager.RefreshStyle(this.GetEpubElement());
+    this.paragraphManager.MarkParagraph(this.counter);
     this.SaveSettings();
     if (this.isPlaying) {
       this.Play(this.counter);
@@ -445,13 +288,13 @@ export class EpubViewComponent implements OnInit {
   }
 
   OnPreviousParagraphClicked() {
-    this.UnmarkParagraph(this.counter);
+    this.paragraphManager.UnmarkParagraph(this.counter);
     this.counter--;
     if (this.counter < 0) {
       this.ChangeSection(false, false);
       return;
     }
-    this.MarkParagraph(this.counter);
+    this.paragraphManager.MarkParagraph(this.counter);
     this.SaveSettings();
     if (this.isPlaying) {
       this.Play(this.counter);
@@ -459,13 +302,13 @@ export class EpubViewComponent implements OnInit {
   }
 
   OnNextParagraphClicked() {
-    this.UnmarkParagraph(this.counter);
+    this.paragraphManager.UnmarkParagraph(this.counter);
     this.counter++;
-    if (this.counter >= this.paragraphs.length) {
+    if (this.counter >= this.paragraphManager.GetSize()) {
       this.OnNextSectionClicked();
       return;
     }
-    this.MarkParagraph(this.counter);
+    this.paragraphManager.MarkParagraph(this.counter);
     this.SaveSettings();
     if (this.isPlaying) {
       this.Play(this.counter);
@@ -481,9 +324,9 @@ export class EpubViewComponent implements OnInit {
   }
 
   OnTextSizeClicked(diff: number): void {
-    this.textSize += diff;
-    this.RefreshStyle();
-    AppSettings.SetTextSize(this.textSize);
+    this.styleManager.textSize += diff;
+    this.styleManager.RefreshStyle(this.GetEpubElement());
+    AppSettings.SetTextSize(this.styleManager.textSize);
   }
 
   async OnEnableSpeakerIdentificationToggled(): Promise<void> {
@@ -504,7 +347,7 @@ export class EpubViewComponent implements OnInit {
     this.availableCharactersLoading = true;
     try {
       this.availableCharacters = await this.appService.ListCharacters(
-        this.paragraphs,
+        this.paragraphManager.GetParagraphs(),
       );
       AppSettings.SetCharacterList(this.availableCharacters);
     } catch (error) {
@@ -547,8 +390,8 @@ export class EpubViewComponent implements OnInit {
       this.showTranslation && this.readTranslatedContent;
 
     const text = shouldReadTranslated
-      ? this.translatedParagraphs[counter]
-      : this.paragraphs[counter];
+      ? this.paragraphManager.GetTranslatedParagraph(counter)
+      : this.paragraphManager.GetParagraph(counter);
 
     const voice = shouldReadTranslated
       ? // If reading translated content, always get new voice
@@ -589,12 +432,12 @@ export class EpubViewComponent implements OnInit {
     this.speakerIdentification = new SpeakerIdentification(
       this.appService,
       this.availableCharacters,
-      this.paragraphs,
+      this.paragraphManager.GetParagraphs(),
     );
 
     this.audioGeneration = new AudioGeneration(
       this.appService,
-      this.paragraphs,
+      this.paragraphManager.GetParagraphs(),
       this.speakerIdentification,
     );
 
@@ -614,6 +457,6 @@ export class EpubViewComponent implements OnInit {
   }
 
   OnRefreshStyleClicked(): void {
-    this.RefreshStyle();
+    this.styleManager.RefreshStyle(this.GetEpubElement());
   }
 }
