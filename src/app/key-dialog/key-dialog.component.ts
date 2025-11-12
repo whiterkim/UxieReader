@@ -3,9 +3,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AppSettings } from '../app.settings';
 
 @Component({
-  selector: 'app-key-dialog',
-  templateUrl: './key-dialog.component.html',
-  styleUrls: ['./key-dialog.component.css'],
+    selector: 'app-key-dialog',
+    templateUrl: './key-dialog.component.html',
+    styleUrls: ['./key-dialog.component.css'],
+    standalone: false
 })
 export class KeyDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<KeyDialogComponent>) {}

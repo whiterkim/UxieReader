@@ -4,9 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { AppSettings } from '../app.settings';
 
 @Component({
-  selector: 'app-book-list-item',
-  templateUrl: './book-list-item.component.html',
-  styleUrl: './book-list-item.component.css',
+    selector: 'app-book-list-item',
+    templateUrl: './book-list-item.component.html',
+    styleUrl: './book-list-item.component.css',
+    standalone: false
 })
 export class BookListItemComponent {
   constructor(

@@ -5,9 +5,10 @@ import bookListJson from '../../assets/book_list.json';
 import { AppSettings } from '../app.settings';
 
 @Component({
-  selector: 'app-book-list',
-  templateUrl: './book-list.component.html',
-  styleUrls: ['./book-list.component.css'],
+    selector: 'app-book-list',
+    templateUrl: './book-list.component.html',
+    styleUrls: ['./book-list.component.css'],
+    standalone: false
 })
 export class BookListComponent implements OnInit {
   constructor(public dialog: MatDialog) {}

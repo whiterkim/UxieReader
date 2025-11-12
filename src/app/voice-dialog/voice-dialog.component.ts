@@ -3,9 +3,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Character } from '../model/character';
 
 @Component({
-  selector: 'app-voice-dialog',
-  templateUrl: './voice-dialog.component.html',
-  styleUrl: './voice-dialog.component.css',
+    selector: 'app-voice-dialog',
+    templateUrl: './voice-dialog.component.html',
+    styleUrl: './voice-dialog.component.css',
+    standalone: false
 })
 export class VoiceDialogComponent {
   characters: Character[] = [];

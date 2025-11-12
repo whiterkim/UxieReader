@@ -7,9 +7,10 @@ import { AppUtils } from '../app.utils';
 import { Book } from '../model/book';
 
 @Component({
-  selector: 'app-txt-view',
-  templateUrl: './txt-view.component.html',
-  styleUrls: ['./txt-view.component.css'],
+    selector: 'app-txt-view',
+    templateUrl: './txt-view.component.html',
+    styleUrls: ['./txt-view.component.css'],
+    standalone: false
 })
 export class TxtViewComponent implements OnInit {
   constructor(

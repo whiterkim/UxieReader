@@ -4,9 +4,10 @@ import { CharacterVoice, VoiceProfile } from '../model/voice';
 import { Character } from '../model/character';
 
 @Component({
-  selector: 'app-voice-menu',
-  templateUrl: './voice-menu.component.html',
-  styleUrl: './voice-menu.component.css',
+    selector: 'app-voice-menu',
+    templateUrl: './voice-menu.component.html',
+    styleUrl: './voice-menu.component.css',
+    standalone: false
 })
 export class VoiceMenuComponent implements OnInit {
   @Input()

@@ -15,9 +15,10 @@ import { Character } from '../model/character';
 import { TranslationGeneration } from '../translation-generation';
 
 @Component({
-  selector: 'app-epub-view',
-  templateUrl: './epub-view.component.html',
-  styleUrls: ['./epub-view.component.css'],
+    selector: 'app-epub-view',
+    templateUrl: './epub-view.component.html',
+    styleUrls: ['./epub-view.component.css'],
+    standalone: false
 })
 export class EpubViewComponent implements OnInit {
   constructor(
