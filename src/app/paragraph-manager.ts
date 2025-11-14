@@ -1,12 +1,16 @@
+import { StyleManager } from './style-manager';
+
 export class ParagraphManager {
   private paragraphs: string[] = [];
   paragraphElements: Element[] = [];
+  private epubElement: HTMLElement | undefined;
 
   Init(epubElement?: HTMLElement): void {
     if (!epubElement) {
       return;
     }
 
+    this.epubElement = epubElement;
     this.Clear();
     this.ProcessDocumentElements(epubElement);
   }
@@ -59,8 +63,7 @@ export class ParagraphManager {
       link.addEventListener('click', () => {
         // Sleep a bit then refresh style
         setTimeout(() => {
-          // TODO: Move to StyleManager
-          // this.RefreshStyle();
+          StyleManager.RefreshStyle(this.epubElement);
         }, 100);
       });
     }

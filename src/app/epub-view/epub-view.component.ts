@@ -42,10 +42,8 @@ export class EpubViewComponent implements OnInit {
   isPlaying: boolean = false;
 
   paragraphManager: ParagraphManager = new ParagraphManager();
-  styleManager: StyleManager = new StyleManager();
 
   settings: AppSettings | undefined;
-  // textSize: number = 1;
   counter: number = 0;
 
   audioGeneration: AudioGeneration | undefined;
@@ -90,7 +88,7 @@ export class EpubViewComponent implements OnInit {
     } else {
       await this.rendition?.display();
       this.GetParagraphs();
-      this.styleManager.RefreshStyle(this.GetEpubElement());
+      StyleManager.RefreshStyle(this.GetEpubElement());
     }
 
     this.InitAudioElement();
@@ -244,7 +242,7 @@ export class EpubViewComponent implements OnInit {
     this.GetParagraphs();
     let savedCounter = this.settings?.GetEpubCounter();
     this.counter = savedCounter ?? 0;
-    this.styleManager.RefreshStyle(this.GetEpubElement());
+    StyleManager.RefreshStyle(this.GetEpubElement());
     // Navigate to CFI again after the style adjustment
     await this.rendition?.display(cfi);
     this.paragraphManager.MarkParagraph(this.counter);
@@ -264,7 +262,7 @@ export class EpubViewComponent implements OnInit {
     this.GetParagraphs();
     this.counter = isBeginning ? 0 : this.paragraphManager.GetSize() - 1;
     this.TriggerInitialization();
-    this.styleManager.RefreshStyle(this.GetEpubElement());
+    StyleManager.RefreshStyle(this.GetEpubElement());
     this.paragraphManager.MarkParagraph(this.counter);
     this.SaveSettings();
     this.Play(this.counter);
@@ -328,10 +326,14 @@ export class EpubViewComponent implements OnInit {
     await this.ChangeSection(true, true);
   }
 
+  GetTextSize(): number {
+    return AppSettings.GetTextSize();
+  }
+
   OnTextSizeClicked(diff: number): void {
-    this.styleManager.textSize += diff;
-    this.styleManager.RefreshStyle(this.GetEpubElement());
-    AppSettings.SetTextSize(this.styleManager.textSize);
+    const textSize = AppSettings.GetTextSize() + diff;
+    AppSettings.SetTextSize(textSize);
+    StyleManager.RefreshStyle(this.GetEpubElement());
   }
 
   async OnEnableSpeakerIdentificationToggled(): Promise<void> {
@@ -471,6 +473,6 @@ export class EpubViewComponent implements OnInit {
   }
 
   OnRefreshStyleClicked(): void {
-    this.styleManager.RefreshStyle(this.GetEpubElement());
+    StyleManager.RefreshStyle(this.GetEpubElement());
   }
 }
