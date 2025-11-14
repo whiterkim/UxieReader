@@ -15,10 +15,10 @@ import { Character } from '../model/character';
 import { TranslationGeneration } from '../translation-generation';
 
 @Component({
-    selector: 'app-epub-view',
-    templateUrl: './epub-view.component.html',
-    styleUrls: ['./epub-view.component.css'],
-    standalone: false
+  selector: 'app-epub-view',
+  templateUrl: './epub-view.component.html',
+  styleUrls: ['./epub-view.component.css'],
+  standalone: false,
 })
 export class EpubViewComponent implements OnInit {
   constructor(
@@ -60,6 +60,9 @@ export class EpubViewComponent implements OnInit {
     let params = await firstValueFrom(this.activatedRoute.params);
 
     let bookName = params['key'];
+    if (bookName && !bookName.endsWith('.epub')) {
+      bookName += '.epub';
+    }
     if (this.bookName) {
       bookName = this.bookName;
     }
@@ -112,7 +115,6 @@ export class EpubViewComponent implements OnInit {
 
   private GetChapters(book: Book): void {
     const spine = book.spine;
-    console.log('Spine items: ', spine);
     const toc = book.navigation.toc;
     this.chapters = [];
     spine.each((item: Section, _: number) => {
@@ -127,7 +129,6 @@ export class EpubViewComponent implements OnInit {
             tocItem.href.split('#')[0] === item.href,
         );
       }
-      console.log('Matched toc item ', tocItem, ' for spine item ', item);
       const name = tocItem?.label ? tocItem.label : item.idref;
       const cfi = 'epubcfi(' + item.cfiBase + '!/0/0/0/0)';
       this.chapters.push({
