@@ -40,4 +40,48 @@ export class StyleManager {
       });
     }
   }
+
+  private static isElementInViewport(element: HTMLElement): boolean {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
+  static MarkParagraph(element?: HTMLElement): void {
+    if (!element) {
+      return;
+    }
+
+    element.setAttribute('style', 'background-color:#2C2C2C;');
+    if (!this.isElementInViewport(element)) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  static UnmarkParagraph(element?: HTMLElement): void {
+    if (!element) {
+      return;
+    }
+
+    element.setAttribute('style', '');
+  }
+
+  static AddTranslation(element: Element, translated: string): void {
+    const old = element.querySelector('.translation-text');
+    if (old) element.removeChild(old);
+
+    const translationElem = document.createElement('div');
+    translationElem.textContent = translated ? translated : '';
+    translationElem.className = 'translation-text';
+    translationElem.style.color = '#8ec07c';
+    translationElem.style.fontSize =
+      String(AppSettings.GetTextSize() * 1.1) + 'rem';
+    translationElem.style.marginTop = '0.3em';
+    element.appendChild(translationElem);
+  }
 }

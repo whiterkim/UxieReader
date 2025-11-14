@@ -152,10 +152,10 @@ export class EpubViewComponent implements OnInit {
     let element = document.getElementById('text-audio');
     if (element instanceof HTMLAudioElement) {
       this.audio = element;
-      this.audio.addEventListener('ended', (event) => {
+      this.audio.addEventListener('ended', (_) => {
         this.OnNextParagraphClicked();
       });
-      this.audio.addEventListener('error', (event) => {
+      this.audio.addEventListener('error', (_) => {
         this.OnNextParagraphClicked();
       });
       this.audio.playbackRate = this.playSpeed;
@@ -166,10 +166,14 @@ export class EpubViewComponent implements OnInit {
     let element = document.getElementById('jump-input');
     if (element instanceof HTMLInputElement) {
       this.jumpInput = element;
-      this.jumpInput?.addEventListener('input', (event) => {
-        this.paragraphManager.UnmarkParagraph(this.counter);
+      this.jumpInput?.addEventListener('input', (_) => {
+        StyleManager.UnmarkParagraph(
+          this.paragraphManager.GetElement(this.counter),
+        );
         this.counter = this.jumpInput ? +this.jumpInput?.value : 0;
-        this.paragraphManager.MarkParagraph(this.counter);
+        StyleManager.MarkParagraph(
+          this.paragraphManager.GetElement(this.counter),
+        );
       });
     }
   }
@@ -178,7 +182,9 @@ export class EpubViewComponent implements OnInit {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         // Scroll the current paragraph in view
-        this.paragraphManager.MarkParagraph(this.counter);
+        StyleManager.MarkParagraph(
+          this.paragraphManager.GetElement(this.counter),
+        );
       }
     });
   }
@@ -200,12 +206,16 @@ export class EpubViewComponent implements OnInit {
 
   private AddClickEventToParagraphs(child: Element, counter: number): void {
     child.addEventListener('click', () => {
-      this.paragraphManager.UnmarkParagraph(this.counter);
+      StyleManager.UnmarkParagraph(
+        this.paragraphManager.GetElement(this.counter),
+      );
       this.counter = counter;
       if (this.jumpInput) {
         this.jumpInput.value = this.counter.toString();
       }
-      this.paragraphManager.MarkParagraph(this.counter);
+      StyleManager.MarkParagraph(
+        this.paragraphManager.GetElement(this.counter),
+      );
       this.SaveSettings();
       if (this.showTranslation) {
         this.translationGeneration?.TriggerTranslate(this.counter);
@@ -245,7 +255,7 @@ export class EpubViewComponent implements OnInit {
     StyleManager.RefreshStyle(this.GetEpubElement());
     // Navigate to CFI again after the style adjustment
     await this.rendition?.display(cfi);
-    this.paragraphManager.MarkParagraph(this.counter);
+    StyleManager.MarkParagraph(this.paragraphManager.GetElement(this.counter));
   }
 
   private async ChangeSection(
@@ -263,7 +273,7 @@ export class EpubViewComponent implements OnInit {
     this.counter = isBeginning ? 0 : this.paragraphManager.GetSize() - 1;
     this.TriggerInitialization();
     StyleManager.RefreshStyle(this.GetEpubElement());
-    this.paragraphManager.MarkParagraph(this.counter);
+    StyleManager.MarkParagraph(this.paragraphManager.GetElement(this.counter));
     this.SaveSettings();
     this.Play(this.counter);
   }
@@ -283,13 +293,15 @@ export class EpubViewComponent implements OnInit {
   }
 
   OnPreviousParagraphClicked() {
-    this.paragraphManager.UnmarkParagraph(this.counter);
+    StyleManager.UnmarkParagraph(
+      this.paragraphManager.GetElement(this.counter),
+    );
     this.counter--;
     if (this.counter < 0) {
       this.ChangeSection(false, false);
       return;
     }
-    this.paragraphManager.MarkParagraph(this.counter);
+    StyleManager.MarkParagraph(this.paragraphManager.GetElement(this.counter));
     this.SaveSettings();
     if (this.showTranslation) {
       this.translationGeneration?.TriggerTranslate(this.counter).then(() => {
@@ -301,13 +313,15 @@ export class EpubViewComponent implements OnInit {
   }
 
   OnNextParagraphClicked() {
-    this.paragraphManager.UnmarkParagraph(this.counter);
+    StyleManager.UnmarkParagraph(
+      this.paragraphManager.GetElement(this.counter),
+    );
     this.counter++;
     if (this.counter >= this.paragraphManager.GetSize()) {
       this.OnNextSectionClicked();
       return;
     }
-    this.paragraphManager.MarkParagraph(this.counter);
+    StyleManager.MarkParagraph(this.paragraphManager.GetElement(this.counter));
     this.SaveSettings();
     if (this.showTranslation) {
       this.translationGeneration?.TriggerTranslate(this.counter).then(() => {

@@ -1,6 +1,6 @@
 import { AppService } from './app.service';
-import { AppSettings } from './app.settings';
 import { ParagraphManager } from './paragraph-manager';
+import { StyleManager } from './style-manager';
 
 export class TranslationGeneration {
   private appService: AppService;
@@ -36,28 +36,14 @@ export class TranslationGeneration {
   public async TriggerTranslate(counter: number): Promise<void> {
     const element = this.paragraphManager.GetElement(counter);
     const translated = await this.GetTranslation(element.textContent);
-    this.AddTranslation(element, translated);
+    StyleManager.AddTranslation(element, translated);
 
     for (let i = 1; i < 5; i++) {
       const element = this.paragraphManager.GetElement(counter + i);
       // No need to await, just trigger translation generation for future paragraphs
       this.GetTranslation(element.textContent).then((translated) => {
-        this.AddTranslation(element, translated);
+        StyleManager.AddTranslation(element, translated);
       });
     }
-  }
-
-  private AddTranslation(element: Element, translated: string): void {
-    const old = element.querySelector('.translation-text');
-    if (old) element.removeChild(old);
-
-    const translationElem = document.createElement('div');
-    translationElem.textContent = translated ? translated : '';
-    translationElem.className = 'translation-text';
-    translationElem.style.color = '#8ec07c';
-    translationElem.style.fontSize =
-      String(AppSettings.GetTextSize() * 1.1) + 'rem';
-    translationElem.style.marginTop = '0.3em';
-    element.appendChild(translationElem);
   }
 }
