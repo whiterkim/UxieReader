@@ -48,9 +48,47 @@
               class="bi bi-dash-lg setting-icon"
               (click)="OnTextSizeClicked(-0.1)"
             ></i>
+            <span
+              style="
+                margin: 0 8px;
+                min-width: 32px;
+                display: inline-block;
+                text-align: center;
+              "
+            >
+              {{ textSize | number: "1.1-1" }}x
+            </span>
             <i
               class="bi bi-plus-lg setting-icon"
               (click)="OnTextSizeClicked(0.1)"
+            ></i>
+          </span>
+        </div>
+
+        <div
+          ngbDropdownItem
+          class="dropdown-header"
+          style="display: flex; justify-content: space-between"
+        >
+          <span>Audio speed</span>
+          <span>
+            <i
+              class="bi bi-dash-lg setting-icon"
+              (click)="OnPlaySpeedChanged(playSpeed - 0.1)"
+            ></i>
+            <span
+              style="
+                margin: 0 8px;
+                min-width: 32px;
+                display: inline-block;
+                text-align: center;
+              "
+            >
+              {{ playSpeed | number: "1.1-1" }}x
+            </span>
+            <i
+              class="bi bi-plus-lg setting-icon"
+              (click)="OnPlaySpeedChanged(playSpeed + 0.1)"
             ></i>
           </span>
         </div>

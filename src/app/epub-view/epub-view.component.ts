@@ -32,6 +32,7 @@ export class EpubViewComponent implements OnInit {
   bookName?: string;
 
   audio: HTMLAudioElement = new Audio();
+  playSpeed: number = 1.0;
   jumpInput: HTMLInputElement | undefined;
 
   rendition: Rendition | undefined;
@@ -161,6 +162,7 @@ export class EpubViewComponent implements OnInit {
       this.audio.addEventListener('error', (event) => {
         this.OnNextParagraphClicked();
       });
+      this.audio.playbackRate = this.playSpeed;
     }
   }
 
@@ -571,7 +573,13 @@ export class EpubViewComponent implements OnInit {
     }
     this.audio.src = url;
     this.audio.load();
+    this.audio.playbackRate = this.playSpeed;
     this.audio.play();
+  }
+
+  OnPlaySpeedChanged(newSpeed: number): void {
+    this.playSpeed = newSpeed;
+    this.audio.playbackRate = this.playSpeed;
   }
 
   private async TriggerInitialization(): Promise<void> {
