@@ -1,10 +1,6 @@
-import { AppSettings } from './app.settings';
-import { TranslationGeneration } from './translation-generation';
-
 export class ParagraphManager {
   private paragraphs: string[] = [];
   paragraphElements: Element[] = [];
-  translationGeneration: TranslationGeneration | undefined;
 
   Init(epubElement?: HTMLElement): void {
     if (!epubElement) {
@@ -22,6 +18,10 @@ export class ParagraphManager {
 
   GetSize(): number {
     return this.paragraphElements.length;
+  }
+
+  GetElement(index: number): Element {
+    return this.paragraphElements[index];
   }
 
   GetParagraph(index: number): string {
@@ -50,33 +50,6 @@ export class ParagraphManager {
     } else {
       this.paragraphElements.push(element);
     }
-  }
-
-  TriggerTranslate(): void {
-    for (let element of this.paragraphElements) {
-      this.AddTranslation(element);
-    }
-  }
-
-  private async AddTranslation(child: Element): Promise<void> {
-    const old = child.querySelector('.translation-text');
-    if (old) child.removeChild(old);
-
-    const text = child.textContent;
-    if (!text || text.trim().length === 0) {
-      return;
-    }
-
-    const translated = await this.translationGeneration?.GetTranslation(text);
-
-    const translationElem = document.createElement('div');
-    translationElem.textContent = translated ? translated : '';
-    translationElem.className = 'translation-text';
-    translationElem.style.color = '#8ec07c';
-    translationElem.style.fontSize =
-      String(AppSettings.GetTextSize() * 1.1) + 'rem';
-    translationElem.style.marginTop = '0.3em';
-    child.appendChild(translationElem);
   }
 
   private HandleLinkClick(child: Element): void {

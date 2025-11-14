@@ -83,10 +83,6 @@ export class EpubViewComponent implements OnInit {
       allowScriptedContent: true,
     });
 
-    // TODO: This init is not good.
-    this.translationGeneration = new TranslationGeneration(this.appService);
-    this.paragraphManager.translationGeneration = this.translationGeneration;
-
     this.settings = new AppSettings(bookName);
     const savedCfi = this.settings.GetEpubCfi();
     if (savedCfi) {
@@ -213,6 +209,9 @@ export class EpubViewComponent implements OnInit {
       }
       this.paragraphManager.MarkParagraph(this.counter);
       this.SaveSettings();
+      if (this.showTranslation) {
+        this.translationGeneration?.TriggerTranslate(this.counter);
+      }
     });
   }
 
@@ -227,7 +226,7 @@ export class EpubViewComponent implements OnInit {
   OnToggleTranslation(): void {
     this.showTranslation = !this.showTranslation;
     if (this.showTranslation) {
-      this.paragraphManager.TriggerTranslate();
+      this.translationGeneration?.TriggerTranslate(this.counter);
     } else {
       this.readTranslatedContent = false;
     }
@@ -268,9 +267,7 @@ export class EpubViewComponent implements OnInit {
     this.styleManager.RefreshStyle(this.GetEpubElement());
     this.paragraphManager.MarkParagraph(this.counter);
     this.SaveSettings();
-    if (this.isPlaying) {
-      this.Play(this.counter);
-    }
+    this.Play(this.counter);
   }
 
   OnChangeBookClicked(): void {
@@ -296,7 +293,11 @@ export class EpubViewComponent implements OnInit {
     }
     this.paragraphManager.MarkParagraph(this.counter);
     this.SaveSettings();
-    if (this.isPlaying) {
+    if (this.showTranslation) {
+      this.translationGeneration?.TriggerTranslate(this.counter).then(() => {
+        this.Play(this.counter);
+      });
+    } else {
       this.Play(this.counter);
     }
   }
@@ -310,7 +311,11 @@ export class EpubViewComponent implements OnInit {
     }
     this.paragraphManager.MarkParagraph(this.counter);
     this.SaveSettings();
-    if (this.isPlaying) {
+    if (this.showTranslation) {
+      this.translationGeneration?.TriggerTranslate(this.counter).then(() => {
+        this.Play(this.counter);
+      });
+    } else {
       this.Play(this.counter);
     }
   }
@@ -386,6 +391,10 @@ export class EpubViewComponent implements OnInit {
   }
 
   private async Play(counter: number): Promise<void> {
+    if (!this.isPlaying) {
+      return;
+    }
+
     const shouldReadTranslated =
       this.showTranslation && this.readTranslatedContent;
 
@@ -439,6 +448,11 @@ export class EpubViewComponent implements OnInit {
       this.appService,
       this.paragraphManager.GetParagraphs(),
       this.speakerIdentification,
+    );
+
+    this.translationGeneration = new TranslationGeneration(
+      this.appService,
+      this.paragraphManager,
     );
 
     // Refresh speaker identification on initialization
