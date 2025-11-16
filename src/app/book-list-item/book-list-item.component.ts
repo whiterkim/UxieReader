@@ -12,6 +12,8 @@ import { AppService } from '../app.service';
 })
 export class BookListItemComponent implements OnInit {
   coverUrl: { [key: string]: string | undefined } = {};
+  bookItems: any[] = [];
+  groupItems: any[] = [];
   constructor(
     private router: Router,
     public dialog: MatDialog,
@@ -24,11 +26,16 @@ export class BookListItemComponent implements OnInit {
   folder: string | undefined;
 
   ngOnInit() {
+    this.bookItems = [];
+    this.groupItems = [];
     for (let child of this.object as any[]) {
       if (child?.book_name) {
+        this.bookItems.push(child);
         this.appService.GetEpubCoverUrl(child.file_name).then((url) => {
           this.coverUrl[child.file_name] = url;
         });
+      } else {
+        this.groupItems.push(child);
       }
     }
   }
@@ -43,7 +50,7 @@ export class BookListItemComponent implements OnInit {
   }
 
   OnBookClicked(child: any): void {
-    const path = child.book_name;
+    const path = child.file_name;
     if (path) {
       AppSettings.SetLastBookPath(path);
       this.router.navigate(['/epub-view', path]);

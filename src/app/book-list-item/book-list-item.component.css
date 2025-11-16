@@ -44,3 +44,23 @@
   margin-top: 4px;
   word-break: break-word;
 }
+
+.group-title {
+  grid-column: 1 / -1;
+  background: linear-gradient(90deg, #222 60%, #333 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1em;
+  padding: 16px 12px;
+  border-radius: 8px;
+  margin: 8px 0 0 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  transition: background 0.2s;
+}
+.group-title:hover {
+  background: linear-gradient(90deg, #333 60%, #444 100%);
+}

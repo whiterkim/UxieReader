@@ -1,7 +1,7 @@
 <div class="book-list-grid">
   <div
     class="book-cell"
-    *ngFor="let child of object"
+    *ngFor="let child of bookItems"
     (click)="OnBookClicked(child)"
   >
     <div class="cover-wrapper">
@@ -13,11 +13,15 @@
       />
       <div *ngIf="!coverUrl[child.file_name]" class="cover-placeholder"></div>
     </div>
-
     <div class="book-title">{{ child.book_name ?? child.key }}</div>
-    <app-book-list-item
-      *ngIf="!GetCollapse(child)"
-      [object]="child.value"
-    ></app-book-list-item>
+  </div>
+</div>
+
+<div *ngFor="let group of groupItems">
+  <div class="book-title group-title" (click)="OnCollapseClicked(group)">
+    {{ group.key }}
+  </div>
+  <div *ngIf="!GetCollapse(group)">
+    <app-book-list-item [object]="group.value"></app-book-list-item>
   </div>
 </div>
