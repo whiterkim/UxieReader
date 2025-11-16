@@ -1,5 +1,30 @@
 [
   {
+    "key": "Nexus",
+    "book_name": "连结",
+    "file_name": "连结.epub"
+  },
+  {
+    "key": "CD",
+    "book_name": "Code Dependent",
+    "file_name": "Code_Dependent.epub"
+  },
+  {
+    "key": "CP",
+    "book_name": "Careless People",
+    "file_name": "Careless People.epub"
+  },
+  {
+    "key": "TWIS",
+    "book_name": "The Worlds I See",
+    "file_name": "The Worlds I See.epub"
+  },
+  {
+    "key": "YDIYM",
+    "book_name": "Your Dog Is Your Mirror",
+    "file_name": "Your Dog Is Your Mirror.epub"
+  },
+  {
     "key": "S1",
     "value": [
       {
