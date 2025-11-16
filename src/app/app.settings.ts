@@ -62,6 +62,19 @@ export class AppSettings {
     localStorage.setItem('textSize', size.toString());
   }
 
+  public static GetPlaySpeed(): number {
+    const savedSpeed = localStorage.getItem('playSpeed');
+    if (savedSpeed !== null) {
+      return +savedSpeed;
+    }
+    // Default play speed is 1.0
+    return 1.0;
+  }
+
+  public static SetPlaySpeed(speed: number): void {
+    localStorage.setItem('playSpeed', speed.toString());
+  }
+
   public static GetVoiceForSpeaker(speaker: Speaker): CharacterVoice {
     return (
       AppSettings.GetSavedCharacterVoice(speaker.name) ??

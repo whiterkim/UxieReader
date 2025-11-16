@@ -34,7 +34,7 @@ export class EpubViewComponent implements OnInit {
   bookName?: string;
 
   audio: HTMLAudioElement = new Audio();
-  playSpeed: number = 1.0;
+  playSpeed: number = AppSettings.GetPlaySpeed();
   jumpInput: HTMLInputElement | undefined;
 
   rendition: Rendition | undefined;
@@ -448,6 +448,7 @@ export class EpubViewComponent implements OnInit {
 
   OnPlaySpeedChanged(newSpeed: number): void {
     this.playSpeed = newSpeed;
+    AppSettings.SetPlaySpeed(newSpeed);
     this.audio.playbackRate = this.playSpeed;
   }
 
