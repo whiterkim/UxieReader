@@ -91,6 +91,28 @@ export class AppService {
     return book;
   }
 
+  public async GetEpubCoverUrl(name: string): Promise<string | undefined> {
+    let fullPath = 'assets/books/' + name;
+    if (!fullPath.endsWith('.epub')) {
+      fullPath += '.epub';
+    }
+    console.log('Getting cover for', fullPath);
+    const book = Epub(fullPath);
+    await book.ready;
+    // epub.js v0.3+ provides coverUrl(), otherwise use book.archive.cover
+    if (typeof book.coverUrl === 'function') {
+      const urlOrPromise = book.coverUrl();
+      if (urlOrPromise instanceof Promise) {
+        const url = await urlOrPromise;
+        console.log('Cover URL:', url);
+        return url === null ? undefined : url;
+      } else {
+        return urlOrPromise === null ? undefined : urlOrPromise;
+      }
+    }
+    return undefined;
+  }
+
   private GetRequestXmlBody(text: string, speaker: Speaker): string {
     const characterVoice = AppSettings.GetVoiceForSpeaker(speaker);
     const root = create()

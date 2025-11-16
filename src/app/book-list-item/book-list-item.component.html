@@ -1,14 +1,23 @@
-<ul class="viewer-paragraph text-white">
-  <li *ngFor="let child of object">
-    <span *ngIf="!child.book_name" (click)="OnCollapseClicked(child)">{{
-      child.key
-    }}</span>
-    <span *ngIf="child.book_name" (click)="OnBookClicked(child.file_name)">{{
-      child.book_name
-    }}</span>
+<div class="book-list-grid">
+  <div
+    class="book-cell"
+    *ngFor="let child of object"
+    (click)="OnBookClicked(child)"
+  >
+    <div class="cover-wrapper">
+      <img
+        *ngIf="coverUrl[child.file_name]"
+        [src]="coverUrl[child.file_name]"
+        alt="cover"
+        class="cover-img"
+      />
+      <div *ngIf="!coverUrl[child.file_name]" class="cover-placeholder"></div>
+    </div>
+
+    <div class="book-title">{{ child.book_name ?? child.key }}</div>
     <app-book-list-item
       *ngIf="!GetCollapse(child)"
       [object]="child.value"
     ></app-book-list-item>
-  </li>
-</ul>
+  </div>
+</div>

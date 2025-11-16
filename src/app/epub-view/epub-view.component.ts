@@ -235,6 +235,7 @@ export class EpubViewComponent implements OnInit {
     this.showTranslation = !this.showTranslation;
     if (this.showTranslation) {
       this.translationGeneration?.TriggerTranslate(this.counter);
+      this.readTranslatedContent = true;
     } else {
       this.readTranslatedContent = false;
     }

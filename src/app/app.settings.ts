@@ -268,7 +268,7 @@ export class AppSettings {
     if (collapse !== null) {
       return collapse === 'true';
     }
-    return false;
+    return true;
   }
 
   public static SetCollapse(key: string, value: boolean): void {

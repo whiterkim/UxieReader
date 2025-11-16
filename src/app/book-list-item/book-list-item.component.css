@@ -1,0 +1,46 @@
+.book-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.book-cell {
+  background: rgba(30, 30, 30, 0.9);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.book-cell:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+.cover-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  margin-bottom: 8px;
+}
+.cover-img {
+  max-height: 72px;
+  max-width: 60px;
+  border-radius: 4px;
+  background: #222;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+.cover-placeholder {
+  width: 60px;
+  height: 72px;
+  background: #444;
+  border-radius: 4px;
+  display: inline-block;
+}
+.book-title {
+  font-size: 0.8em;
+  color: #fff;
+  margin-top: 4px;
+  word-break: break-word;
+}
