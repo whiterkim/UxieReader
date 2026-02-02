@@ -96,7 +96,7 @@ export class AppService {
     if (!fullPath.endsWith('.epub')) {
       fullPath += '.epub';
     }
-    console.log('Getting cover for', fullPath);
+
     const book = Epub(fullPath);
     await book.ready;
     // epub.js v0.3+ provides coverUrl(), otherwise use book.archive.cover
@@ -104,7 +104,6 @@ export class AppService {
       const urlOrPromise = book.coverUrl();
       if (urlOrPromise instanceof Promise) {
         const url = await urlOrPromise;
-        console.log('Cover URL:', url);
         return url === null ? undefined : url;
       } else {
         return urlOrPromise === null ? undefined : urlOrPromise;

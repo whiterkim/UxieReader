@@ -4,7 +4,7 @@
       <!-- Placeholder for menu icon -->
       <div style="width: 24px"></div>
     </div>
-    <span class="menu-title text-white">Uxie Reader</span>
+    <span class="menu-title text-white">Library</span>
     <div ngbDropdown class="nav-link menu-button">
       <i
         ngbDropdownToggle
@@ -17,11 +17,18 @@
         aria-labelledby="settingsDropdownButton"
       >
         <div ngbDropdownItem class="menu-item" (click)="OnEnterKeyClicked()">
-          Enter key...
+          Enter keys...
         </div>
         <div class="dropdown-divider"></div>
-        <div ngbDropdownItem class="menu-item">Whiter Kim</div>
-        <div ngbDropdownItem style="display: flex; justify-content: end">
+        <!-- <div ngbDropdownItem class="menu-item">Whiter Kim</div> -->
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 16px;
+          "
+        >
+          <div>Whiter Kim</div>
           <svg
             width="25"
             height="25"
