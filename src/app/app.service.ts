@@ -259,6 +259,58 @@ export class AppService {
     return elements;
   }
 
+  private GetResponseOutputText(response: any): string {
+    if (typeof response?.output_text === 'string') {
+      return response.output_text.trim();
+    }
+
+    const output = response?.output;
+    if (!Array.isArray(output)) {
+      return '';
+    }
+
+    const messageText = this.GetTextFromResponseOutputItems(
+      output.filter((item: any) => item?.type === 'message'),
+    );
+    if (messageText) {
+      return messageText.trim();
+    }
+
+    return this.GetTextFromResponseOutputItems(output).trim();
+  }
+
+  private GetTextFromResponseOutputItems(outputItems: any[]): string {
+    const textParts: string[] = [];
+
+    for (const outputItem of outputItems) {
+      if (typeof outputItem?.text === 'string') {
+        textParts.push(outputItem.text);
+      }
+
+      const content = outputItem?.content;
+      if (typeof content === 'string') {
+        textParts.push(content);
+        continue;
+      }
+
+      if (!Array.isArray(content)) {
+        continue;
+      }
+
+      for (const contentItem of content) {
+        if (typeof contentItem === 'string') {
+          textParts.push(contentItem);
+        } else if (typeof contentItem?.text === 'string') {
+          textParts.push(contentItem.text);
+        } else if (typeof contentItem?.content === 'string') {
+          textParts.push(contentItem.content);
+        }
+      }
+    }
+
+    return textParts.join('\n');
+  }
+
   public async IdentifySpeakers(
     availableCharacters: any[],
     paragraphsBefore: string[],
@@ -269,7 +321,7 @@ export class AppService {
 
     const headers = {
       'Content-Type': 'application/json',
-      'api-key': AppSettings.GetAzureOpenAIKey(),
+      Authorization: `Bearer ${AppSettings.GetAzureOpenAIKey()}`,
     };
 
     const textElements = this.GetTextElementArray(paragraphs);
@@ -288,22 +340,20 @@ export class AppService {
     );
 
     const body = {
-      response_format: { type: 'json_object' },
-      messages: [
+      input: [
         { role: 'system', content: prompt },
         { role: 'user', content: content },
       ],
-      max_tokens: 1200,
-      temperature: 0.7,
+      max_output_tokens: 16384,
+      model: 'gpt-chat-latest',
+      text: { format: { type: 'json_object' } },
       frequency_penalty: 0,
       presence_penalty: 0,
-      top_p: 0.95,
-      stop: null,
     };
 
     const response = await lastValueFrom(
       this.http.post(
-        'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-12-01-preview',
+        'https://white-mpsks5mt-eastus2.cognitiveservices.azure.com/openai/responses?api-version=2025-04-01-preview',
         body,
         {
           headers: headers,
@@ -316,10 +366,10 @@ export class AppService {
 
     // if response 400
 
-    const message = response?.choices[0]?.message;
+    const responseText = this.GetResponseOutputText(response);
 
-    // Convert message.content to JSON
-    let data = JSON.parse(message.content);
+    // Convert response text to JSON
+    let data = JSON.parse(responseText);
 
     for (let i = 0; i < paragraphs.length; i++) {
       const item = data.speakers.find((item: any) => +item.index === i);
@@ -339,6 +389,9 @@ export class AppService {
         });
       }
     }
+
+    console.log('Data:', data);
+    console.log('Identified speakers:', speakers);
 
     return speakers;
   }
@@ -375,7 +428,7 @@ export class AppService {
   public async ListCharacters(paragraphs: string[]): Promise<Character[]> {
     const headers = {
       'Content-Type': 'application/json',
-      'api-key': AppSettings.GetAzureOpenAIKey(),
+      Authorization: `Bearer ${AppSettings.GetAzureOpenAIKey()}`,
     };
 
     let content = '';
@@ -390,22 +443,20 @@ export class AppService {
     );
 
     const body = {
-      response_format: { type: 'json_object' },
-      messages: [
+      input: [
         { role: 'system', content: prompt },
         { role: 'user', content: content },
       ],
-      max_tokens: 1200,
-      temperature: 0.7,
+      max_output_tokens: 16384,
+      model: 'gpt-chat-latest',
+      text: { format: { type: 'json_object' } },
       frequency_penalty: 0,
       presence_penalty: 0,
-      top_p: 0.95,
-      stop: null,
     };
 
     const response = await lastValueFrom(
       this.http.post(
-        'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-12-01-preview',
+        'https://white-mpsks5mt-eastus2.cognitiveservices.azure.com/openai/responses?api-version=2025-04-01-preview',
         body,
         {
           headers: headers,
@@ -418,10 +469,10 @@ export class AppService {
 
     // if response 400
 
-    const message = response?.choices[0]?.message;
+    const responseText = this.GetResponseOutputText(response);
 
-    // Convert message.content to JSON
-    let data = JSON.parse(message.content);
+    // Convert response text to JSON
+    let data = JSON.parse(responseText);
 
     const characters: Character[] = [];
     for (let item of data.characters) {
@@ -439,7 +490,7 @@ export class AppService {
   public async GetTranslation(text: string): Promise<string> {
     const headers = {
       'Content-Type': 'application/json',
-      'api-key': AppSettings.GetAzureOpenAIKey(),
+      Authorization: `Bearer ${AppSettings.GetAzureOpenAIKey()}`,
     };
 
     const prompt = await lastValueFrom(
@@ -451,23 +502,20 @@ export class AppService {
     const content = `Translate to zh (simplified Chinese) (output translation only):\n${text}`;
 
     const body = {
-      response_format: { type: 'text' },
-      messages: [
+      input: [
         { role: 'system', content: prompt },
         { role: 'user', content: content },
       ],
-      max_tokens: 1200,
-      temperature: 0.3,
+      max_output_tokens: 16384,
+      model: 'gpt-chat-latest',
       frequency_penalty: 0,
       presence_penalty: 0,
-      top_p: 0.95,
-      stop: null,
     };
 
     try {
       const response: any = await lastValueFrom(
         this.http.post(
-          'https://openaiazureservicewest.openai.azure.com/openai/deployments/DetectModel4o/chat/completions?api-version=2024-12-01-preview',
+          'https://white-mpsks5mt-eastus2.cognitiveservices.azure.com/openai/responses?api-version=2025-04-01-preview',
           body,
           {
             headers: headers,
@@ -475,8 +523,8 @@ export class AppService {
           },
         ),
       );
-      // 取出返回的翻译文本
-      return response?.choices?.[0]?.message?.content?.trim() ?? '';
+
+      return this.GetResponseOutputText(response);
     } catch (e) {
       return '';
     }
