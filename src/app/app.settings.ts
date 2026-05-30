@@ -102,10 +102,35 @@ export class AppSettings {
   }
 
   public static GetCharacterVoice(key: string): CharacterVoice {
-    return (
-      AppSettings.GetSavedCharacterVoice(key) ??
-      AppSettings.BuildCharacterVoice(AppSettings.GetVoiceProfiles()[0])
-    );
+    const saved = AppSettings.GetSavedCharacterVoice(key);
+    if (saved) {
+      return saved;
+    }
+
+    const profiles = AppSettings.GetVoiceProfiles();
+
+    if (key === 'male') {
+      const male = profiles.find(
+        (p) => p.ShortName === 'zh-CN-YunyiMultilingualNeural',
+      );
+      if (male) return AppSettings.BuildCharacterVoice(male);
+    }
+
+    if (key === 'female') {
+      const female = profiles.find(
+        (p) => p.ShortName === 'zh-CN-XiaoxiaoMultilingualNeural',
+      );
+      if (female) return AppSettings.BuildCharacterVoice(female);
+    }
+
+    if (key === 'narration') {
+      const narrationPref = profiles.find(
+        (p) => p.ShortName === 'zh-CN-XiaoxiaoMultilingualNeural',
+      );
+      if (narrationPref) return AppSettings.BuildCharacterVoice(narrationPref);
+    }
+
+    return AppSettings.BuildCharacterVoice(profiles[0]);
   }
 
   private static GetSavedCharacterVoice(
