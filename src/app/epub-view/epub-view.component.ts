@@ -196,8 +196,10 @@ export class EpubViewComponent implements OnInit {
 
     let element = bodyElement;
     while (
-      element?.children[0]?.tagName === 'DIV' ||
-      element?.children[0]?.tagName === 'SECTION'
+      (element?.children[0]?.tagName === 'DIV' &&
+        element.children[0].children.length > 1) ||
+      (element?.children[0]?.tagName === 'SECTION' &&
+        element.children[0].children.length > 1)
     ) {
       element = element?.children[0] as HTMLElement;
     }
