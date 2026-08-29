@@ -57,7 +57,7 @@ export class StyleManager {
       return;
     }
 
-    element.setAttribute('style', 'background-color:#2C2C2C;');
+    element.setAttribute('style', 'background-color:#2C2C2C;color:#E4E4E4;');
     if (!this.isElementInViewport(element)) {
       element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
@@ -68,7 +68,7 @@ export class StyleManager {
       return;
     }
 
-    element.setAttribute('style', '');
+    element.setAttribute('style', 'color:#E4E4E4;');
   }
 
   static AddTranslation(element: Element, translated: string): void {
